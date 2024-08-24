@@ -80,8 +80,8 @@ list adf_path_to_entry(
     std::getline(ss, vol_name, ':');
     if (!adf_check_volume(dev, vol_name, cur_vol, cur_pos)) {
       const char* message = "Could not find the specified volume on device";
-      if ((mode & ADF_FI_THROW_ERROR) != 0) Rf_error(message); else
-        if ((mode & ADF_FI_WARN) != 0) Rf_warning(message);
+      if ((mode & ADF_FI_THROW_ERROR) != 0) Rf_error("%s", message); else
+        if ((mode & ADF_FI_WARN) != 0) Rf_warning("%s", message);
       return result;
     } else {
       vol = dev->volList[cur_vol];
@@ -96,15 +96,15 @@ list adf_path_to_entry(
   const char* message1 = "No entry block for current dir.";
   RETCODE rc = adfReadEntryBlock ( vol, cur_pos, entry );
   if (rc != RC_OK) {
-    if ((mode & ADF_FI_THROW_ERROR) != 0) Rf_error(message1); else
-      if ((mode & ADF_FI_WARN) != 0) Rf_warning(message1);
+    if ((mode & ADF_FI_THROW_ERROR) != 0) Rf_error("%s", message1); else
+      if ((mode & ADF_FI_WARN) != 0) Rf_warning("%s", message1);
     return result;
   }    
   while (std::getline(ss, path_chunk, '/')) {
     RETCODE rc = adfReadEntryBlock ( vol, cur_pos, entry );
     if (rc != RC_OK) {
-      if ((mode & ADF_FI_THROW_ERROR) != 0) Rf_error(message1); else
-        if ((mode & ADF_FI_WARN) != 0) Rf_warning(message1);
+      if ((mode & ADF_FI_THROW_ERROR) != 0) Rf_error("%s", message1); else
+        if ((mode & ADF_FI_WARN) != 0) Rf_warning("%s", message1);
       return result;
     }
     parent = cur_pos;
@@ -112,9 +112,9 @@ list adf_path_to_entry(
     if (cur_pos < vol->firstBlock || cur_pos > vol->lastBlock) {
       const char* message = "Path not found.";
       if ((mode & (ADF_FI_EXPECT_EXIST | ADF_FI_THROW_ERROR)) != 0) {
-        Rf_error(message);
+        Rf_error("%s", message);
       } else {
-        if ((mode & ADF_FI_WARN) != 0) Rf_warning(message);
+        if ((mode & ADF_FI_WARN) != 0) Rf_warning("%s", message);
         result["remainder"] = writable::strings(r_string(path_chunk));
         break;
       }
@@ -138,13 +138,13 @@ list adf_path_to_entry(
       entry_sectype != ST_FILE) {
     const char * message = "Path does not point to a file";
     if ((mode & ADF_FI_THROW_ERROR) != 0)
-      Rf_error(message); else Rf_warning(message);
+      Rf_error("%s", message); else Rf_warning("%s", message);
   }
   if (((mode & ADF_FI_EXPECT_DIR) != 0) &&
       entry_sectype != ST_DIR && entry_sectype != ST_ROOT) {
     const char * message = "Path does not point to a directory";
     if ((mode & ADF_FI_THROW_ERROR) != 0)
-      Rf_error(message); else Rf_warning(message);
+      Rf_error("%s", message); else Rf_warning("%s", message);
   }
   
   return result;

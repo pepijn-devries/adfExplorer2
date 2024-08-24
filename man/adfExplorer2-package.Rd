@@ -10,6 +10,13 @@
 
 Amiga Disk Files (ADF) are virtual representations of 3.5 inch floppy disks for the Commodore Amiga. Most disk drives from other systems (including modern drives) are not able to read these disks. The AdfExplorer2 package enables you to establish R connections to files on such virtual DOS-formatted disks, which can be use to read from and write to those files.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://pepijn-devries.github.io/adfExplorer2/}
+}
+
+}
 \author{
 \strong{Maintainer}: Pepijn de Vries \email{pepijn.devries@outlook.com} (\href{https://orcid.org/0000-0002-7961-6646}{ORCID})
 

@@ -1,0 +1,11 @@
+# script inspired on https://github.com/cran/Matrix/blob/master/src/Makevars
+
+CFILES = $(wildcard *.c adflib/*.c adfbridge/*.c)
+CPPFILES = $(wildcard *.cpp)
+
+SOURCES = $(CFILES) $(CPPFILES)
+
+OBJECTS = $(CFILES:.c=.o) $(CPPFILES:.cpp=.o)
+
+PKG_CFLAGS = -Iadflib
+PKG_CXXFLAGS = -Iadflib

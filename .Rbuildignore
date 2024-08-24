@@ -1,0 +1,12 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^.*\.a$
+^.*\.o$
+^.*\.so$
+^.*\.dll$
+src/adflib/CMakeLists\.txt
+src/adflib/Makefile\.am
+src/adflib\.pc\.in
+^LICENSE\.md$
+^README\.Rmd$
+^CODE_OF_CONDUCT\.md$

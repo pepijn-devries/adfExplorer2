@@ -1,0 +1,39 @@
+Package: adfExplorer2
+Title: Access and Manipulate Amiga Disk Files
+Version: 0.0.0.9000
+Authors@R:
+    person("Pepijn", "de Vries", role = c("aut", "cre"),
+    email = "pepijn.devries@outlook.com",
+    comment = c(ORCID = "0000-0002-7961-6646"))
+Author:
+    Pepijn de Vries [aut, cre] (0000-0002-7961-6646)
+Maintainer: Pepijn de Vries <pepijn.devries@outlook.com>
+Description: Amiga Disk Files (ADF) are virtual
+    representations of 3.5 inch floppy disks for the
+    Commodore Amiga. Most disk drives from other systems
+    (including modern drives) are not able to read these
+    disks. The AdfExplorer2 package enables you to
+    establish R connections to files on such
+    virtual DOS-formatted disks, which can be use to
+    read from and write to those files.
+SystemRequirements: GNU make
+License: GPL (>= 3)
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+LinkingTo: 
+    cpp11
+Collate: 
+    'adfExplorer2-package.R'
+    'blocks.R'
+    'cpp11.R'
+    'connect_adf.R'
+    'device_info.R'
+    'device_create.R'
+    'imports.R'
+    's3_methods.R'
+    'virtual_path.R'
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

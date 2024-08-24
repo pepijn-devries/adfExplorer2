@@ -4,7 +4,7 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-<img src="man/figures/logo.svg" align="right" height="139" copyright="cc-sa" alt="logo" />
+<img src="man/figures/logo.svg" align="right" height="139" copyright="cc-sa" alt="logo" class="pkgdown-hide" />
 
 `adfExplorer2` is the successor of
 [`adfExplorer`](https://pepijn-devries.github.io/adfExplorer/). It can

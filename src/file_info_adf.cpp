@@ -5,8 +5,10 @@ r_string adf_upper(strings x, logicals intl) {
   if (x.size() != 1 || intl.size() != 1)
     Rf_error("`adf_upper` can only handle length 1 arguments");
   char* upper = new char[x.at(0).size() + 1];
+  std::string xs = (std::string)x.at(0);
+  const char * input = xs.c_str();
   BOOL intl_b = intl.at(0) ? TRUE : FALSE;
-  adfStrToUpper((uint8_t *)upper, (uint8_t *)((std::string)x.at(0)).c_str(),
+  adfStrToUpper((uint8_t *)upper, (uint8_t *)input,
                 x.at(0).size(), intl_b);
   r_string result = upper;
   delete[] upper;

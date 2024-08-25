@@ -20,8 +20,8 @@ bool adf_check_volume(AdfDevice * dev, std::string vol_name,
   if (vol_name.length() == 0) return false;
   writable::strings vn({vol_name});
   for (int i = 0; i < dev->nVol; i++) {
-    bool intl = isINTL(dev->volList[i]->dosType) == TRUE ||
-      isDIRCACHE(dev->volList[i]->dosType) == TRUE;
+    r_bool intl = (r_bool)(isINTL(dev->volList[i]->dosType) == TRUE ||
+      isDIRCACHE(dev->volList[i]->dosType) == TRUE);
     vn.at(0) = vol_name;
     std::string vol_name2 = (std::string)adf_upper(vn,
                              logicals({intl}));

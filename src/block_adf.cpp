@@ -246,14 +246,14 @@ SEXP dmt_to_POSIXct(int days, int minutes, int ticks) {
 
 logicals access_from_int(int access) {
   writable::logicals result({
-    "D"_nm = hasD(access),
-      "E"_nm = hasE(access),
-      "W"_nm = hasW(access),
-      "R"_nm = hasR(access),
-      "A"_nm = hasA(access),
-      "P"_nm = hasP(access),
-      "S"_nm = hasS(access),
-      "H"_nm = hasH(access)
+    "D"_nm = (r_bool)hasD(access),
+      "E"_nm = (r_bool)hasE(access),
+      "W"_nm = (r_bool)hasW(access),
+      "R"_nm = (r_bool)hasR(access),
+      "A"_nm = (r_bool)hasA(access),
+      "P"_nm = (r_bool)hasP(access),
+      "S"_nm = (r_bool)hasS(access),
+      "H"_nm = (r_bool)hasH(access)
   });
   return result;
 }

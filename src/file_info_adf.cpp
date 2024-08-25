@@ -17,9 +17,7 @@ r_string adf_upper(strings x, logicals intl) {
 
 bool adf_check_volume(AdfDevice * dev, std::string vol_name,
                       int & cur_vol, int & cur_pos) {
-  Rprintf("TODO debug 1 %s\n", vol_name.c_str());
   if (vol_name.length() == 0) return false;
-  Rprintf("TODO debug 2\n");
   writable::strings vn({vol_name});
   for (int i = 0; i < dev->nVol; i++) {
     bool intl = isINTL(dev->volList[i]->dosType) == TRUE ||
@@ -27,8 +25,7 @@ bool adf_check_volume(AdfDevice * dev, std::string vol_name,
     vn.at(0) = vol_name;
     std::string vol_name2 = (std::string)adf_upper(vn,
                              logicals({intl}));
-    Rprintf("TODO debug 3 %s\n", vol_name2.c_str());
-    
+
     if (std::string("SYS").compare(vol_name2) == 0) {
       cur_pos = dev->volList[i]->rootBlock;
       return true;
@@ -41,8 +38,7 @@ bool adf_check_volume(AdfDevice * dev, std::string vol_name,
       dev->devType == DEVTYPE_HARDFILE) {
       num_dev = "DH" + std::to_string(i);
     }
-    Rprintf("TODO debug 4 %s\n", num_dev.c_str());
-    
+
     vn.at(0) = adf_dev_name_internal(dev, i);
     std::string dev_vol_name = (std::string)adf_upper(vn,
                                 logicals({intl}));

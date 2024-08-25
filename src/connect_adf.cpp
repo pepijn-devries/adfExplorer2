@@ -149,7 +149,7 @@ void adf_register_file_con(adf_conn * ac, int con_id) {
 
 void check_adf_con (SEXP con) {
   auto inherits = cpp11::package("base")["inherits"];
-  if (! cpp11::logicals(inherits(con, "adf_device")).at(0))
+  if (! inherits(con, "adf_device"))
     Rf_error("Connection should inherit 'adf_device'.");
 }
 

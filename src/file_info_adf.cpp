@@ -5,9 +5,8 @@ r_string adf_upper(strings x, logicals intl) {
   if (x.size() != 1 || intl.size() != 1)
     Rf_error("`adf_upper` can only handle length 1 arguments");
   char* upper = new char[x.at(0).size() + 1];
-  const char* input = ((std::string)x.at(0)).c_str();
   BOOL intl_b = intl.at(0) ? TRUE : FALSE;
-  adfStrToUpper((uint8_t *)upper, (uint8_t *)input,
+  adfStrToUpper((uint8_t *)upper, (uint8_t *)((std::string)x.at(0)).c_str(),
                 x.at(0).size(), intl_b);
   r_string result = upper;
   delete[] upper;
@@ -26,6 +25,8 @@ bool adf_check_volume(AdfDevice * dev, std::string vol_name,
     vn.at(0) = vol_name;
     std::string vol_name2 = (std::string)adf_upper(vn,
                              logicals({intl}));
+    printf("TODO debug 3 %s\n", vol_name2.c_str());
+    
     if (std::string("SYS").compare(vol_name2) == 0) {
       cur_pos = dev->volList[i]->rootBlock;
       return true;
@@ -38,6 +39,7 @@ bool adf_check_volume(AdfDevice * dev, std::string vol_name,
       dev->devType == DEVTYPE_HARDFILE) {
       num_dev = "DH" + std::to_string(i);
     }
+    printf("TODO debug 4 %s\n", num_dev.c_str());
     
     vn.at(0) = adf_dev_name_internal(dev, i);
     std::string dev_vol_name = (std::string)adf_upper(vn,

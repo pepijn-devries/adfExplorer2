@@ -16,7 +16,9 @@ r_string adf_upper(strings x, logicals intl) {
 
 bool adf_check_volume(AdfDevice * dev, std::string vol_name,
                       int & cur_vol, int & cur_pos) {
+  printf("TODO debug 1 %s\n", vol_name.c_str());
   if (vol_name.length() == 0) return false;
+  printf("TODO debug 2\n");
   writable::strings vn({vol_name});
   for (int i = 0; i < dev->nVol; i++) {
     bool intl = isINTL(dev->volList[i]->dosType) == TRUE ||

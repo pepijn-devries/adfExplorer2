@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   file_system_modes: file_system_modes.html
   virtual_paths: virtual_paths.html
-last_built: 2024-08-25T08:25Z
+last_built: 2024-08-25T08:28Z
 urls:
   reference: https://pepijn-devries.github.io/adfExplorer2/reference
   article: https://pepijn-devries.github.io/adfExplorer2/articles

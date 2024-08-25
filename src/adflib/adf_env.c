@@ -277,7 +277,7 @@ static void assertInternal ( BOOL cnd, const char * const msg )
     if ( ! cnd ) {
         //fputs ( msg, stderr ); /* Edit PdV */
         //exit(1); /* Edit PdV */
-        Rf_error(msg); /* Edit PdV */
+        Rf_error("%s", msg); /* Edit PdV */
     }
 }
 

@@ -88,17 +88,28 @@ followed by a colon character.</p>
 first station is called <code>"DF0:"</code>:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/virtual_path.html">virtual_path</a></span><span class="op">(</span><span class="va">my_device</span>, <span class="st">"DF0:"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; TODO debug 1 DF0</span></span>
+<span><span class="co">#&gt; TODO debug 2</span></span>
+<span><span class="co">#&gt; TODO debug 3 DF0</span></span>
+<span><span class="co">#&gt; TODO debug 4 DF0</span></span>
 <span><span class="co">#&gt; ROOT                   adfExampleOFS</span></span></code></pre></div>
 <p>If the device happens to be the system’s device you can refer to it
 as <code>"SYS:"</code>. Here any device is also treated as the system’s
 device. So you can use:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/virtual_path.html">virtual_path</a></span><span class="op">(</span><span class="va">my_device</span>, <span class="st">"SYS:"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; TODO debug 1 SYS</span></span>
+<span><span class="co">#&gt; TODO debug 2</span></span>
+<span><span class="co">#&gt; TODO debug 3 SYS</span></span>
 <span><span class="co">#&gt; ROOT                   adfExampleOFS</span></span></code></pre></div>
 <p>Of course, if you know the disk’s name, you can also use that to
 refer to the root:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/virtual_path.html">virtual_path</a></span><span class="op">(</span><span class="va">my_device</span>, <span class="st">"adfExampleOFS:"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; TODO debug 1 adfExampleOFS</span></span>
+<span><span class="co">#&gt; TODO debug 2</span></span>
+<span><span class="co">#&gt; TODO debug 3 ADFEXAMPLEOFS</span></span>
+<span><span class="co">#&gt; TODO debug 4 DF0</span></span>
 <span><span class="co">#&gt; ROOT                   adfExampleOFS</span></span></code></pre></div>
 <p>It doesn’t matter which of these options you use, they all refer to
 the root.</p>
@@ -107,6 +118,10 @@ directory. directories are separated by forward slashes on the Amiga. So
 you could use:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/virtual_path.html">virtual_path</a></span><span class="op">(</span><span class="va">my_device</span>, <span class="st">"DF0:s/startup-sequence"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; TODO debug 1 DF0</span></span>
+<span><span class="co">#&gt; TODO debug 2</span></span>
+<span><span class="co">#&gt; TODO debug 3 DF0</span></span>
+<span><span class="co">#&gt; TODO debug 4 DF0</span></span>
 <span><span class="co">#&gt; FILE   0.6 kB -------- Startup-Sequence</span></span></code></pre></div>
 <p>This refers to the file ‘startup-sequence’ in the directory ‘s’ which
 in turn is located on the disk’s root. Note that the resulting displayed

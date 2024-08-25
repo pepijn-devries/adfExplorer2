@@ -2,6 +2,10 @@
 # adfExplorer2
 
 <!-- badges: start -->
+
+[![R-CMD-check](https://github.com/pepijn-devries/adfExplorer2/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/pepijn-devries/adfExplorer2/actions/workflows/R-CMD-check.yaml)
+[![adfExplorer2 status
+badge](https://pepijn-devries.r-universe.dev/badges/adfExplorer2)](https://pepijn-devries.r-universe.dev/adfExplorer2)
 <!-- badges: end -->
 
 <img src="man/figures/logo.svg" align="right" height="139" copyright="cc-sa" alt="logo" class="pkgdown-hide" />

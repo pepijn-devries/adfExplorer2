@@ -57,7 +57,7 @@ format.virtual_path <- function(x, ...) {
       `1`  = interpret_root_header(x$device, entry$volume))
   size <- sprintf("%5.1f kB", info$byteSize/1024)
   if (length(size) == 0) size <- strrep(" ", 8)
-  if (is.null(info$access) || !is.logical(info$access))
+  if (!(!is.null(info$access) && is.logical(info$access)))
     access <- strrep(" ", 8) else
     access <-
     ifelse(info$access, names(info$access), "-") |> paste(collapse = "")

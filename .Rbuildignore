@@ -14,3 +14,4 @@ src/adflib\.pc\.in
 ^docs$
 ^pkgdown$
 ^\.github$
+^data-raw$

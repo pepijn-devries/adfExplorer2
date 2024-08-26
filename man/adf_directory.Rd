@@ -56,8 +56,6 @@ the current directory as a \code{virtual_path} class object.
 system is present. When connecting to or creating a new device, the current
 directory is the disk's root by default. To change the current directory,
 use \code{adf_directory()} in combination with the assign operator (\verb{<-}).
-
-TODO
 }
 \details{
 To create a new directory on a device use \code{adf_make_dir()} and use a full or

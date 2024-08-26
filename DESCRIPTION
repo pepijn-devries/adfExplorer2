@@ -34,8 +34,10 @@ Collate:
     'imports.R'
     's3_methods.R'
     'virtual_path.R'
-Suggests: 
+Suggests:
+    adfExplorer,
     knitr,
     rmarkdown
 VignetteBuilder: knitr
 URL: https://pepijn-devries.github.io/adfExplorer2/
+BugReports: https://github.com/pepijn-devries/adfExplorer2/issues

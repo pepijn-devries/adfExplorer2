@@ -1,15 +1,18 @@
 #include "connect_adf.h"
 #include "dev_format.h"
+#include "block_adf.h"
 
 SEXP adf_dev_format(SEXP connection, SEXP name,
-                    cpp11::logicals ffs, cpp11::logicals intl, cpp11::logicals dircache) {
+                    cpp11::logicals ffs, cpp11::logicals intl, cpp11::logicals dircache,
+                    cpp11::logicals bootable) {
   AdfDevice * dev = get_adf_dev_internal(connection);
   uint8_t boot_code[1024] = {0};
   uint8_t vol_type = 0;
   
-  if (ffs.size() == 0 || ffs.size() > 1 || ffs.at(0) == NA_LOGICAL ||
-      intl.size() == 0 || intl.size() > 1 || intl.at(0) == NA_LOGICAL ||
-      dircache.size() == 0 || dircache.size() > 1 || dircache.at(0) == NA_LOGICAL)
+  if (ffs.size() != 1  || ffs.at(0) == NA_LOGICAL ||
+      intl.size() != 1 || intl.at(0) == NA_LOGICAL ||
+      dircache.size() != 1 || dircache.at(0) == NA_LOGICAL ||
+      bootable.size() != 1 || bootable.at(0) == NA_LOGICAL)
     Rf_error("Logical arguments should have a length of one and not be NA");
   
   if (!(bool)intl.at(0) && (bool)dircache.at(0))
@@ -44,6 +47,11 @@ SEXP adf_dev_format(SEXP connection, SEXP name,
 
   }
   
+  if (bootable.at(0)) {
+    cpp11::raws bc = adf_bootable_code();
+    for (int i = 0; i < bc.size(); i ++)
+      boot_code[i + 12] = (uint8_t)(bc.at(i));
+  }
   RETCODE rc;
   for (int i = 0; i < dev->nVol; i++) {
     AdfVolume * vol = adfMount(dev, i, dev->readOnly);

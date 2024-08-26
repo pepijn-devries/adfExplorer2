@@ -86,3 +86,11 @@ Don't forget to cleanup after yourself and close the connection to the virtual d
 ```{r finalize}
 close(my_device)
 ```
+
+## A note on disk, file and directory names
+
+The name of a disk, file and directories should consist of at least 1 UTF8 character,
+or a maximum of 30 characters. You can use both lower and upper case characters in a
+name. You can use almost any character in a name, but it is advisable to use only
+alphanumerical characters, spaces and periods. The only characters that are really not allowed
+in Amiga file names are forward slashes and colons, as these are used as path separators.

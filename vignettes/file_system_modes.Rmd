@@ -42,7 +42,7 @@ the international mode is mandatory.
 ## Directory Caching
 
 With Amiga OS 3.0, the 'directory cache mode' was
-introduced. With the direct cache mode, one or more blocks are stored
+introduced. With the directory cache mode, one or more blocks are stored
 for each directory (including the root) with basic information about
 the files stored in that directory. In older versions, the directory
 header only stored pointers to the files in that directory.
@@ -50,12 +50,12 @@ This meant that in older OS versions the header of each file (all scattered
 around the disk) needed to be
 loaded, in order to list all files in that directory.
 As with the directory cache mode
-all information was stored in one (or more when necessary) block, it
+all information was stored in one block (or more when necessary), it
 was faster at listing directory content. On the original machine that
 is, as floppy disk drives were pretty slow.
 
 Note that using the 'directory cache' mode requires a larger storage
-overhead for the file system, leaving less capacity for file data.
+overhead for the file system, leaving less capacity for actual file data.
 
 ## Creating disks with diferent modes
 

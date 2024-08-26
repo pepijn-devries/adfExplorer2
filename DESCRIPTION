@@ -30,6 +30,7 @@ Collate:
     'connect_adf.R'
     'device_info.R'
     'device_create.R'
+    'directory.R'
     'imports.R'
     's3_methods.R'
     'virtual_path.R'

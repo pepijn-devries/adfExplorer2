@@ -175,7 +175,6 @@ r_string adf_file_con_info(SEXP connection) {
 }
 
 void adf_file_con_test_class(SEXP connection) {
-  auto inherits = cpp11::package("base")["inherits"];
-  if (! inherits(connection, "adf_file_con"))
+  if (! Rf_inherits(connection, "adf_file_con"))
     Rf_error("Connection should inherit 'adf_file_con'.");
 }

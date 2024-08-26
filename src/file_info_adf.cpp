@@ -55,6 +55,7 @@ bool adf_check_volume(AdfDevice * dev, std::string vol_name,
 list adf_path_to_entry(
     SEXP connection, strings filename,
     int mode) {
+  
   if (filename.size() != 1) Rf_error("Path can only be retrieved for single string.");
   writable::strings entry_name;
   entry_name.push_back(r_string(""));
@@ -229,9 +230,42 @@ SEXP adf_change_dir(SEXP connection, strings path) {
   return R_NilValue;
 }
 
+SEXP adf_get_current_dir(SEXP connection) {
+  AdfDevice * dev = get_adf_dev_internal(connection);
+  int cur_vol = get_adf_vol_internal(connection);
+  AdfVolume * vol = dev->volList[cur_vol];
+  writable::list result({
+    "device"_nm = connection,
+      "path"_nm = adf_entry_to_path(connection, cur_vol, vol->curDirPtr, TRUE)
+  });
+  result.attr("class") = strings({"virtual_path", "list"});
+  return result;
+}
+
 void adf_change_dir_internal(SEXP connection, SECTNUM sector, int volume) {
   AdfDevice * dev = get_adf_dev_internal(connection);
   check_volume_number(dev, volume);
   AdfVolume * vol = dev->volList[volume];
   vol->curDirPtr = sector;
+}
+
+SEXP adf_mkdir(SEXP connection, r_string path) {
+  AdfDevice * dev = get_adf_dev_internal(connection);
+  
+  list entry = adf_path_to_entry(connection, strings(path), 0);
+  std::string remainder = strings(entry["remainder"]).at(0);
+  int vol_num = integers(entry["volume"]).at(0);
+  int sectype = integers(entry["header_sectype"]).at(0);
+  if (sectype != ST_ROOT && sectype != ST_DIR)
+    Rf_error("Parent of a new directory needs to be the root or another directory.");
+  check_volume_number(dev, vol_num);
+  AdfVolume * vol = dev->volList[vol_num];
+  
+  int parent = integers(entry["parent"]).at(0);
+  if (parent < vol->firstBlock || parent > vol->lastBlock) Rf_error("Invalid path");
+
+  check_adf_name(remainder);
+  RETCODE rc = adfCreateDir(vol, parent, remainder.c_str());
+  if (rc != RC_OK) Rf_error("Failed to create directory '%s'.", remainder.c_str());
+  return connection;
 }

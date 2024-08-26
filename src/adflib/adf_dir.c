@@ -78,7 +78,7 @@ RETCODE adfRenameEntry ( struct AdfVolume * const vol,
 
     nSect = adfNameToEntryBlk(vol, parent.hashTable, oldName, &entry, &prevSect);
     if (nSect==-1) {
-        (*adfEnv.wFct)("adfRenameEntry : existing entry not found");
+        //(*adfEnv.wFct)("adfRenameEntry : existing entry not found");  /* Edit PdV */
         return RC_ERROR;
     }
 
@@ -148,7 +148,7 @@ RETCODE adfRenameEntry ( struct AdfVolume * const vol,
                                 (uint8_t *) previous.name,
                                 previous.nameLen, intl );
                 if (strncmp(name3,name2,len)==0) {
-                    (*adfEnv.wFct)("adfRenameEntry : entry already exists");
+                    //(*adfEnv.wFct)("adfRenameEntry : entry already exists");  /* Edit PdV */
                     return RC_ERROR;
                 }
             }
@@ -164,7 +164,7 @@ RETCODE adfRenameEntry ( struct AdfVolume * const vol,
             rc=adfWriteFileHdrBlock(vol, previous.headerKey, 
                    (struct bFileHeaderBlock*)&previous);
         else {
-            (*adfEnv.wFct)("adfRenameEntry : unknown entry type");
+            //(*adfEnv.wFct)("adfRenameEntry : unknown entry type");  /* Edit PdV */
             rc = RC_ERROR;
         }
         if ( rc != RC_OK )
@@ -216,7 +216,7 @@ RETCODE adfRemoveEntry ( struct AdfVolume * const vol,
     struct bEntryBlock parent, previous, entry;
     SECTNUM nSect2, nSect;
     BOOL intl;
-    char buf[200];
+    //char buf[200];  /* Edit PdV */
 
     RETCODE rc = adfReadEntryBlock ( vol, pSect, &parent );
     if ( rc != RC_OK )
@@ -224,13 +224,13 @@ RETCODE adfRemoveEntry ( struct AdfVolume * const vol,
     nSect = adfNameToEntryBlk(vol, parent.hashTable, name, &entry, &nSect2);
     if (nSect==-1) {
       //sprintf(buf, "adfRemoveEntry : entry '%s' not found", name); /* Edit PdV */
-        (*adfEnv.wFct)(buf);
+        // (*adfEnv.wFct)(buf);  /* Edit PdV */
         return RC_ERROR;
     }
     /* if it is a directory, is it empty ? */
     if ( entry.secType==ST_DIR && !isDirEmpty((struct bDirBlock*)&entry) ) {
       //sprintf(buf, "adfRemoveEntry : directory '%s' not empty", name); /* Edit PdV */
-        (*adfEnv.wFct)(buf);
+        // (*adfEnv.wFct)(buf);  /* Edit PdV */
         return RC_ERROR;
     }
 /*    printf("name=%s  nSect2=%ld\n",name, nSect2);*/
@@ -262,8 +262,8 @@ RETCODE adfRemoveEntry ( struct AdfVolume * const vol,
         if ( rc != RC_OK )
             return rc;
     	adfSetBlockFree(vol, nSect); //marks the FileHeaderBlock as free in BitmapBlock
-    	if (adfEnv.useNotify)
-             (*adfEnv.notifyFct)(pSect,ST_FILE);
+    	//if (adfEnv.useNotify)  /* Edit PdV */
+      //       (*adfEnv.notifyFct)(pSect,ST_FILE);  /* Edit PdV */
     }
     else if (entry.secType==ST_DIR) {
         adfSetBlockFree(vol, nSect);
@@ -271,12 +271,12 @@ RETCODE adfRemoveEntry ( struct AdfVolume * const vol,
         if (isDIRCACHE(vol->dosType))
             adfSetBlockFree(vol, entry.extension);
 
-        if (adfEnv.useNotify)
-            (*adfEnv.notifyFct)(pSect,ST_DIR);
+        //if (adfEnv.useNotify)  /* Edit PdV */
+        //    (*adfEnv.notifyFct)(pSect,ST_DIR);  /* Edit PdV */
     }
     else {
       //sprintf(buf, "adfRemoveEntry : secType %d not supported", entry.secType); /* Edit PdV */
-        (*adfEnv.wFct)(buf);
+        //(*adfEnv.wFct)(buf);  /* Edit PdV */
         return RC_ERROR;
     }
 
@@ -309,7 +309,7 @@ RETCODE adfSetEntryComment ( struct AdfVolume * const vol,
         return rc;
     nSect = adfNameToEntryBlk(vol, parent.hashTable, name, &entry, NULL);
     if (nSect==-1) {
-        (*adfEnv.wFct)("adfSetEntryComment : entry not found");
+        //(*adfEnv.wFct)("adfSetEntryComment : entry not found");  /* Edit PdV */
         return RC_ERROR;
     }
 
@@ -327,7 +327,7 @@ RETCODE adfSetEntryComment ( struct AdfVolume * const vol,
             return rc;
     }
     else {
-        (*adfEnv.wFct)("adfSetEntryComment : entry secType incorrect");
+        //(*adfEnv.wFct)("adfSetEntryComment : entry secType incorrect");  /* Edit PdV */
         // abort here?
     }
 
@@ -356,7 +356,7 @@ RETCODE adfSetEntryAccess ( struct AdfVolume * const vol,
 
     nSect = adfNameToEntryBlk(vol, parent.hashTable, name, &entry, NULL);
     if (nSect==-1) {
-        (*adfEnv.wFct)("adfSetEntryAccess : entry not found");
+        //(*adfEnv.wFct)("adfSetEntryAccess : entry not found"); /* Edit PdV */
         return RC_ERROR;
     }
 
@@ -372,7 +372,7 @@ RETCODE adfSetEntryAccess ( struct AdfVolume * const vol,
             return rc;
     }
     else {
-        (*adfEnv.wFct)("adfSetEntryAccess : entry secType incorrect");
+        //(*adfEnv.wFct)("adfSetEntryAccess : entry secType incorrect");  /* Edit PdV */
         // abort here?
     }
 
@@ -449,7 +449,7 @@ struct AdfList * adfGetRDirEnt ( struct AdfVolume * const vol,
              entry = ( struct AdfEntry * ) malloc ( sizeof ( struct AdfEntry ) );
              if (!entry) {
                  adfFreeDirList(head);
-				 (*adfEnv.eFct)("adfGetDirEnt : malloc");
+				 //(*adfEnv.eFct)("adfGetDirEnt : malloc"); /* Edit PdV */
                  return NULL;
              }
              if (adfReadEntryBlock(vol, hashTable[i], &entryBlk)!=RC_OK) {
@@ -478,7 +478,7 @@ struct AdfList * adfGetRDirEnt ( struct AdfVolume * const vol,
                  entry = ( struct AdfEntry * ) malloc ( sizeof ( struct AdfEntry ) );
                  if (!entry) {
                      adfFreeDirList(head);
-					 (*adfEnv.eFct)("adfGetDirEnt : malloc");
+					 //(*adfEnv.eFct)("adfGetDirEnt : malloc"); /* Edit PdV */
                      return NULL;
                  }
                  if (adfReadEntryBlock(vol, nextSector, &entryBlk)!=RC_OK) {
@@ -688,7 +688,8 @@ RETCODE adfEntBlock2Entry ( const struct bEntryBlock * const entryBlk,
     case ST_LSOFT:
         break;
     default:
-        (*adfEnv.wFct)("unknown entry type");
+      return RC_ERROR;
+        //(*adfEnv.wFct)("unknown entry type");  /* Edit PdV */
     }
 	
     return RC_OK;
@@ -704,8 +705,8 @@ SECTNUM adfGetEntryByName ( struct AdfVolume * const   vol,
     struct bEntryBlock parent;
     RETCODE rc = adfReadEntryBlock ( vol, dirPtr, &parent );
     if ( rc != RC_OK ) {
-        adfEnv.eFct ( "adfGetEntryByName: error reading parent entry "
-                      "(block %d)\n", dirPtr );
+        //adfEnv.eFct ( "adfGetEntryByName: error reading parent entry "  /* Edit PdV */
+        //              "(block %d)\n", dirPtr );  /* Edit PdV */
         return rc;
     }
 
@@ -834,7 +835,7 @@ SECTNUM adfCreateEntry ( struct AdfVolume * const   vol,
         else {
             newSect = adfGet1FreeBlock(vol);
             if (newSect==-1) {
-               (*adfEnv.wFct)("adfCreateEntry : nSect==-1");
+               // (*adfEnv.wFct)("adfCreateEntry : nSect==-1"); /* Edit PdV */
                return -1;
             }
         }
@@ -867,7 +868,7 @@ SECTNUM adfCreateEntry ( struct AdfVolume * const   vol,
                             (uint8_t *) updEntry.name,
                             updEntry.nameLen, intl );
             if (strncmp(name3,name2,len)==0) {
-                (*adfEnv.wFct)("adfCreateEntry : entry already exists");
+                // (*adfEnv.wFct)("adfCreateEntry : entry already exists"); /* Edit PdV */
                 return -1;
             }
         }
@@ -879,7 +880,7 @@ SECTNUM adfCreateEntry ( struct AdfVolume * const   vol,
     else {
         newSect2 = adfGet1FreeBlock(vol);
         if (newSect2==-1) {
-            (*adfEnv.wFct)("adfCreateEntry : nSect==-1");
+            //(*adfEnv.wFct)("adfCreateEntry : nSect==-1");  /* Edit PdV */
             return -1;
         }
     }
@@ -891,8 +892,8 @@ SECTNUM adfCreateEntry ( struct AdfVolume * const   vol,
     else if (updEntry.secType==ST_FILE)
         rc=adfWriteFileHdrBlock(vol, updEntry.headerKey, 
 		    (struct bFileHeaderBlock*)&updEntry);
-    else
-        (*adfEnv.wFct)("adfCreateEntry : unknown entry type");
+    //else /* Edit PdV */
+    //    (*adfEnv.wFct)("adfCreateEntry : unknown entry type"); /* Edit PdV */
 
 /*puts("adfCreateEntry out, hash");*/
     if (rc!=RC_OK) {
@@ -1004,11 +1005,11 @@ RETCODE adfCreateDir ( struct AdfVolume * const vol,
     RETCODE rc = adfReadEntryBlock ( vol, nParent, &parent );
     if ( rc != RC_OK )
         return rc;
-
+    
     /* -1 : do not use a specific, already allocated sector */
     nSect = adfCreateEntry(vol, &parent, name, -1);
     if (nSect==-1) {
-        (*adfEnv.wFct)("adfCreateDir : no sector available");
+        //(*adfEnv.wFct)("adfCreateDir : no sector available"); /* Edit PdV */
         return RC_ERROR;
     }
     memset(&dir, 0, sizeof(struct bDirBlock));
@@ -1040,8 +1041,8 @@ RETCODE adfCreateDir ( struct AdfVolume * const vol,
 
     rc = adfUpdateBitmap ( vol );
 
-    if (adfEnv.useNotify)
-        (*adfEnv.notifyFct)(nParent,ST_DIR);
+    //if (adfEnv.useNotify) /* Edit PdV */
+    //    (*adfEnv.notifyFct)(nParent,ST_DIR); /* Edit PdV */
 
     return rc;
 }
@@ -1076,8 +1077,8 @@ RETCODE adfCreateFile ( struct AdfVolume * const        vol,
         fhdr->parent = vol->rootBlock;
     else if (parent.secType==ST_DIR)
         fhdr->parent = parent.headerKey;
-    else
-        (*adfEnv.wFct)("adfCreateFile : unknown parent secType");
+    //else  /* Edit PdV */
+    //    (*adfEnv.wFct)("adfCreateFile : unknown parent secType"); /* Edit PdV */
     adfTime2AmigaTime(adfGiveCurrentTime(),
         &(fhdr->days),&(fhdr->mins),&(fhdr->ticks));
 
@@ -1093,8 +1094,8 @@ RETCODE adfCreateFile ( struct AdfVolume * const        vol,
 
     rc = adfUpdateBitmap ( vol );
 
-    if (adfEnv.useNotify)
-        (*adfEnv.notifyFct)(nParent,ST_FILE);
+    //if (adfEnv.useNotify)  /* Edit PdV */
+    //    (*adfEnv.notifyFct)(nParent,ST_FILE);  /* Edit PdV */
 
     return rc;
 }

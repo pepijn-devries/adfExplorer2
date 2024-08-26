@@ -19,6 +19,8 @@ using namespace cpp11;
 [[cpp11::register]] r_string adf_entry_to_path(SEXP connection, int vol_num, int sectnum, bool full);
 [[cpp11::register]] strings adf_dir_list(SEXP connection, strings filename);
 [[cpp11::register]] SEXP adf_change_dir(SEXP connection, strings path);
+[[cpp11::register]] SEXP adf_get_current_dir(SEXP connection);
+[[cpp11::register]] SEXP adf_mkdir(SEXP connection, r_string path);
 bool adf_check_volume(AdfDevice * dev, std::string vol_name, int & cur_vol, int & cur_pos);
 void adf_change_dir_internal(SEXP connection, SECTNUM sector, int volume);
 

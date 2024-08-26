@@ -18,11 +18,10 @@ Files (ADF).
 ## Installation
 
 You can install the development version of adfExplorer2 from
-[GitHub](https://github.com/) with:
+[r-universe](https://pepijn-devries.r-universe.dev/adfExplorer2) with:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("pepijn-devries/adfExplorer2")
+install.packages("adfExplorer2", repos = c("https://pepijn-devries.r-universe.dev", "https://cloud.r-project.org"))
 ```
 
 ## Background
@@ -73,6 +72,10 @@ and is therefore out of the scope of this package.
 
 ``` r
 library(adfExplorer2)
+#> Warning: S3 methods 'adf_directory<-.adf_device',
+#> 'adf_directory<-.adf_device.character',
+#> 'adf_directory<-.adf_device.virtual_path' were declared in NAMESPACE but not
+#> found
 
 ## First setup a connection to a virtual device
 adz_file <- system.file("example.adz", package = "adfExplorer2")

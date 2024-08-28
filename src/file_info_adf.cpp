@@ -186,8 +186,10 @@ r_string adf_entry_to_path(SEXP connection, int vol_num, int sectnum, bool full)
   return r_string(result);
 }
 
-strings adf_dir_list(SEXP connection, strings filename) {
-  writable::strings result;
+list adf_dir_list_(SEXP connection, strings filename, logicals recursive) {
+  if (recursive.size() != 1 || recursive.at(0) == NA_LOGICAL)
+    Rf_error("'recursive' should be of length 1 and not NA.");
+  writable::list result;
   AdfDevice * dev = get_adf_dev_internal(connection);
   
   int mode = ADF_FI_EXPECT_DIR | ADF_FI_THROW_ERROR | ADF_FI_EXPECT_EXIST |
@@ -196,23 +198,39 @@ strings adf_dir_list(SEXP connection, strings filename) {
   int vol_num  = integers(entry_pos["volume"]).at(0);
   SECTNUM sect = integers(entry_pos["sector"]).at(0);
   
-  if (vol_num < 0 || sect < (SECTNUM)0) {
+  if (vol_num < 0 || sect < (SECTNUM)0)
     Rf_error("Path does not exist");
-  }
+  
   AdfVolume * vol = dev->volList[vol_num];
-  SECTNUM cur_pos = sect;
-  auto list       = new AdfList;
-  auto entry      = new AdfEntry;
+  result = adf_dir_list2_(connection, vol, sect, vol_num, recursive.at(0));
+  return result;
+}
+
+list adf_dir_list2_(SEXP connection, AdfVolume * vol,
+                    SECTNUM sector, int vol_num, r_bool recursive) {
+  writable::list result;
+  auto alist = new AdfList;
+  auto entry = new AdfEntry;
   
-  list = adfGetDirEnt ( vol, cur_pos );
-  while ( list ) {
-    entry = (AdfEntry *)list->content;
-    result.push_back(entry->name);
-    list = list->next;
+  alist = adfGetRDirEnt ( vol, sector, FALSE );
+  while ( alist ) {
+    entry = (AdfEntry *)alist->content;
+    
+    result.push_back(
+      writable::strings({
+        adf_entry_to_path(connection, vol_num, entry->sector, TRUE)
+      })
+    );
+    alist = alist->next;
+    if (entry->type == ST_DIR && recursive) {
+      result.push_back(
+        adf_dir_list2_(connection, vol, entry->sector, vol_num, recursive)
+      );
+    }
+    
   }
-  
-  adfFreeDirList(list);
-  delete list;
+  adfFreeDirList(alist);
+  delete alist;
   delete entry;
   return result;
 }
@@ -234,11 +252,12 @@ SEXP adf_get_current_dir(SEXP connection) {
   AdfDevice * dev = get_adf_dev_internal(connection);
   int cur_vol = get_adf_vol_internal(connection);
   AdfVolume * vol = dev->volList[cur_vol];
+  writable::list dev_l((R_xlen_t)0);
+  dev_l.push_back(connection);
   writable::list result({
-    "device"_nm = connection,
+    "device"_nm = dev_l,
       "path"_nm = adf_entry_to_path(connection, cur_vol, vol->curDirPtr, TRUE)
   });
-  result.attr("class") = strings({"virtual_path", "list"});
   return result;
 }
 

@@ -100,8 +100,8 @@ adf_entry_to_path <- function(connection, vol_num, sectnum, full) {
   .Call(`_adfExplorer2_adf_entry_to_path`, connection, vol_num, sectnum, full)
 }
 
-adf_dir_list <- function(connection, filename) {
-  .Call(`_adfExplorer2_adf_dir_list`, connection, filename)
+adf_dir_list_ <- function(connection, filename, recursive) {
+  .Call(`_adfExplorer2_adf_dir_list_`, connection, filename, recursive)
 }
 
 adf_change_dir <- function(connection, path) {

@@ -98,6 +98,18 @@ adf_directory(my_disk2) <- "s"
 
 ```
 
+List entries in a directory. Note that `adfExplorer2` has the capability to list the
+entries recursively (in all nested subdirectories):
+
+```{r listdir}
+# ---------------- adfExplorer
+list.adf.files(my_disk1, "DF0:")
+
+# ---------------- adfExplorer2
+adf_dir_list(my_disk2, "DF0:", recursive = TRUE)
+
+```
+
 Read from a file on the virtual disk:
 ```{r fileread}
 # ---------------- adfExplorer
@@ -125,7 +137,8 @@ rm(my_disk2)
 
 A set of tasks were defined to evaluate computational time: open an ADF file;
 show the current dir; set the current directory to a specific path; read a small
-text file from the virtual device. The plot below shows the time it took to complete
+text file from the virtual device; list all dir and file entries on the disk's root.
+The plot below shows the time it took to complete
 these tasks with both packages. `adfExplorer2` is nearly 5 times faster than its
 predecessor.
 

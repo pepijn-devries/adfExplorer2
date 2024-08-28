@@ -164,7 +164,12 @@ r_string adf_file_con_info(SEXP connection) {
   
   adf_file_con_str *afc = (adf_file_con_str *) con->private_ptr;
   AdfFile *af = afc->adf_file;
-  SEXP parent = getCon(afc->parent_con);
+  sexp parent = getCon(afc->parent_con);
+  
+  writable::strings cls = strings(parent.attr("class"));
+  cls.insert(0, "adf_device");
+  parent.attr("class") = cls;
+
   std::string path = adf_entry_to_path(parent, afc->vol_num,
                                        af->fileHdr->headerKey, TRUE);
   std::string access = "read only";

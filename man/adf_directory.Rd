@@ -61,7 +61,7 @@ use \code{adf_directory()} in combination with the assign operator (\verb{<-}).
 To create a new directory on a device use \code{adf_make_dir()} and use a full or
 relative path name to specify the new directory name.
 
-See \verb{vignette("virtual_path)} for a note on file and directory names on the Amiga.
+See \code{vignette("virtual_paths")} for a note on file and directory names on the Amiga.
 }
 \examples{
 ## First setup a connection to a virtual device

@@ -2,7 +2,8 @@
 #' 
 #' Format and print methods for all S3 class objects created with `adfExplorer2`
 #' 
-#' @param x Object to be formated or printed
+#' @param x Object to be formatted or printed
+#' @param width Set the text width for formatting virtual paths
 #' @param ... Ignored or passed on to next methods
 #' @rdname s3_methods
 #' @export format.adf_device
@@ -46,26 +47,46 @@ format.adf_block <- function(x, ...) {
 #' @rdname s3_methods
 #' @export format.virtual_path
 #' @export
-format.virtual_path <- function(x, ...) {
-  entry <- adf_path_to_entry(x$device, x$path, 0)
-  if (entry$sector < 0) return ("Invalid path")
-  info <-
-    switch(
-      as.character(entry$header_sectype),
-      `-3` = interpret_file_header(x$device, entry$volume, entry$sector),
-      `2`  = interpret_dir_header(x$device, entry$volume, entry$sector),
-      `1`  = interpret_root_header(x$device, entry$volume))
-  size <- sprintf("%5.1f kB", info$byteSize/1024)
-  if (length(size) == 0) size <- strrep(" ", 8)
-  if (!(!is.null(info$access) && is.logical(info$access)))
-    access <- strrep(" ", 8) else
-    access <-
-    ifelse(info$access, names(info$access), "-") |> paste(collapse = "")
-  sprintf("%-4s %s %s %s",
-          info$secType,
-          size,
-          access,
-          info[grepl("NAME", toupper(names(info)))])
+format.virtual_path <- function(x, width = 20L, ...) {
+  abbr <- (length(x) > 1)
+  x <- unclass(x)
+  lapply (seq_len(length(x$path)), \(i) {
+    entry <- adf_path_to_entry(x$device[[i]], x$path[[i]], 0)
+    if (entry$sector < 0) return ("Invalid path")
+    info <-
+      switch(
+        as.character(entry$header_sectype),
+        `-3` = interpret_file_header(x$device[[i]], entry$volume, entry$sector),
+        `2`  = interpret_dir_header(x$device[[i]], entry$volume, entry$sector),
+        `1`  = interpret_root_header(x$device[[i]], entry$volume))
+    size <- sprintf("%5.1f kB", info$byteSize/1024)
+    if (length(size) == 0) size <- strrep(" ", 8)
+    if (!(!is.null(info$access) && is.logical(info$access)))
+      access <- strrep(" ", 8) else
+        access <-
+      ifelse(info$access, names(info$access), "-") |> paste(collapse = "")
+    result <- sprintf("%-4s %s %s %s",
+                      info$secType,
+                      size,
+                      access,
+                      info[grepl("NAME", toupper(names(info)))])
+    if (abbr) {
+      len <- nchar(result)
+      l <- 5L
+      r <- width - 3L - l
+      if (len > width) {
+        result <- paste0(
+          substr(result, 1L, l),
+          "...",
+          substr(result, len - r, len)
+        )
+      } else if (len < width) {
+        result <- paste0(result, strrep(" ", width - len))
+      }
+    }
+    result
+  }) |>
+    unlist()
 }
 
 #' @rdname s3_methods
@@ -91,8 +112,15 @@ print.adf_block <- function(x, ...) {
 #' @rdname s3_methods
 #' @export
 print.virtual_path <- function(x, ...) {
-  cat(format(x, ...))
-  cat("\n")
+  len <- min(length(x), options("max.print")[[1]])
+  cat(paste(format(x[seq_len(len)], ...), collapse = "\n"))
+}
+
+#' @rdname s3_methods
+#' @export
+as.character.virtual_path <- function(x, ...) {
+  x <- unclass(x)
+  x$path
 }
 
 .displayRawData <- function(x, ncol = 4, col.wid = 4, address.len = 3, hex.upper = T) {

@@ -181,10 +181,10 @@ extern "C" SEXP _adfExplorer2_adf_entry_to_path(SEXP connection, SEXP vol_num, S
   END_CPP11
 }
 // file_info_adf.h
-strings adf_dir_list(SEXP connection, strings filename);
-extern "C" SEXP _adfExplorer2_adf_dir_list(SEXP connection, SEXP filename) {
+list adf_dir_list_(SEXP connection, strings filename, logicals recursive);
+extern "C" SEXP _adfExplorer2_adf_dir_list_(SEXP connection, SEXP filename, SEXP recursive) {
   BEGIN_CPP11
-    return cpp11::as_sexp(adf_dir_list(cpp11::as_cpp<cpp11::decay_t<SEXP>>(connection), cpp11::as_cpp<cpp11::decay_t<strings>>(filename)));
+    return cpp11::as_sexp(adf_dir_list_(cpp11::as_cpp<cpp11::decay_t<SEXP>>(connection), cpp11::as_cpp<cpp11::decay_t<strings>>(filename), cpp11::as_cpp<cpp11::decay_t<logicals>>(recursive)));
   END_CPP11
 }
 // file_info_adf.h
@@ -219,7 +219,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_adfExplorer2_adf_dev_nvol",           (DL_FUNC) &_adfExplorer2_adf_dev_nvol,           1},
     {"_adfExplorer2_adf_dev_size",           (DL_FUNC) &_adfExplorer2_adf_dev_size,           1},
     {"_adfExplorer2_adf_dev_type",           (DL_FUNC) &_adfExplorer2_adf_dev_type,           1},
-    {"_adfExplorer2_adf_dir_list",           (DL_FUNC) &_adfExplorer2_adf_dir_list,           2},
+    {"_adfExplorer2_adf_dir_list_",          (DL_FUNC) &_adfExplorer2_adf_dir_list_,          3},
     {"_adfExplorer2_adf_entry_to_path",      (DL_FUNC) &_adfExplorer2_adf_entry_to_path,      4},
     {"_adfExplorer2_adf_file_con_",          (DL_FUNC) &_adfExplorer2_adf_file_con_,          3},
     {"_adfExplorer2_adf_file_con_info",      (DL_FUNC) &_adfExplorer2_adf_file_con_info,      1},

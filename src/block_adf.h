@@ -14,5 +14,6 @@ logicals access_from_int(int access);
 [[cpp11::register]] list interpret_root_header(SEXP connection, int vol_num);
 [[cpp11::register]] list interpret_file_header(SEXP connection, int vol_num, int sectnum);
 [[cpp11::register]] list interpret_dir_header(SEXP connection, int vol_num, int sectnum);
+raws adf_bootable_code(void);
 
 #endif /* __BLOCK_ADF__ */

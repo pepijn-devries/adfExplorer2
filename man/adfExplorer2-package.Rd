@@ -14,6 +14,7 @@ Amiga Disk Files (ADF) are virtual representations of 3.5 inch floppy disks for 
 Useful links:
 \itemize{
   \item \url{https://pepijn-devries.github.io/adfExplorer2/}
+  \item Report bugs at \url{https://github.com/pepijn-devries/adfExplorer2/issues}
 }
 
 }

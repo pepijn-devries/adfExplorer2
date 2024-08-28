@@ -55,10 +55,10 @@ extern "C" SEXP _adfExplorer2_connect_adf_(SEXP filename, SEXP write_protected) 
   END_CPP11
 }
 // dev_format.h
-SEXP adf_dev_format(SEXP connection, SEXP name, cpp11::logicals ffs, cpp11::logicals intl, cpp11::logicals dircache);
-extern "C" SEXP _adfExplorer2_adf_dev_format(SEXP connection, SEXP name, SEXP ffs, SEXP intl, SEXP dircache) {
+SEXP adf_dev_format(SEXP connection, SEXP name, cpp11::logicals ffs, cpp11::logicals intl, cpp11::logicals dircache, cpp11::logicals bootable);
+extern "C" SEXP _adfExplorer2_adf_dev_format(SEXP connection, SEXP name, SEXP ffs, SEXP intl, SEXP dircache, SEXP bootable) {
   BEGIN_CPP11
-    return cpp11::as_sexp(adf_dev_format(cpp11::as_cpp<cpp11::decay_t<SEXP>>(connection), cpp11::as_cpp<cpp11::decay_t<SEXP>>(name), cpp11::as_cpp<cpp11::decay_t<cpp11::logicals>>(ffs), cpp11::as_cpp<cpp11::decay_t<cpp11::logicals>>(intl), cpp11::as_cpp<cpp11::decay_t<cpp11::logicals>>(dircache)));
+    return cpp11::as_sexp(adf_dev_format(cpp11::as_cpp<cpp11::decay_t<SEXP>>(connection), cpp11::as_cpp<cpp11::decay_t<SEXP>>(name), cpp11::as_cpp<cpp11::decay_t<cpp11::logicals>>(ffs), cpp11::as_cpp<cpp11::decay_t<cpp11::logicals>>(intl), cpp11::as_cpp<cpp11::decay_t<cpp11::logicals>>(dircache), cpp11::as_cpp<cpp11::decay_t<cpp11::logicals>>(bootable)));
   END_CPP11
 }
 // dev_info.h
@@ -181,10 +181,10 @@ extern "C" SEXP _adfExplorer2_adf_entry_to_path(SEXP connection, SEXP vol_num, S
   END_CPP11
 }
 // file_info_adf.h
-strings adf_dir_list(SEXP connection, strings filename);
-extern "C" SEXP _adfExplorer2_adf_dir_list(SEXP connection, SEXP filename) {
+list adf_dir_list_(SEXP connection, strings filename, logicals recursive);
+extern "C" SEXP _adfExplorer2_adf_dir_list_(SEXP connection, SEXP filename, SEXP recursive) {
   BEGIN_CPP11
-    return cpp11::as_sexp(adf_dir_list(cpp11::as_cpp<cpp11::decay_t<SEXP>>(connection), cpp11::as_cpp<cpp11::decay_t<strings>>(filename)));
+    return cpp11::as_sexp(adf_dir_list_(cpp11::as_cpp<cpp11::decay_t<SEXP>>(connection), cpp11::as_cpp<cpp11::decay_t<strings>>(filename), cpp11::as_cpp<cpp11::decay_t<logicals>>(recursive)));
   END_CPP11
 }
 // file_info_adf.h
@@ -194,27 +194,43 @@ extern "C" SEXP _adfExplorer2_adf_change_dir(SEXP connection, SEXP path) {
     return cpp11::as_sexp(adf_change_dir(cpp11::as_cpp<cpp11::decay_t<SEXP>>(connection), cpp11::as_cpp<cpp11::decay_t<strings>>(path)));
   END_CPP11
 }
+// file_info_adf.h
+SEXP adf_get_current_dir(SEXP connection);
+extern "C" SEXP _adfExplorer2_adf_get_current_dir(SEXP connection) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(adf_get_current_dir(cpp11::as_cpp<cpp11::decay_t<SEXP>>(connection)));
+  END_CPP11
+}
+// file_info_adf.h
+SEXP adf_mkdir(SEXP connection, r_string path);
+extern "C" SEXP _adfExplorer2_adf_mkdir(SEXP connection, SEXP path) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(adf_mkdir(cpp11::as_cpp<cpp11::decay_t<SEXP>>(connection), cpp11::as_cpp<cpp11::decay_t<r_string>>(path)));
+  END_CPP11
+}
 
 extern "C" {
 static const R_CallMethodDef CallEntries[] = {
     {"_adfExplorer2_adf_block_size",         (DL_FUNC) &_adfExplorer2_adf_block_size,         2},
     {"_adfExplorer2_adf_change_dir",         (DL_FUNC) &_adfExplorer2_adf_change_dir,         2},
     {"_adfExplorer2_adf_check_file_reg",     (DL_FUNC) &_adfExplorer2_adf_check_file_reg,     2},
-    {"_adfExplorer2_adf_dev_format",         (DL_FUNC) &_adfExplorer2_adf_dev_format,         5},
+    {"_adfExplorer2_adf_dev_format",         (DL_FUNC) &_adfExplorer2_adf_dev_format,         6},
     {"_adfExplorer2_adf_dev_name",           (DL_FUNC) &_adfExplorer2_adf_dev_name,           2},
     {"_adfExplorer2_adf_dev_nvol",           (DL_FUNC) &_adfExplorer2_adf_dev_nvol,           1},
     {"_adfExplorer2_adf_dev_size",           (DL_FUNC) &_adfExplorer2_adf_dev_size,           1},
     {"_adfExplorer2_adf_dev_type",           (DL_FUNC) &_adfExplorer2_adf_dev_type,           1},
-    {"_adfExplorer2_adf_dir_list",           (DL_FUNC) &_adfExplorer2_adf_dir_list,           2},
+    {"_adfExplorer2_adf_dir_list_",          (DL_FUNC) &_adfExplorer2_adf_dir_list_,          3},
     {"_adfExplorer2_adf_entry_to_path",      (DL_FUNC) &_adfExplorer2_adf_entry_to_path,      4},
     {"_adfExplorer2_adf_file_con_",          (DL_FUNC) &_adfExplorer2_adf_file_con_,          3},
     {"_adfExplorer2_adf_file_con_info",      (DL_FUNC) &_adfExplorer2_adf_file_con_info,      1},
     {"_adfExplorer2_adf_free_blocks",        (DL_FUNC) &_adfExplorer2_adf_free_blocks,        2},
+    {"_adfExplorer2_adf_get_current_dir",    (DL_FUNC) &_adfExplorer2_adf_get_current_dir,    1},
     {"_adfExplorer2_adf_is_bootable",        (DL_FUNC) &_adfExplorer2_adf_is_bootable,        2},
     {"_adfExplorer2_adf_is_dircache",        (DL_FUNC) &_adfExplorer2_adf_is_dircache,        2},
     {"_adfExplorer2_adf_is_ffs",             (DL_FUNC) &_adfExplorer2_adf_is_ffs,             2},
     {"_adfExplorer2_adf_is_intl",            (DL_FUNC) &_adfExplorer2_adf_is_intl,            2},
     {"_adfExplorer2_adf_is_write_protected", (DL_FUNC) &_adfExplorer2_adf_is_write_protected, 1},
+    {"_adfExplorer2_adf_mkdir",              (DL_FUNC) &_adfExplorer2_adf_mkdir,              2},
     {"_adfExplorer2_adf_path_to_entry",      (DL_FUNC) &_adfExplorer2_adf_path_to_entry,      3},
     {"_adfExplorer2_adf_upper",              (DL_FUNC) &_adfExplorer2_adf_upper,              2},
     {"_adfExplorer2_adf_vol_size",           (DL_FUNC) &_adfExplorer2_adf_vol_size,           2},

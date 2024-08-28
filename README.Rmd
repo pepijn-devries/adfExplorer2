@@ -25,12 +25,12 @@ It can be used to read from and write to virtual Amiga Disks, a.k.a Amiga Disk F
 
 ## Installation
 
-You can install the development version of adfExplorer2 from [GitHub](https://github.com/) with:
+You can install the development version of adfExplorer2 from [r-universe](https://pepijn-devries.r-universe.dev/adfExplorer2) with:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("pepijn-devries/adfExplorer2")
+install.packages("adfExplorer2", repos = c("https://pepijn-devries.r-universe.dev", "https://cloud.r-project.org"))
 ```
+
 ## Background
 
 ### Amiga Disk Files

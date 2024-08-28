@@ -9,6 +9,7 @@
 \alias{print.adf_file_con}
 \alias{print.adf_block}
 \alias{print.virtual_path}
+\alias{as.character.virtual_path}
 \title{Basic methods for S3 class objects}
 \usage{
 \method{format}{adf_device}(x, ...)
@@ -17,7 +18,7 @@
 
 \method{format}{adf_block}(x, ...)
 
-\method{format}{virtual_path}(x, ...)
+\method{format}{virtual_path}(x, width = 20L, ...)
 
 \method{print}{adf_device}(x, ...)
 
@@ -26,11 +27,15 @@
 \method{print}{adf_block}(x, ...)
 
 \method{print}{virtual_path}(x, ...)
+
+\method{as.character}{virtual_path}(x, ...)
 }
 \arguments{
-\item{x}{Object to be formated or printed}
+\item{x}{Object to be formatted or printed}
 
 \item{...}{Ignored or passed on to next methods}
+
+\item{width}{Set the text width for formatting virtual paths}
 }
 \description{
 Format and print methods for all S3 class objects created with \code{adfExplorer2}

@@ -14,6 +14,7 @@ prepare_adf_device(
   ffs = TRUE,
   international = TRUE,
   dircache = FALSE,
+  bootable = TRUE,
   ...
 )
 
@@ -23,6 +24,7 @@ prepare_adf_device(
   ffs = TRUE,
   international = TRUE,
   dircache = FALSE,
+  bootable = TRUE,
   ...
 )
 }
@@ -56,6 +58,16 @@ should be used for file naming. See also \code{vignette("file_system_modes")}.}
 
 \item{dircache}{A \code{logical} value indicating whether directory caching should be
 used. See also \code{vignette("file_system_modes")}.}
+
+\item{bootable}{A \code{logical} value indicating whether you want to include executable
+code on the boot block. If set to \code{TRUE} minimal code will be added to the boot block.
+In an Amiga emulator, this code will load the Amiga Disk Operating System library
+and start the Amiga Command line interface (CLI). It will then run the startup
+sequence file from the disk (if available).
+
+If set to \code{FALSE} no such code is added. In that case the file system will still be
+accessible by the Amiga operating system (if the file system mode is compatible).
+You just can't use the disk to start up a (virtual) Amiga machine.}
 }
 \value{
 Either an \code{adf_device} connection or \code{NULL} depending on the value of

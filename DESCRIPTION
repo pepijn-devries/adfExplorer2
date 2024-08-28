@@ -1,6 +1,6 @@
 Package: adfExplorer2
 Title: Access and Manipulate Amiga Disk Files
-Version: 0.0.0.9001
+Version: 0.0.0.9002
 Authors@R:
     person("Pepijn", "de Vries", role = c("aut", "cre"),
     email = "pepijn.devries@outlook.com",
@@ -30,11 +30,19 @@ Collate:
     'connect_adf.R'
     'device_info.R'
     'device_create.R'
+    'helpers.R'
+    'directory.R'
     'imports.R'
+    'init.R'
     's3_methods.R'
     'virtual_path.R'
-Suggests: 
+Imports:
+    methods,
+    vctrs
+Suggests:
+    adfExplorer,
     knitr,
     rmarkdown
 VignetteBuilder: knitr
 URL: https://pepijn-devries.github.io/adfExplorer2/
+BugReports: https://github.com/pepijn-devries/adfExplorer2/issues

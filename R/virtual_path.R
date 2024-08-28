@@ -30,7 +30,5 @@ virtual_path <- function(dev, virtual_path) {
   if (typeof(virtual_path) != "character") stop("`virtual_path` should be of type `character`.")
   if (length(virtual_path) != 1) stop("Length of `virtual_path` should be 1.")
   if (is.na(virtual_path)) stop("`virtual_path` cannot be `NA`")
-  result <- list(device = dev, path = virtual_path)
-  class(result) <- union("virtual_path", class(result))
-  result
+  vctrs::new_rcrd(list(device = list(dev), path = virtual_path), class = "virtual_path")
 }

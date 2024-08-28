@@ -55,6 +55,7 @@ bool adf_check_volume(AdfDevice * dev, std::string vol_name,
 list adf_path_to_entry(
     SEXP connection, strings filename,
     int mode) {
+  
   if (filename.size() != 1) Rf_error("Path can only be retrieved for single string.");
   writable::strings entry_name;
   entry_name.push_back(r_string(""));
@@ -185,8 +186,10 @@ r_string adf_entry_to_path(SEXP connection, int vol_num, int sectnum, bool full)
   return r_string(result);
 }
 
-strings adf_dir_list(SEXP connection, strings filename) {
-  writable::strings result;
+list adf_dir_list_(SEXP connection, strings filename, logicals recursive) {
+  if (recursive.size() != 1 || recursive.at(0) == NA_LOGICAL)
+    Rf_error("'recursive' should be of length 1 and not NA.");
+  writable::list result;
   AdfDevice * dev = get_adf_dev_internal(connection);
   
   int mode = ADF_FI_EXPECT_DIR | ADF_FI_THROW_ERROR | ADF_FI_EXPECT_EXIST |
@@ -195,23 +198,39 @@ strings adf_dir_list(SEXP connection, strings filename) {
   int vol_num  = integers(entry_pos["volume"]).at(0);
   SECTNUM sect = integers(entry_pos["sector"]).at(0);
   
-  if (vol_num < 0 || sect < (SECTNUM)0) {
+  if (vol_num < 0 || sect < (SECTNUM)0)
     Rf_error("Path does not exist");
-  }
+  
   AdfVolume * vol = dev->volList[vol_num];
-  SECTNUM cur_pos = sect;
-  auto list       = new AdfList;
-  auto entry      = new AdfEntry;
+  result = adf_dir_list2_(connection, vol, sect, vol_num, recursive.at(0));
+  return result;
+}
+
+list adf_dir_list2_(SEXP connection, AdfVolume * vol,
+                    SECTNUM sector, int vol_num, r_bool recursive) {
+  writable::list result;
+  auto alist = new AdfList;
+  auto entry = new AdfEntry;
   
-  list = adfGetDirEnt ( vol, cur_pos );
-  while ( list ) {
-    entry = (AdfEntry *)list->content;
-    result.push_back(entry->name);
-    list = list->next;
+  alist = adfGetRDirEnt ( vol, sector, FALSE );
+  while ( alist ) {
+    entry = (AdfEntry *)alist->content;
+    
+    result.push_back(
+      writable::strings({
+        adf_entry_to_path(connection, vol_num, entry->sector, TRUE)
+      })
+    );
+    alist = alist->next;
+    if (entry->type == ST_DIR && recursive) {
+      result.push_back(
+        adf_dir_list2_(connection, vol, entry->sector, vol_num, recursive)
+      );
+    }
+    
   }
-  
-  adfFreeDirList(list);
-  delete list;
+  adfFreeDirList(alist);
+  delete alist;
   delete entry;
   return result;
 }
@@ -229,9 +248,43 @@ SEXP adf_change_dir(SEXP connection, strings path) {
   return R_NilValue;
 }
 
+SEXP adf_get_current_dir(SEXP connection) {
+  AdfDevice * dev = get_adf_dev_internal(connection);
+  int cur_vol = get_adf_vol_internal(connection);
+  AdfVolume * vol = dev->volList[cur_vol];
+  writable::list dev_l((R_xlen_t)0);
+  dev_l.push_back(connection);
+  writable::list result({
+    "device"_nm = dev_l,
+      "path"_nm = adf_entry_to_path(connection, cur_vol, vol->curDirPtr, TRUE)
+  });
+  return result;
+}
+
 void adf_change_dir_internal(SEXP connection, SECTNUM sector, int volume) {
   AdfDevice * dev = get_adf_dev_internal(connection);
   check_volume_number(dev, volume);
   AdfVolume * vol = dev->volList[volume];
   vol->curDirPtr = sector;
+}
+
+SEXP adf_mkdir(SEXP connection, r_string path) {
+  AdfDevice * dev = get_adf_dev_internal(connection);
+  
+  list entry = adf_path_to_entry(connection, strings(path), 0);
+  std::string remainder = strings(entry["remainder"]).at(0);
+  int vol_num = integers(entry["volume"]).at(0);
+  int sectype = integers(entry["header_sectype"]).at(0);
+  if (sectype != ST_ROOT && sectype != ST_DIR)
+    Rf_error("Parent of a new directory needs to be the root or another directory.");
+  check_volume_number(dev, vol_num);
+  AdfVolume * vol = dev->volList[vol_num];
+  
+  int parent = integers(entry["parent"]).at(0);
+  if (parent < vol->firstBlock || parent > vol->lastBlock) Rf_error("Invalid path");
+
+  check_adf_name(remainder);
+  RETCODE rc = adfCreateDir(vol, parent, remainder.c_str());
+  if (rc != RC_OK) Rf_error("Failed to create directory '%s'.", remainder.c_str());
+  return connection;
 }

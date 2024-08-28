@@ -69,12 +69,22 @@ create_adf_device <- function(destination, type = "DD", ..., connect = TRUE) {
 #' should be used for file naming. See also `vignette("file_system_modes")`.
 #' @param dircache A `logical` value indicating whether directory caching should be
 #' used. See also `vignette("file_system_modes")`.
+#' @param bootable A `logical` value indicating whether you want to include executable
+#' code on the boot block. If set to `TRUE` minimal code will be added to the boot block.
+#' In an Amiga emulator, this code will load the Amiga Disk Operating System library
+#' and start the Amiga Command line interface (CLI). It will then run the startup
+#' sequence file from the disk (if available).
+#' 
+#' If set to `FALSE` no such code is added. In that case the file system will still be
+#' accessible by the Amiga operating system (if the file system mode is compatible).
+#' You just can't use the disk to start up a (virtual) Amiga machine.
 #' @param ... Ignored for `prepare_adf_device()`.
 #' @include device_info.R
 #' @rdname create_adf_device
 #' @export
 prepare_adf_device <- function(dev, name = "EMPTY",
                               ffs = TRUE, international = TRUE, dircache = FALSE,
+                              bootable = TRUE,
                               ...) {
   UseMethod("prepare_adf_device", dev)
 }
@@ -83,6 +93,7 @@ prepare_adf_device <- function(dev, name = "EMPTY",
 #' @export
 prepare_adf_device.adf_device <- function(dev, name = "EMPTY",
                                          ffs = TRUE, international = TRUE, dircache = FALSE,
+                                         bootable = TRUE,
                                          ...) {
-  adf_dev_format(dev, name, ffs, international, dircache) |> invisible()
+  adf_dev_format(dev, name, ffs, international, dircache, bootable) |> invisible()
 }

@@ -112,5 +112,7 @@ adf_file_con.adf_device.character <- function(x, virtual_path, ..., writable = F
 #' @name adf_file_con
 #' @export
 adf_file_con.virtual_path <- function(x, ..., writable = FALSE) {
-  adf_file_con_(x$device, x$path, writable)
+  if (length(x) != 1) stop("'virtual_path' should be of length 1.")
+  x <- unclass(x)
+  adf_file_con_(x$device[[1]], x$path[[1]], writable)
 }

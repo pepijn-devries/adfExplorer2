@@ -72,10 +72,6 @@ and is therefore out of the scope of this package.
 
 ``` r
 library(adfExplorer2)
-#> Warning: S3 methods 'adf_directory<-.adf_device',
-#> 'adf_directory<-.adf_device.character',
-#> 'adf_directory<-.adf_device.virtual_path' were declared in NAMESPACE but not
-#> found
 
 ## First setup a connection to a virtual device
 adz_file <- system.file("example.adz", package = "adfExplorer2")

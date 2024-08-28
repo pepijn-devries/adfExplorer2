@@ -2,9 +2,10 @@ pandoc: 3.1.11
 pkgdown: 2.1.0
 pkgdown_sha: ~
 articles:
+  adfExplorer_vs_adfExplorer2: adfExplorer_vs_adfExplorer2.html
   file_system_modes: file_system_modes.html
   virtual_paths: virtual_paths.html
-last_built: 2024-08-25T11:36Z
+last_built: 2024-08-28T21:27Z
 urls:
   reference: https://pepijn-devries.github.io/adfExplorer2/reference
   article: https://pepijn-devries.github.io/adfExplorer2/articles

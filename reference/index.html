@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">adfExplorer2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9002</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -18,12 +18,14 @@
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/file_system_modes.html">ADF File System Modes</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/adfExplorer_vs_adfExplorer2.html">adfExplorer vs. adfExplorer2</a></li>
+    <li><a class="dropdown-item" href="../articles/file_system_modes.html">ADF File System Modes</a></li>
     <li><a class="dropdown-item" href="../articles/virtual_paths.html">Virtual Paths</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/pepijn-devries/adfExplorer2/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul></div>
 
 
@@ -53,6 +55,18 @@
         <dd>Read or write raw data blocks to a virtual device</dd>
       </dl><dl><dt>
 
+          <code><a href="adf_dir_list.html">adf_dir_list()</a></code> <code><a href="adf_dir_list.html">adf_dir_list.adf_device(<i>&lt;character&gt;</i>)</a></code> <code><a href="adf_dir_list.html">adf_dir_list.adf_device(<i>&lt;virtual_path&gt;</i>)</a></code>
+
+        </dt>
+        <dd>List entries in a directory of a virtual ADF device</dd>
+      </dl><dl><dt>
+
+          <code><a href="adf_directory.html">adf_directory()</a></code> <code><a href="adf_directory.html">`adf_directory&lt;-`()</a></code> <code><a href="adf_directory.html">`adf_directory.adf_device&lt;-`(<i>&lt;character&gt;</i>)</a></code> <code><a href="adf_directory.html">`adf_directory.adf_device&lt;-`(<i>&lt;virtual_path&gt;</i>)</a></code> <code><a href="adf_directory.html">adf_make_dir()</a></code> <code><a href="adf_directory.html">adf_make_dir.adf_device(<i>&lt;character&gt;</i>)</a></code> <code><a href="adf_directory.html">adf_make_dir.adf_device(<i>&lt;virtual_path&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Changing and creating directories on a virtual device</dd>
+      </dl><dl><dt>
+
           <code><a href="adf_file_con.html">adf_file_con()</a></code> <code><a href="adf_file_con.html">adf_file_con.adf_device(<i>&lt;character&gt;</i>)</a></code>
 
         </dt>
@@ -77,7 +91,7 @@
         <dd>Obtain information about an <code>adf_device</code> connection</dd>
       </dl><dl><dt>
 
-          <code><a href="s3_methods.html">format(<i>&lt;adf_device&gt;</i>)</a></code> <code><a href="s3_methods.html">format(<i>&lt;adf_file_con&gt;</i>)</a></code> <code><a href="s3_methods.html">format(<i>&lt;adf_block&gt;</i>)</a></code> <code><a href="s3_methods.html">format(<i>&lt;virtual_path&gt;</i>)</a></code> <code><a href="s3_methods.html">print(<i>&lt;adf_device&gt;</i>)</a></code> <code><a href="s3_methods.html">print(<i>&lt;adf_file_con&gt;</i>)</a></code> <code><a href="s3_methods.html">print(<i>&lt;adf_block&gt;</i>)</a></code> <code><a href="s3_methods.html">print(<i>&lt;virtual_path&gt;</i>)</a></code>
+          <code><a href="s3_methods.html">format(<i>&lt;adf_device&gt;</i>)</a></code> <code><a href="s3_methods.html">format(<i>&lt;adf_file_con&gt;</i>)</a></code> <code><a href="s3_methods.html">format(<i>&lt;adf_block&gt;</i>)</a></code> <code><a href="s3_methods.html">format(<i>&lt;virtual_path&gt;</i>)</a></code> <code><a href="s3_methods.html">print(<i>&lt;adf_device&gt;</i>)</a></code> <code><a href="s3_methods.html">print(<i>&lt;adf_file_con&gt;</i>)</a></code> <code><a href="s3_methods.html">print(<i>&lt;adf_block&gt;</i>)</a></code> <code><a href="s3_methods.html">print(<i>&lt;virtual_path&gt;</i>)</a></code> <code><a href="s3_methods.html">as.character(<i>&lt;virtual_path&gt;</i>)</a></code>
 
         </dt>
         <dd>Basic methods for S3 class objects</dd>

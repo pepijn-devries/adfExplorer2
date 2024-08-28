@@ -19,7 +19,7 @@ disk space on the virtual device."><meta property="og:image" content="https://pe
 
     <a class="navbar-brand me-2" href="../index.html">adfExplorer2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9002</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -30,12 +30,14 @@ disk space on the virtual device."><meta property="og:image" content="https://pe
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/file_system_modes.html">ADF File System Modes</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/adfExplorer_vs_adfExplorer2.html">adfExplorer vs. adfExplorer2</a></li>
+    <li><a class="dropdown-item" href="../articles/file_system_modes.html">ADF File System Modes</a></li>
     <li><a class="dropdown-item" href="../articles/virtual_paths.html">Virtual Paths</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/pepijn-devries/adfExplorer2/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul></div>
 
 
@@ -44,7 +46,7 @@ disk space on the virtual device."><meta property="og:image" content="https://pe
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.svg" class="logo" alt=""><h1>Create and format a virtual ADF device</h1>
-
+      <small class="dont-index">Source: <a href="https://github.com/pepijn-devries/adfExplorer2/blob/master/R/device_create.R" class="external-link"><code>R/device_create.R</code></a></small>
       <div class="d-none name"><code>create_adf_device.Rd</code></div>
     </div>
 
@@ -68,6 +70,7 @@ disk space on the virtual device.</p>
 <span>  ffs <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  international <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  dircache <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  bootable <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -78,6 +81,7 @@ disk space on the virtual device.</p>
 <span>  ffs <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  international <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  dircache <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  bootable <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -132,6 +136,17 @@ should be used for file naming. See also <code><a href="../articles/file_system_
 <dt id="arg-dircache">dircache<a class="anchor" aria-label="anchor" href="#arg-dircache"></a></dt>
 <dd><p>A <code>logical</code> value indicating whether directory caching should be
 used. See also <code><a href="../articles/file_system_modes.html">vignette("file_system_modes")</a></code>.</p></dd>
+
+
+<dt id="arg-bootable">bootable<a class="anchor" aria-label="anchor" href="#arg-bootable"></a></dt>
+<dd><p>A <code>logical</code> value indicating whether you want to include executable
+code on the boot block. If set to <code>TRUE</code> minimal code will be added to the boot block.
+In an Amiga emulator, this code will load the Amiga Disk Operating System library
+and start the Amiga Command line interface (CLI). It will then run the startup
+sequence file from the disk (if available).</p>
+<p>If set to <code>FALSE</code> no such code is added. In that case the file system will still be
+accessible by the Amiga operating system (if the file system mode is compatible).
+You just can't use the disk to start up a (virtual) Amiga machine.</p></dd>
 
 </dl></div>
     <div class="section level2">

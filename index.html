@@ -23,7 +23,7 @@
 
     <a class="navbar-brand me-2" href="index.html">adfExplorer2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9002</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,7 +36,8 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="articles/file_system_modes.html">ADF File System Modes</a></li>
+<li><a class="dropdown-item" href="articles/adfExplorer_vs_adfExplorer2.html">adfExplorer vs. adfExplorer2</a></li>
+    <li><a class="dropdown-item" href="articles/file_system_modes.html">ADF File System Modes</a></li>
     <li><a class="dropdown-item" href="articles/virtual_paths.html">Virtual Paths</a></li>
   </ul>
 </li>
@@ -46,6 +47,7 @@
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json">
 </form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/pepijn-devries/adfExplorer2/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -65,10 +67,9 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install the development version of adfExplorer2 from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
+<p>You can install the development version of adfExplorer2 from <a href="https://pepijn-devries.r-universe.dev/adfExplorer2" class="external-link">r-universe</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"pepijn-devries/adfExplorer2"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"adfExplorer2"</span>, repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"https://pepijn-devries.r-universe.dev"</span>, <span class="st">"https://cloud.r-project.org"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="background">Background<a class="anchor" aria-label="anchor" href="#background"></a>
@@ -96,6 +97,10 @@
 </h2>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://pepijn-devries.github.io/adfExplorer2/">adfExplorer2</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: S3 methods 'adf_directory&lt;-.adf_device',</span></span>
+<span><span class="co">#&gt; 'adf_directory&lt;-.adf_device.character',</span></span>
+<span><span class="co">#&gt; 'adf_directory&lt;-.adf_device.virtual_path' were declared in NAMESPACE but not</span></span>
+<span><span class="co">#&gt; found</span></span>
 <span></span>
 <span><span class="co">## First setup a connection to a virtual device</span></span>
 <span><span class="va">adz_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"example.adz"</span>, package <span class="op">=</span> <span class="st">"adfExplorer2"</span><span class="op">)</span></span>
@@ -124,7 +129,15 @@
 <p>Please note that the adfExplorer2 project is released with a <a href="https://contributor-covenant.org/version/2/1/CODE_OF_CONDUCT.html" class="external-link">Contributor Code of Conduct</a>. By contributing to this project, you agree to abide by its terms.</p>
 </div>
 </div>
-  </main><aside class="col-md-3"><div class="license">
+  </main><aside class="col-md-3"><div class="links">
+<h2 data-toc-skip>Links</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/pepijn-devries/adfExplorer2/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/pepijn-devries/adfExplorer2/issues" class="external-link">Report a bug</a></li>
+</ul>
+</div>
+
+<div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li><a href="LICENSE.html">Full license</a></li>

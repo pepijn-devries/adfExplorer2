@@ -50,6 +50,7 @@ format.adf_block <- function(x, ...) {
 format.virtual_path <- function(x, width = 20L, ...) {
   abbr <- (length(x) > 1)
   x <- unclass(x)
+  if (length(x$device) == 0 || length(x$path) == 0) return(":EMPTY:")
   lapply (seq_len(length(x$path)), \(i) {
     entry <- adf_path_to_entry(x$device[[i]], x$path[[i]], 0)
     if (entry$sector < 0) return ("Invalid path")

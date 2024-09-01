@@ -27,7 +27,7 @@
 #endif
 #endif
 
-SEXP adf_file_con_(SEXP connection, cpp11::strings filename, bool writable);
+[[cpp11::register]] SEXP adf_file_con_(SEXP connection, cpp11::strings filename, bool writable);
 static size_t adf_file_read(void *target, size_t sz, size_t ni, Rconnection con);
 static size_t adf_file_write(const void *ptr, size_t sz, size_t ni, Rconnection con);
 static int adf_getc(Rconnection con);

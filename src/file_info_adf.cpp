@@ -1,9 +1,10 @@
 #include "file_info_adf.h"
 #include "connect_adf.h"
+#include "block_adf.h"
 
 r_string adf_upper(strings x, logicals intl) {
   if (x.size() != 1 || intl.size() != 1)
-    Rf_error("`adf_upper` can only handle length 1 arguments");
+    Rf_error("`intl` can only handle length 1 arguments");
   char* upper = new char[x.at(0).size() + 1];
   std::string xs = (std::string)x.at(0);
   const char * input = xs.c_str();
@@ -287,4 +288,57 @@ SEXP adf_mkdir(SEXP connection, r_string path) {
   RETCODE rc = adfCreateDir(vol, parent, remainder.c_str());
   if (rc != RC_OK) Rf_error("Failed to create directory '%s'.", remainder.c_str());
   return connection;
+}
+
+SEXP adf_remove_entry(SEXP connection, strings path, logicals flush) {
+  if (path.size() != 1 && flush.size() != 1)
+    Rf_error("`adf_remove_entry` can only handle length 1 arguments");
+  
+  AdfDevice * dev = get_adf_dev_internal(connection);
+  
+  int mode = ADF_FI_THROW_ERROR | ADF_FI_EXPECT_EXIST |
+    ADF_FI_EXPECT_VALID_CHECKSUM;
+  
+  list entry = adf_path_to_entry(connection, path, mode);
+  int vol_num  = integers(entry["volume"]).at(0);
+  SECTNUM psect = integers(entry["parent"]).at(0);
+
+  check_volume_number(dev, vol_num);
+  AdfVolume * vol = dev->volList[vol_num];
+  std::string name_s = (std::string)strings(entry["name"]).at(0);
+
+  int nblocks = (vol->lastBlock - vol->firstBlock);
+  writable::logicals block_bit((R_xlen_t)nblocks - 2);
+
+  int i;
+  // Store current state of bitmap if file needs to be flushed  
+  if ((r_bool)flush.at(0)) {
+    for(i = vol->firstBlock + 2; i <= nblocks; i++) {
+      block_bit[i - 2] = (r_bool)adfIsBlockFree(vol, i);
+    }
+  }
+  
+  const char * name = name_s.c_str();
+
+  RETCODE rc = adfRemoveEntry(vol, psect, name);
+  
+  if (rc == RC_DIR_NOT_EMPTY) Rf_error("Can remove directory only when it is empty.");
+  
+  if (rc != RC_OK) Rf_error("Failed to remove entry from device.");
+
+  writable::raws empty((R_xlen_t)512);
+  for (i = 0; i < 512; i++) empty[i] = 0;
+  
+  // Erase blocks that have been set to free in the bitmap
+  if ((r_bool)flush.at(0)) {
+    for (i = vol->firstBlock + 2; i <= nblocks; i++) {
+      r_bool new_state = (r_bool)adfIsBlockFree(vol, i);
+      r_bool old_state = (r_bool)block_bit[i - 2];
+      if (!old_state && new_state) {
+        write_adf_block(connection, i, empty);
+      }
+    }
+  }
+  
+  return R_NilValue;
 }

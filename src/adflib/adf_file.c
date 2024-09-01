@@ -417,10 +417,10 @@ RETCODE adfFileFlush ( struct AdfFile * const file )
                                     file->currentExt->headerKey,
                                     file->currentExt );
         if ( rc != RC_OK ) {
-            adfEnv.eFct ( "adfFlushfile : error writing ext block 0x%x (%d), file '%s'",
-                          file->currentExt->headerKey,
-                          file->currentExt->headerKey,
-                          file->fileHdr->fileName );
+            // adfEnv.eFct ( "adfFlushfile : error writing ext block 0x%x (%d), file '%s'", /* Edit PdV */
+            //               file->currentExt->headerKey, /* Edit PdV */
+            //               file->currentExt->headerKey, /* Edit PdV */
+            //               file->fileHdr->fileName ); /* Edit PdV */
             return rc;
         }
     }
@@ -439,9 +439,9 @@ RETCODE adfFileFlush ( struct AdfFile * const file )
                                  file->curDataPtr,
                                  file->currentData );
         if ( rc != RC_OK ) {
-            adfEnv.eFct ( "adfFlushFile : error writing data block 0x%x (%u), file '%s'",
-                          file->curDataPtr, file->curDataPtr,
-                          file->fileHdr->fileName );
+            // adfEnv.eFct ( "adfFlushFile : error writing data block 0x%x (%u), file '%s'",  /* Edit PdV */
+            //               file->curDataPtr, file->curDataPtr, /* Edit PdV */
+            //               file->fileHdr->fileName ); /* Edit PdV */
             return rc;
         }
     }
@@ -456,8 +456,8 @@ RETCODE adfFileFlush ( struct AdfFile * const file )
                                 file->fileHdr->headerKey,
                                 file->fileHdr );
     if ( rc != RC_OK ) {
-        adfEnv.eFct ( "adfFlushfile : error writing file header block %d",
-                      file->fileHdr->headerKey );
+        // adfEnv.eFct ( "adfFlushfile : error writing file header block %d", /* Edit PdV */
+        //               file->fileHdr->headerKey ); /* Edit PdV */
         return rc;
     }
 
@@ -466,22 +466,22 @@ RETCODE adfFileFlush ( struct AdfFile * const file )
         struct bEntryBlock parent;
         rc = adfReadEntryBlock ( file->volume, file->fileHdr->parent, &parent );
         if ( rc != RC_OK ) {
-            adfEnv.eFct ( "adfFlushfile : error reading entry block %d",
-                          file->fileHdr->parent );
+            // adfEnv.eFct ( "adfFlushfile : error reading entry block %d", /* Edit PdV */
+            //               file->fileHdr->parent ); /* Edit PdV */
             return rc;
         }
 
         rc = adfUpdateCache ( file->volume, &parent,
                               (struct bEntryBlock*) file->fileHdr, FALSE );
         if ( rc != RC_OK ) {
-            adfEnv.eFct ( "adfFlushfile : error updating cache" );
+            // adfEnv.eFct ( "adfFlushfile : error updating cache" ); /* Edit PdV */
             return rc;
         }
     }
 
     rc = adfUpdateBitmap ( file->volume );
     if ( rc != RC_OK ) {
-        adfEnv.eFct ( "adfFlushfile : error updating volume bitmap" );
+        // adfEnv.eFct ( "adfFlushfile : error updating volume bitmap" ); /* Edit PdV */
         return rc;
     }
 

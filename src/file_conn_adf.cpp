@@ -1,6 +1,5 @@
 #include "file_conn_adf.h"
 
-[[cpp11::register]]
 SEXP adf_file_con_(SEXP connection, cpp11::strings filename, bool writable) {
   SEXP result;
   Rconnection con_in = R_GetConnection(connection);
@@ -17,7 +16,12 @@ SEXP adf_file_con_(SEXP connection, cpp11::strings filename, bool writable) {
 
   int vol_num  = cpp11::integers(entry_pos["volume"]).at(0);
   SECTNUM sect = cpp11::integers(entry_pos["parent"]).at(0);
-
+  
+  logicals file_reg_check = adf_check_file_reg(
+    connection, vol_num, cpp11::integers(entry_pos["sector"]).at(0));
+  if (file_reg_check.at(0))
+    Rf_error("Can only open 1 connection per file on a virtual device");
+  
   auto vol = dev->volList[vol_num];
   int vol_old = get_adf_vol_internal(connection);
   SECTNUM cur_dir = vol->curDirPtr;
@@ -28,7 +32,7 @@ SEXP adf_file_con_(SEXP connection, cpp11::strings filename, bool writable) {
   AdfFileMode fmode = ADF_FILE_MODE_READ;
   if (writable) fmode = ADF_FILE_MODE_WRITE;
 
-  if (writable && (int)(cpp11::integers(entry_pos["sector"]).at(0)) == -1) {
+  if (writable && sect == -1) {
     // The remainder of the path that does not exist:
     fns = (std::string)
       (cpp11::strings(entry_pos["remainder"]).at(0));

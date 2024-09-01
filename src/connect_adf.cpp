@@ -123,28 +123,21 @@ void adf_register_file_con(adf_conn * ac, int con_id) {
   return;
 }
 
-[[cpp11::register]] SEXP adf_check_file_reg(SEXP con, int file_header) {
+cpp11::logicals adf_check_file_reg(SEXP con, int vol_num, int file_header) {
   auto get_connection = cpp11::package("base")["getConnection"];
   Rconnection con2 = R_GetConnection(con);
   adf_conn *ac = (adf_conn *)con2->private_ptr;
   std::vector<int> * fc = & ac->file_connections;
   for (int & i : * fc) {
-    Rprintf("i: %i\n", i);
     Rconnection con_in = R_GetConnection(get_connection(Rf_ScalarInteger(i)));
 
     if (con_in->isopen) {
       auto * afc  = (adf_file_con_str *)con_in->private_ptr;
-      Rprintf("i: %i vol %i file header %i\n", i,
-              ac->currentVol,
-              afc->adf_file->fileHdr->headerKey);
-    } else {
-      Rprintf("Not open\n");
+      if (ac->currentVol == vol_num && afc->adf_file->fileHdr->headerKey == file_header)
+        return cpp11::writable::logicals({(cpp11::r_bool)TRUE});
     }
   }
-
-  cpp11::writable::integers result((R_xlen_t)1);
-  result.at(0) = (int)fc->size();
-  return(result);
+  return cpp11::writable::logicals({(cpp11::r_bool)FALSE});
 }
 
 void check_adf_con (SEXP con) {

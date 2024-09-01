@@ -20,12 +20,12 @@ interpret_dir_header <- function(connection, vol_num, sectnum) {
   .Call(`_adfExplorer2_interpret_dir_header`, connection, vol_num, sectnum)
 }
 
-adf_check_file_reg <- function(con, file_header) {
-  .Call(`_adfExplorer2_adf_check_file_reg`, con, file_header)
-}
-
 connect_adf_ <- function(filename, write_protected) {
   .Call(`_adfExplorer2_connect_adf_`, filename, write_protected)
+}
+
+adf_check_file_reg <- function(con, vol_num, file_header) {
+  .Call(`_adfExplorer2_adf_check_file_reg`, con, vol_num, file_header)
 }
 
 adf_dev_format <- function(connection, name, ffs, intl, dircache, bootable) {
@@ -114,4 +114,8 @@ adf_get_current_dir <- function(connection) {
 
 adf_mkdir <- function(connection, path) {
   .Call(`_adfExplorer2_adf_mkdir`, connection, path)
+}
+
+adf_remove_entry <- function(connection, path, flush) {
+  .Call(`_adfExplorer2_adf_remove_entry`, connection, path, flush)
 }

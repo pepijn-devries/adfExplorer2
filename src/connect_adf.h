@@ -45,6 +45,7 @@ struct adf_conn {
 
 [[cpp11::register]] SEXP connect_adf_(cpp11::strings filename,
                                       bool write_protected);
+[[cpp11::register]] cpp11::logicals adf_check_file_reg(SEXP con, int vol_num, int file_header);
 AdfDevice * get_adf_dev(Rconnection con);
 AdfDevice * get_adf_dev_internal(SEXP con);
 int get_adf_vol(Rconnection con);

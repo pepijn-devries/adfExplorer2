@@ -42,6 +42,9 @@ typedef enum {
     RC_FOPEN           = 1 << 10,
     RC_NULLPTR         = 1 << 12,
 
+/* adf remove entry Edit PdV*/
+    RC_DIR_NOT_EMPTY   = 1 << 13, /*Edit PdV */
+
 /* adfRead*Block() */
 
     RC_BLOCKTYPE       = 1,

@@ -217,7 +217,6 @@ RETCODE adfRemoveEntry ( struct AdfVolume * const vol,
     SECTNUM nSect2, nSect;
     BOOL intl;
     //char buf[200];  /* Edit PdV */
-
     RETCODE rc = adfReadEntryBlock ( vol, pSect, &parent );
     if ( rc != RC_OK )
         return rc;
@@ -231,7 +230,7 @@ RETCODE adfRemoveEntry ( struct AdfVolume * const vol,
     if ( entry.secType==ST_DIR && !isDirEmpty((struct bDirBlock*)&entry) ) {
       //sprintf(buf, "adfRemoveEntry : directory '%s' not empty", name); /* Edit PdV */
         // (*adfEnv.wFct)(buf);  /* Edit PdV */
-        return RC_ERROR;
+        return RC_DIR_NOT_EMPTY; /* Edit PdV RC_ERROR;*/
     }
 /*    printf("name=%s  nSect2=%ld\n",name, nSect2);*/
 

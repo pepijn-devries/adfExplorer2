@@ -1,6 +1,6 @@
 Package: adfExplorer2
 Title: Access and Manipulate Amiga Disk Files
-Version: 0.0.0.9003
+Version: 0.0.0.9004
 Authors@R:
     person("Pepijn", "de Vries", role = c("aut", "cre"),
     email = "pepijn.devries@outlook.com",
@@ -26,6 +26,7 @@ LinkingTo:
 Collate: 
     'adfExplorer2-package.R'
     'blocks.R'
+    'compress.R'
     'cpp11.R'
     'connect_adf.R'
     'device_info.R'
@@ -34,6 +35,7 @@ Collate:
     'directory.R'
     'imports.R'
     'init.R'
+    'remove.R'
     's3_methods.R'
     'virtual_path.R'
 Imports:

@@ -3,10 +3,13 @@
 #' This function removes an entry (file or directory) from a virtual ADF device. At the moment
 #' this function only removes a single entry per call, and in case the entry is a directory,
 #' the directory needs to be empty before it can be removed.
-#' @param dev The virtual adf device from which a file needs to be deleted.
-#' It should be of class `adf_device` which can be created with [`create_adf_device()`] or [`connect_adf()`].
+#' @param x The virtual ADF device from which an entry needs to be deleted or a virtual path pointing
+#' at the entry to be deleted. In case of a virtual device, it should be of class `adf_device` which
+#' can be created with [`create_adf_device()`] or [`connect_adf()`]. In case of a virtual path use
+#' [`virtual_path()`].
 #' @param virtual_path A `character` string or a virtual_path (see [`virtual_path()`])
-#' representing a file or directory you wish to delete.
+#' representing a file or directory you wish to delete. Should be omitted when `x` is alreade a
+#' virtual path.
 #' @param flush A `logical` value. When set to `FALSE` (default), only the entry's registry in its
 #' parent directory is removed and its flags in the bitmap block are set to 'available'. The entry's
 #' header data and if the entry is a file, the file data will still linger on the virtual disk.
@@ -39,37 +42,48 @@
 #' @name remove_adf_entry
 #' @author Pepijn de Vries
 #' @export
-remove_adf_entry <- function(dev, virtual_path, flush = FALSE, ...) {
-  UseMethod("remove_adf_entry", dev)
+remove_adf_entry <- function(x, virtual_path, flush = FALSE, ...) {
+  UseMethod("remove_adf_entry", x)
 }
 
 #' @rdname remove_adf_entry
 #' @method remove_adf_entry adf_device
 #' @export remove_adf_entry.adf_device
 #' @export
-remove_adf_entry.adf_device <- function(dev, virtual_path, flush = FALSE, ...) {
+remove_adf_entry.adf_device <- function(x, virtual_path, flush = FALSE, ...) {
   if (missing(virtual_path)) {
-    remove_adf_entry(dev, adf_directory(dev), flush = flush, ...)
+    remove_adf_entry(x, adf_directory(x), flush = flush, ...)
   } else UseMethod("remove_adf_entry.adf_device", virtual_path)
+}
+
+#' @rdname remove_adf_entry
+#' @method remove_adf_entry virtual_path
+#' @export remove_adf_entry.virtual_path
+#' @export
+remove_adf_entry.virtual_path <- function(x, virtual_path, flush = FALSE, ...) {
+  if (!missing(virtual_path))
+    stop("Argument `virtual_path` should be omitted when `x` is already a virtual path")
+  x <- unclass(x)
+  remove_adf_entry(x$device[[1]], x$path)
 }
 
 #' @rdname remove_adf_entry
 #' @name remove_adf_entry
 #' @method remove_adf_entry.adf_device character
 #' @export
-remove_adf_entry.adf_device.character <- function(dev, virtual_path, flush = FALSE, ...) {
-  adf_remove_entry(dev, virtual_path, flush)
-  return(dev)
+remove_adf_entry.adf_device.character <- function(x, virtual_path, flush = FALSE, ...) {
+  adf_remove_entry(x, virtual_path, flush)
+  return(x)
 }
 
 #' @rdname remove_adf_entry
 #' @name remove_adf_entry
 #' @method remove_adf_entry.adf_device virtual_path
 #' @export
-remove_adf_entry.adf_device.virtual_path <- function(dev, virtual_path, flush = FALSE, ...) {
+remove_adf_entry.adf_device.virtual_path <- function(x, virtual_path, flush = FALSE, ...) {
   if (length(virtual_path) > 1)
     stop("Cannot remove entries from multiple virtual paths")
-  .check_dev(dev, virtual_path)
+  .check_dev(x, virtual_path)
   virtual_path <- unclass(virtual_path[[1]])
-  remove_adf_entry(dev, virtual_path$path, flush, ...)
+  remove_adf_entry(x, virtual_path$path, flush, ...)
 }

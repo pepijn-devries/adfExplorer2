@@ -13,9 +13,9 @@ SEXP adf_file_con_(SEXP connection, cpp11::strings filename, bool writable) {
   if (!writable) mode = mode | ADF_FI_EXPECT_EXIST | ADF_FI_THROW_ERROR;
 
   cpp11::list entry_pos = adf_path_to_entry(connection, filename, mode);
-
   int vol_num  = cpp11::integers(entry_pos["volume"]).at(0);
-  SECTNUM sect = cpp11::integers(entry_pos["parent"]).at(0);
+  SECTNUM sect = cpp11::integers(entry_pos["sector"]).at(0);
+  SECTNUM parent = cpp11::integers(entry_pos["parent"]).at(0);
   
   logicals file_reg_check = adf_check_file_reg(
     connection, vol_num, cpp11::integers(entry_pos["sector"]).at(0));
@@ -26,7 +26,7 @@ SEXP adf_file_con_(SEXP connection, cpp11::strings filename, bool writable) {
   int vol_old = get_adf_vol_internal(connection);
   SECTNUM cur_dir = vol->curDirPtr;
 
-  adf_change_dir_internal(connection, sect, vol_num);
+  adf_change_dir_internal(connection, parent, vol_num);
 
   std::string fns;
   AdfFileMode fmode = ADF_FILE_MODE_READ;
@@ -39,7 +39,7 @@ SEXP adf_file_con_(SEXP connection, cpp11::strings filename, bool writable) {
     auto fhead = new bFileHeaderBlock;
     check_adf_name(fns);
     const char * fn2 = fns.c_str();
-    RETCODE fcret = adfCreateFile(vol, sect, fn2, fhead);
+    RETCODE fcret = adfCreateFile(vol, parent, fn2, fhead);
     delete(fhead);
     if (fcret != RC_OK) Rf_error("Failed to create file for writing.");
   } else {

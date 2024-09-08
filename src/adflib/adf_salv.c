@@ -212,7 +212,7 @@ RETCODE adfUndelDir ( struct AdfVolume * vol,
         return rc;
 
     if (pSect!=entry->parent) {
-        (*adfEnv.wFct)("adfUndelDir : the given parent sector isn't the entry parent");
+        //(*adfEnv.wFct)("adfUndelDir : the given parent sector isn't the entry parent"); /* Edit PdV */
         return RC_ERROR;
     }
 
@@ -266,7 +266,7 @@ RETCODE adfUndelFile ( struct AdfVolume *        vol,
         return rc;
 
     if (pSect!=entry->parent) {
-        (*adfEnv.wFct)("adfUndelFile : the given parent sector isn't the entry parent");
+        //(*adfEnv.wFct)("adfUndelFile : the given parent sector isn't the entry parent");  /* Edit PdV */
         return RC_ERROR;
     }
 

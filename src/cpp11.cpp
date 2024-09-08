@@ -215,6 +215,27 @@ extern "C" SEXP _adfExplorer2_adf_remove_entry(SEXP connection, SEXP path, SEXP 
     return cpp11::as_sexp(adf_remove_entry(cpp11::as_cpp<cpp11::decay_t<SEXP>>(connection), cpp11::as_cpp<cpp11::decay_t<strings>>(path), cpp11::as_cpp<cpp11::decay_t<logicals>>(flush)));
   END_CPP11
 }
+// file_info_adf.h
+SEXP move_adf_internal(SEXP connection, strings source, strings destination);
+extern "C" SEXP _adfExplorer2_move_adf_internal(SEXP connection, SEXP source, SEXP destination) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(move_adf_internal(cpp11::as_cpp<cpp11::decay_t<SEXP>>(connection), cpp11::as_cpp<cpp11::decay_t<strings>>(source), cpp11::as_cpp<cpp11::decay_t<strings>>(destination)));
+  END_CPP11
+}
+// file_info_adf.h
+SEXP adf_dir_exists_(SEXP connection, strings path);
+extern "C" SEXP _adfExplorer2_adf_dir_exists_(SEXP connection, SEXP path) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(adf_dir_exists_(cpp11::as_cpp<cpp11::decay_t<SEXP>>(connection), cpp11::as_cpp<cpp11::decay_t<strings>>(path)));
+  END_CPP11
+}
+// file_info_adf.h
+SEXP adf_file_exists_(SEXP connection, strings path);
+extern "C" SEXP _adfExplorer2_adf_file_exists_(SEXP connection, SEXP path) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(adf_file_exists_(cpp11::as_cpp<cpp11::decay_t<SEXP>>(connection), cpp11::as_cpp<cpp11::decay_t<strings>>(path)));
+  END_CPP11
+}
 
 extern "C" {
 static const R_CallMethodDef CallEntries[] = {
@@ -226,10 +247,12 @@ static const R_CallMethodDef CallEntries[] = {
     {"_adfExplorer2_adf_dev_nvol",           (DL_FUNC) &_adfExplorer2_adf_dev_nvol,           1},
     {"_adfExplorer2_adf_dev_size",           (DL_FUNC) &_adfExplorer2_adf_dev_size,           1},
     {"_adfExplorer2_adf_dev_type",           (DL_FUNC) &_adfExplorer2_adf_dev_type,           1},
+    {"_adfExplorer2_adf_dir_exists_",        (DL_FUNC) &_adfExplorer2_adf_dir_exists_,        2},
     {"_adfExplorer2_adf_dir_list_",          (DL_FUNC) &_adfExplorer2_adf_dir_list_,          3},
     {"_adfExplorer2_adf_entry_to_path",      (DL_FUNC) &_adfExplorer2_adf_entry_to_path,      4},
     {"_adfExplorer2_adf_file_con_",          (DL_FUNC) &_adfExplorer2_adf_file_con_,          3},
     {"_adfExplorer2_adf_file_con_info",      (DL_FUNC) &_adfExplorer2_adf_file_con_info,      1},
+    {"_adfExplorer2_adf_file_exists_",       (DL_FUNC) &_adfExplorer2_adf_file_exists_,       2},
     {"_adfExplorer2_adf_free_blocks",        (DL_FUNC) &_adfExplorer2_adf_free_blocks,        2},
     {"_adfExplorer2_adf_get_current_dir",    (DL_FUNC) &_adfExplorer2_adf_get_current_dir,    1},
     {"_adfExplorer2_adf_is_bootable",        (DL_FUNC) &_adfExplorer2_adf_is_bootable,        2},
@@ -246,6 +269,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_adfExplorer2_interpret_dir_header",   (DL_FUNC) &_adfExplorer2_interpret_dir_header,   3},
     {"_adfExplorer2_interpret_file_header",  (DL_FUNC) &_adfExplorer2_interpret_file_header,  3},
     {"_adfExplorer2_interpret_root_header",  (DL_FUNC) &_adfExplorer2_interpret_root_header,  2},
+    {"_adfExplorer2_move_adf_internal",      (DL_FUNC) &_adfExplorer2_move_adf_internal,      3},
     {"_adfExplorer2_read_adf_block",         (DL_FUNC) &_adfExplorer2_read_adf_block,         2},
     {"_adfExplorer2_write_adf_block",        (DL_FUNC) &_adfExplorer2_write_adf_block,        3},
     {NULL, NULL, 0}

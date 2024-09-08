@@ -3,26 +3,30 @@
 \name{adf_dir_list}
 \alias{adf_dir_list}
 \alias{adf_dir_list.adf_device}
+\alias{adf_dir_list.virtual_path}
 \alias{adf_dir_list.adf_device.character}
 \alias{adf_dir_list.adf_device.virtual_path}
 \title{List entries in a directory of a virtual ADF device}
 \usage{
-adf_dir_list(dev, virtual_path, recursive = FALSE, ...)
+adf_dir_list(x, virtual_path, recursive = FALSE, ...)
 
-\method{adf_dir_list}{adf_device}(dev, virtual_path, recursive = FALSE, ...)
+\method{adf_dir_list}{adf_device}(x, virtual_path, recursive = FALSE, ...)
 
-\method{adf_dir_list.adf_device}{character}(dev, virtual_path, recursive = FALSE, ...)
+\method{adf_dir_list}{virtual_path}(x, virtual_path, recursive = FALSE, ...)
 
-\method{adf_dir_list.adf_device}{virtual_path}(dev, virtual_path, recursive = FALSE, ...)
+\method{adf_dir_list.adf_device}{character}(x, virtual_path, recursive = FALSE, ...)
+
+\method{adf_dir_list.adf_device}{virtual_path}(x, virtual_path, recursive = FALSE, ...)
 }
 \arguments{
-\item{dev}{The virtual adf device for which information needs to be obtained.
-It should be of class \code{adf_device} which can be created with \code{\link[=create_adf_device]{create_adf_device()}}
-or \code{\link[=connect_adf]{connect_adf()}}.}
+\item{x}{Either an \code{adf_device} class object, in which case the \code{virtual_path}
+argument needs to be specified; or, a \code{virtual_path} class object.}
 
 \item{virtual_path}{The virtual path for which you wish to obtain a list
 of entries (see also \code{vignette("virtual_paths")}). When missing,
-entries for the current directory (\code{\link[=adf_directory]{adf_directory()}}) are returned.}
+entries for the current directory (\code{\link[=adf_directory]{adf_directory()}}) are returned, wen
+\code{x} is an \code{adf_device} class object. If \code{x} is a \code{virtual_path} class
+object, content of the path defined in that object is listed}
 
 \item{recursive}{A \code{logical} value. When set to \code{TRUE}, the function is
 called recursively for all subdirectories in \code{virtual_path}.}

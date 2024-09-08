@@ -10,6 +10,7 @@
 \alias{adf_directory.adf_device<-.virtual_path}
 \alias{adf_make_dir}
 \alias{adf_make_dir.adf_device}
+\alias{adf_make_dir.virtual_path}
 \alias{adf_make_dir.adf_device.character}
 \alias{adf_make_dir.adf_device.virtual_path}
 \title{Changing and creating directories on a virtual device}
@@ -26,13 +27,15 @@ adf_directory(dev, ...) <- value
 
 \method{adf_directory.adf_device}{virtual_path}(dev, ...) <- value
 
-adf_make_dir(dev, virtual_path, ...)
+adf_make_dir(x, virtual_path, ...)
 
-\method{adf_make_dir}{adf_device}(dev, virtual_path, ...)
+\method{adf_make_dir}{adf_device}(x, virtual_path, ...)
 
-\method{adf_make_dir.adf_device}{character}(dev, virtual_path, ...)
+\method{adf_make_dir}{virtual_path}(x, virtual_path, ...)
 
-\method{adf_make_dir.adf_device}{virtual_path}(dev, virtual_path, ...)
+\method{adf_make_dir.adf_device}{character}(x, virtual_path, ...)
+
+\method{adf_make_dir.adf_device}{virtual_path}(x, virtual_path, ...)
 }
 \arguments{
 \item{dev}{The virtual adf device for which information needs to be obtained.
@@ -44,8 +47,13 @@ or \code{\link[=connect_adf]{connect_adf()}}.}
 \item{value}{A \code{character} string or a \code{virtual_path} (see \code{\link[=virtual_path]{virtual_path()}})
 representing directory you wish to set as current.}
 
+\item{x}{An \code{adf_device} or \code{virtual_path} class object. The first specifies
+the device on which a directory needs to be created. The latter specifies
+both the directory and the device on which it needs to be created.}
+
 \item{virtual_path}{A \code{character} string or a \code{virtual_path} (see \code{\link[=virtual_path]{virtual_path()}})
-specifying the name of the new directory to be created.}
+specifying the name of the new directory to be created. Should be missing when \code{x} is
+of class \code{virtual_path}}
 }
 \value{
 \code{adf_make_dir()} returns the device connection. \code{adf_directory()} returns

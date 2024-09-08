@@ -299,10 +299,18 @@ SEXP adf_remove_entry(SEXP connection, strings path, logicals flush) {
   int mode = ADF_FI_THROW_ERROR | ADF_FI_EXPECT_EXIST |
     ADF_FI_EXPECT_VALID_CHECKSUM;
   
-  list entry = adf_path_to_entry(connection, path, mode);
-  int vol_num  = integers(entry["volume"]).at(0);
+  list entry    = adf_path_to_entry(connection, path, mode);
+  int sectype   = integers(entry["header_sectype"]).at(0);
+  if (sectype == ST_ROOT) Rf_error("Cannot remove a device's root");
+  
+  int vol_num   = integers(entry["volume"]).at(0);
   SECTNUM psect = integers(entry["parent"]).at(0);
 
+  logicals file_reg_check = adf_check_file_reg(
+    connection, vol_num, cpp11::integers(entry["sector"]).at(0));
+  if (file_reg_check.at(0))
+    Rf_error("Cannot remove files with open connection. Close file first then try again.");
+  
   check_volume_number(dev, vol_num);
   AdfVolume * vol = dev->volList[vol_num];
   std::string name_s = (std::string)strings(entry["name"]).at(0);
@@ -340,5 +348,67 @@ SEXP adf_remove_entry(SEXP connection, strings path, logicals flush) {
     }
   }
   
+  return R_NilValue;
+}
+
+SEXP adf_file_exists_(SEXP connection, strings path) {
+  list entry = adf_path_to_entry(connection, path, 0);
+  logicals result({(r_bool)(integers(entry["sector"]).at(0) != -1)});
+  return result;
+}
+
+SEXP adf_dir_exists_(SEXP connection, strings path) {
+  list entry = adf_path_to_entry(connection, path, 0);
+  int sec_type = integers(entry["header_sectype"]).at(0);
+  logicals result({(r_bool)(integers(entry["sector"]).at(0) != -1 &&
+    (sec_type == ST_DIR || sec_type == ST_ROOT))});
+  return result;
+}
+
+SEXP move_adf_internal(SEXP connection, strings source, strings destination) {
+  if (source.size() != 1 && destination.size() != 1)
+    Rf_error("`move_adf_internal` can only handle length 1 arguments");
+  int mode = ADF_FI_THROW_ERROR | ADF_FI_EXPECT_EXIST |
+    ADF_FI_EXPECT_VALID_CHECKSUM;
+  
+  list entry_src = adf_path_to_entry(connection, source, mode);
+  list entry_dst = adf_path_to_entry(connection, destination, mode);
+  writable::list entry_traverse;
+
+  int sec_type_src = integers(entry_src["header_sectype"]).at(0);
+  int sec_type_dst = integers(entry_dst["header_sectype"]).at(0);
+  if (sec_type_src == ST_ROOT)
+    Rf_error("Cannot move the root to elsewhere on the device.");
+  if (sec_type_dst != ST_DIR && sec_type_dst != ST_ROOT)
+    Rf_error("'destination' does not point at a directory.");
+
+  int dst_check = integers(entry_dst["sector"]).at(0);
+  int dst_parent = integers(entry_dst["parent"]).at(0);
+  int src_check = integers(entry_src["sector"]).at(0);
+  int cur_vol = integers(entry_src["volume"]).at(0);
+  
+  AdfDevice * dev = get_adf_dev_internal(connection);
+  auto vol = dev->volList[cur_vol];
+  
+  // Check if the source header is not in the path of the destination
+  uint8_t buf[512] = {0};
+  bEntryBlock * entry = (bEntryBlock *) buf;
+
+  bool test = (dst_check == src_check || dst_parent == src_check);
+  
+  int failsafe = 0L;
+  while (sec_type_dst != ST_ROOT) {
+    RETCODE rc = adfReadEntryBlock ( vol, dst_parent, entry );
+    if (rc != RC_OK) Rf_error("Failed to check destination path");
+    dst_parent = (int)entry->parent;
+    sec_type_dst = (int)entry->secType;
+    if (test || dst_parent == src_check)
+      Rf_error("'source' is already in `destination` path, cannot move.");
+    failsafe++;
+    if (failsafe > 1000L) Rf_error("Unexpectedly deep path");
+  }
+
+  // Currently this function only checks if the move is allowed
+  // It doesn't actually move anything
   return R_NilValue;
 }

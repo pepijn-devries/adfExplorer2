@@ -3,24 +3,30 @@
 \name{remove_adf_entry}
 \alias{remove_adf_entry}
 \alias{remove_adf_entry.adf_device}
+\alias{remove_adf_entry.virtual_path}
 \alias{remove_adf_entry.adf_device.character}
 \alias{remove_adf_entry.adf_device.virtual_path}
 \title{Remove entry (file / directory) from a virtual ADF device}
 \usage{
-remove_adf_entry(dev, virtual_path, flush = FALSE, ...)
+remove_adf_entry(x, virtual_path, flush = FALSE, ...)
 
-\method{remove_adf_entry}{adf_device}(dev, virtual_path, flush = FALSE, ...)
+\method{remove_adf_entry}{adf_device}(x, virtual_path, flush = FALSE, ...)
 
-\method{remove_adf_entry.adf_device}{character}(dev, virtual_path, flush = FALSE, ...)
+\method{remove_adf_entry}{virtual_path}(x, virtual_path, flush = FALSE, ...)
 
-\method{remove_adf_entry.adf_device}{virtual_path}(dev, virtual_path, flush = FALSE, ...)
+\method{remove_adf_entry.adf_device}{character}(x, virtual_path, flush = FALSE, ...)
+
+\method{remove_adf_entry.adf_device}{virtual_path}(x, virtual_path, flush = FALSE, ...)
 }
 \arguments{
-\item{dev}{The virtual adf device from which a file needs to be deleted.
-It should be of class \code{adf_device} which can be created with \code{\link[=create_adf_device]{create_adf_device()}} or \code{\link[=connect_adf]{connect_adf()}}.}
+\item{x}{The virtual ADF device from which an entry needs to be deleted or a virtual path pointing
+at the entry to be deleted. In case of a virtual device, it should be of class \code{adf_device} which
+can be created with \code{\link[=create_adf_device]{create_adf_device()}} or \code{\link[=connect_adf]{connect_adf()}}. In case of a virtual path use
+\code{\link[=virtual_path]{virtual_path()}}.}
 
 \item{virtual_path}{A \code{character} string or a virtual_path (see \code{\link[=virtual_path]{virtual_path()}})
-representing a file or directory you wish to delete.}
+representing a file or directory you wish to delete. Should be omitted when \code{x} is alreade a
+virtual path.}
 
 \item{flush}{A \code{logical} value. When set to \code{FALSE} (default), only the entry's registry in its
 parent directory is removed and its flags in the bitmap block are set to 'available'. The entry's

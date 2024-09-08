@@ -92,11 +92,11 @@ close(my_device)
 
 ## Acknowledgements
 
-The `adfExplorer2` package has created an R interface around the
-[`ADFlib` library](https://github.com/lclevy/ADFlib). The package would
-not have been possible without the work of Laurent Clévy, Tomasz Wolak)
-and many other
-[contributors](https://github.com/lclevy/ADFlib/blob/master/AUTHORS) on
+The `adfExplorer2` package is an R interface around the [`ADFlib`
+library](https://github.com/lclevy/ADFlib). The package would not have
+been possible without the work of Laurent Clévy, Tomasz Wolak) and many
+other
+[contributors](https://github.com/lclevy/ADFlib/blob/master/AUTHORS) of
 ADFlib.
 
 ## Code of Conduct

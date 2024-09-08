@@ -65,7 +65,8 @@ format.virtual_path <- function(x, width = 20L, ...) {
     if (!(!is.null(info$access) && is.logical(info$access)))
       access <- strrep(" ", 8) else
         access <-
-      ifelse(info$access, names(info$access), "-") |> paste(collapse = "")
+      ifelse(c(!info$access[1:4], info$access[5:8]),
+             names(info$access), "-") |> paste(collapse = "")
     result <- sprintf("%-4s %s %s %s",
                       info$secType,
                       size,

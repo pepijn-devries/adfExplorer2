@@ -96,4 +96,5 @@ prepare_adf_device.adf_device <- function(dev, name = "EMPTY",
                                          bootable = TRUE,
                                          ...) {
   adf_dev_format(dev, name, ffs, international, dircache, bootable) |> invisible()
+  dev
 }

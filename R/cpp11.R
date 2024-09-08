@@ -119,3 +119,15 @@ adf_mkdir <- function(connection, path) {
 adf_remove_entry <- function(connection, path, flush) {
   .Call(`_adfExplorer2_adf_remove_entry`, connection, path, flush)
 }
+
+move_adf_internal <- function(connection, source, destination) {
+  .Call(`_adfExplorer2_move_adf_internal`, connection, source, destination)
+}
+
+adf_dir_exists_ <- function(connection, path) {
+  .Call(`_adfExplorer2_adf_dir_exists_`, connection, path)
+}
+
+adf_file_exists_ <- function(connection, path) {
+  .Call(`_adfExplorer2_adf_file_exists_`, connection, path)
+}

@@ -13,7 +13,7 @@ use adf_directory() in combination with the assign operator (&amp;lt;-)."><meta 
 
     <a class="navbar-brand me-2" href="../index.html">adfExplorer2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9004</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9005</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -69,16 +69,19 @@ use <code>adf_directory()</code> in combination with the assign operator (<code>
 <span><span class="co"># S3 method for class 'virtual_path'</span></span>
 <span><span class="fu">adf_directory.adf_device</span><span class="op">(</span><span class="va">dev</span>, <span class="va">...</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span></span>
 <span></span>
-<span><span class="fu">adf_make_dir</span><span class="op">(</span><span class="va">dev</span>, <span class="va">virtual_path</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">adf_make_dir</span><span class="op">(</span><span class="va">x</span>, <span class="va">virtual_path</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'adf_device'</span></span>
-<span><span class="fu">adf_make_dir</span><span class="op">(</span><span class="va">dev</span>, <span class="va">virtual_path</span>, <span class="va">...</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># S3 method for class 'character'</span></span>
-<span><span class="fu">adf_make_dir.adf_device</span><span class="op">(</span><span class="va">dev</span>, <span class="va">virtual_path</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">adf_make_dir</span><span class="op">(</span><span class="va">x</span>, <span class="va">virtual_path</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'virtual_path'</span></span>
-<span><span class="fu">adf_make_dir.adf_device</span><span class="op">(</span><span class="va">dev</span>, <span class="va">virtual_path</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">adf_make_dir</span><span class="op">(</span><span class="va">x</span>, <span class="va">virtual_path</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for class 'character'</span></span>
+<span><span class="fu">adf_make_dir.adf_device</span><span class="op">(</span><span class="va">x</span>, <span class="va">virtual_path</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for class 'virtual_path'</span></span>
+<span><span class="fu">adf_make_dir.adf_device</span><span class="op">(</span><span class="va">x</span>, <span class="va">virtual_path</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -100,9 +103,16 @@ or <code><a href="connect_adf.html">connect_adf()</a></code>.</p></dd>
 representing directory you wish to set as current.</p></dd>
 
 
+<dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
+<dd><p>An <code>adf_device</code> or <code>virtual_path</code> class object. The first specifies
+the device on which a directory needs to be created. The latter specifies
+both the directory and the device on which it needs to be created.</p></dd>
+
+
 <dt id="arg-virtual-path">virtual_path<a class="anchor" aria-label="anchor" href="#arg-virtual-path"></a></dt>
 <dd><p>A <code>character</code> string or a <code>virtual_path</code> (see <code><a href="virtual_path.html">virtual_path()</a></code>)
-specifying the name of the new directory to be created.</p></dd>
+specifying the name of the new directory to be created. Should be missing when <code>x</code> is
+of class <code>virtual_path</code></p></dd>
 
 </dl></div>
     <div class="section level2">

@@ -1,10 +1,11 @@
-adfExplorer2 v0.0.9005
+adfExplorer2 v0.0.9006
 -------------
 
   * Initial commit, which can:
     * Connect to ADF and ADZ files
     * Create new virtual floppy disks (including file system)
     * Connect to files on virtual floppy disks
+    * Move files between virtual and physical devices
     * Obtain device information
     * List files and directories on virtual device
     * Remove files and directories from virtual device

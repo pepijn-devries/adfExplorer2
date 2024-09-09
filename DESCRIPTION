@@ -1,6 +1,6 @@
 Package: adfExplorer2
 Title: Access and Manipulate Amiga Disk Files
-Version: 0.0.0.9005
+Version: 0.0.0.9006
 Authors@R:
     person("Pepijn", "de Vries", role = c("aut", "cre"),
     email = "pepijn.devries@outlook.com",
@@ -16,7 +16,6 @@ Description: Amiga Disk Files (ADF) are virtual
     establish R connections to files on such
     virtual DOS-formatted disks, which can be use to
     read from and write to those files.
-SystemRequirements: GNU make
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -40,6 +39,8 @@ Collate:
     'remove.R'
     's3_methods.R'
     'virtual_path.R'
+Depends:
+    R (>= 3.5.0)
 Imports:
     methods,
     vctrs

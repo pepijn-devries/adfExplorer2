@@ -5,7 +5,7 @@ CFLAGS=`${R_HOME}/bin/R CMD config CFLAGS`
 CPPFLAGS=`${R_HOME}/bin/R CMD config CPPFLAGS`
 
 # Find source files
-ADF_CFILES="$(cd src/ && ls {adfbridge,adflib}/*.c | tr '\n' ' ')"
+ADF_CFILES="$(cd src/ && ls adfbridge/*.c adflib/*.c | tr '\n' ' ')"
 ADF_CPPFILES="$(cd src/ && ls *.cpp | tr '\n' ' ')"
 
 # Write to Makevars

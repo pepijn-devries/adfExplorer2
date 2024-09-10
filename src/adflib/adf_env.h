@@ -74,17 +74,17 @@ struct AdfEnv {
 };
 
 
-PREFIX void adfEnvInitDefault();
+PREFIX void adfEnvInitDefault(void); /* Edit PdV - comply with ISO C */
 
 PREFIX void adfSetEnvFct ( const AdfLogFct    eFct,
                            const AdfLogFct    wFct,
                            const AdfLogFct    vFct,
                            const AdfNotifyFct notifyFct );
 
-PREFIX void adfEnvCleanUp();
+PREFIX void adfEnvCleanUp(void); /* Edit PdV - comply with ISO C */
 PREFIX void adfChgEnvProp(int prop, void *newval);
-PREFIX char* adfGetVersionNumber();
-PREFIX char* adfGetVersionDate();
+PREFIX char* adfGetVersionNumber(void); /* Edit PdV - comply with ISO C */
+PREFIX char* adfGetVersionDate(void); /* Edit PdV - comply with ISO C */
 
 extern struct AdfEnv adfEnv;
 

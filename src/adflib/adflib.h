@@ -67,7 +67,7 @@ extern "C" {
 #include "adf_env.h"
 
 /* link */
-#include "adf_link.h"
+// #include "adf_link.h" /* Edit PdV - comply with ISO C */
 
 /* salv */
 #include "adf_salv.h"

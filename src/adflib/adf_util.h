@@ -39,31 +39,33 @@ struct DateTime {
     int year, mon, day, hour, min, sec;
 };
 
-
+/* Edit Pdv - comply with ISO C */
 /* defines max and min */
 #ifndef max
 #if defined(__clang__) || defined(__GNUC__)
 #define max(a,b)             \
+__extension__                \
 ({                           \
     __typeof__ (a) _a = (a); \
     __typeof__ (b) _b = (b); \
     _a > _b ? _a : _b;       \
 })
-#else
-#define max(a,b)        ((a)>(b) ? (a) : (b))
+//#else
+//#define max(a,b)        ((a)>(b) ? (a) : (b))
 #endif
 #endif
 
 #ifndef min
 #if defined(__clang__) || defined(__GNUC__)
 #define min(a,b)             \
+__extension__                \
 ({                           \
     __typeof__ (a) _a = (a); \
     __typeof__ (b) _b = (b); \
     _a < _b ? _a : _b;       \
 })
-#else
-#define min(a,b)        ((a)<(b) ? (a) : (b))
+//#else
+//#define min(a,b)        ((a)<(b) ? (a) : (b))
 #endif
 #endif
 

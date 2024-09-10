@@ -63,7 +63,7 @@ adf_directory.adf_device <- function(dev, ...) {
 #' @name adf_directory<-
 #' @method adf_directory<- adf_device
 #' @export adf_directory<-.adf_device
-#' @aliases adf_directory.adf_device<-
+#' @export adf_directory.adf_device<-
 #' @aliases adf_directory<-.adf_device
 #' @export
 `adf_directory.adf_device<-` <- `adf_directory<-.adf_device` <- function(dev, ..., value) {

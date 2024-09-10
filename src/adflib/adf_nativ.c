@@ -96,7 +96,7 @@ BOOL myIsDevNative ( const char * const devName )
  * adfInitNativeFct
  *
  */
-void adfInitNativeFct()
+void adfInitNativeFct(void) /* Edit PdV - comply with ISO C */
 {
     struct AdfNativeFunctions * nFct =
         ( struct AdfNativeFunctions * ) adfEnv.nativeFct;

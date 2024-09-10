@@ -28,7 +28,7 @@
 #' )
 #' 
 #' ## List all entries on the virtual device
-#' adf_dir_list(my_device, recursive = TRUE)
+#' list_adf_entries(my_device, recursive = TRUE)
 #' 
 #' ## Move the entire virtual device content to
 #' ## the tempdir on your physical device
@@ -197,7 +197,7 @@ move_adf_entry.virtual_path.character <- function(source, destination, ...) {
         .concat_path(destination, .sanitise_name_amiga(basename(source)))
       )
       if (adf_file_exists(new_dest)) stop("Cannot create directory, path already exists")
-      adf_make_dir(new_dest)
+      make_adf_dir(new_dest)
       content <- list.files(source, include.dirs = TRUE, full.names = TRUE)
       for (i in seq_along(content)) {
         .move_char_vp(delete, content[i], new_dest, ...)
@@ -232,8 +232,8 @@ move_adf_entry.virtual_path.character <- function(source, destination, ...) {
     new_dest <- .concat_path(destination, gsub("[:]", "/", as.character(source)) |> basename())
     new_dest <- virtual_path(dev_dest, new_dest)
     if (adf_dir_exists(new_dest)) stop("Cannot create directory, the path already exists.")
-    adf_make_dir(new_dest)
-    content <- adf_dir_list(source)
+    make_adf_dir(new_dest)
+    content <- list_adf_entries(source)
     for (i in seq_along(content)) {
       .move_vp_vp(delete, content[i], new_dest, ...)
     }
@@ -261,7 +261,7 @@ move_adf_entry.virtual_path.character <- function(source, destination, ...) {
           .sanitise_name_nonamiga())
       if (file.exists(new_dest)) stop("Cannot create directory, the path already exists.")
       dir.create(new_dest)
-      content <- adf_dir_list(source, recursive = FALSE)
+      content <- list_adf_entries(source, recursive = FALSE)
       for (i in seq_along(content)) {
         .move_vp_char(delete, content[i], new_dest, ...)
       }

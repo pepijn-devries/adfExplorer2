@@ -164,18 +164,15 @@ static double adf_seek(Rconnection con, double where, int origin, int rw) {
 r_string adf_file_con_info(SEXP connection) {
   adf_file_con_test_class(connection);
   Rconnection con = R_GetConnection(connection);
-  auto getCon     = cpp11::package("base")["getConnection"];
-  
+  if (!con->isopen) return (r_string("Closed ADF file connection"));
+
   adf_file_con_str *afc = (adf_file_con_str *) con->private_ptr;
   AdfFile *af = afc->adf_file;
-  sexp parent = getCon(afc->parent_con);
-  
-  writable::strings cls = strings(parent.attr("class"));
-  cls.insert(0, "adf_device");
-  parent.attr("class") = cls;
+  AdfDevice *parent = af->volume->dev;
 
-  std::string path = adf_entry_to_path(parent, afc->vol_num,
-                                       af->fileHdr->headerKey, TRUE);
+  std::string path = adf_entry_to_path_internal(
+    parent, afc->vol_num, af->fileHdr->headerKey, TRUE);
+  
   std::string access = "read only";
   if (con->canwrite) access = "writable";
   

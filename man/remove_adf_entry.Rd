@@ -55,13 +55,13 @@ decompress_adz(adz_file, adf_file)
 my_device <- connect_adf(adf_file, write_protected = FALSE)
 
 ## List files in directory 'Devs':
-adf_dir_list(my_device, "Devs")
+list_adf_entries(my_device, "Devs")
 
 ## remove the file 'system-configuration' from the virtual device
 remove_adf_entry(my_device, "devs/system-configuration")
 
 ## List files in directory 'Devs' again:
-adf_dir_list(my_device, "Devs")
+list_adf_entries(my_device, "Devs")
 
 ## close the connection to the virtual device
 close(my_device)

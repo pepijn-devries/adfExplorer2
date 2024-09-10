@@ -1,7 +1,7 @@
 #' Read or write raw data blocks to a virtual device
 #' 
 #' The Amiga file system is structured around 512 byte blocks. A double density
-#' floppy disk consists of 1760 blocks of 512 bytes. `read_block` and `write_block`
+#' floppy disk consists of 1760 blocks of 512 bytes. `read_adf_block` and `write_adf_block`
 #' can be used to transform raw data from and to virtual devices (created with
 #' [`create_adf_device()`] or [`connect_adf()`]). Note that writing raw data to
 #' a disk could corrupt the file system on the device. So it is generally not
@@ -11,58 +11,58 @@
 #' For double density disks, the ID ranges from 0 to 1759.
 #' @param data Block data (`raw` vector of length 512) you wish to write to a virtual device
 #' @param ... Ignored
-#' @returns In case of `write_block` `NULL` is returned invisibly. In case of `read_block`
+#' @returns In case of `write_adf_block` `NULL` is returned invisibly. In case of `read_adf_block`
 #' the `raw` data is returned as a `adf_block` class object.
 #' @author Pepijn de Vries
 #' @rdname adf_block
 #' @export
-read_block <- function(dev, sector, ...) {
-  UseMethod("read_block", dev)
+read_adf_block <- function(dev, sector, ...) {
+  UseMethod("read_adf_block", dev)
 }
 
 #' @rdname adf_block
 #' @export
-read_block.adf_device <- function(dev, sector, ...) {
-  read_adf_block(dev, sector)
+read_adf_block.adf_device <- function(dev, sector, ...) {
+  read_adf_block_(dev, sector)
 }
 
 #' @rdname adf_block
 #' @export
-write_block <- function(dev, sector, data, ...) {
-  UseMethod("write_block", dev)
+write_adf_block <- function(dev, sector, data, ...) {
+  UseMethod("write_adf_block", dev)
 }
 
 #' @rdname adf_block
-#' @method write_block adf_device
+#' @method write_adf_block adf_device
 #' @export
-write_block.adf_device <- function(dev, sector, data, ...) {
-  UseMethod("write_block.adf_device", data)
+write_adf_block.adf_device <- function(dev, sector, data, ...) {
+  UseMethod("write_adf_block.adf_device", data)
 }
 
 #' @rdname adf_block
-#' @method write_block.adf_device raw
+#' @method write_adf_block.adf_device raw
 #' @export
-write_block.adf_device.raw <- function(dev, sector, data, ...) {
+write_adf_block.adf_device.raw <- function(dev, sector, data, ...) {
   NextMethod()
 }
 
 #' @rdname adf_block
-#' @method write_block.adf_device adf_block
+#' @method write_adf_block.adf_device adf_block
 #' @export
-write_block.adf_device.adf_block <- function(dev, sector, data, ...) {
+write_adf_block.adf_device.adf_block <- function(dev, sector, data, ...) {
   NextMethod()
 }
 
 #' @rdname adf_block
-#' @method write_block.adf_device default
+#' @method write_adf_block.adf_device default
 #' @export
-write_block.adf_device.default <- function(dev, sector, data, ...) {
-  write_adf_block(dev, sector, data) |> invisible()
+write_adf_block.adf_device.default <- function(dev, sector, data, ...) {
+  write_adf_block_(dev, sector, data) |> invisible()
 }
 
 #' @rdname adf_block
 #' @export
-as_block <- function(data, ...) {
+as_adf_block <- function(data, ...) {
   if (typeof(data) != "raw" && length(data) != 512)
     stop("`data` should be a raw vector with length 512")
   class(data) <- union("adf_block", class(data))
@@ -71,6 +71,6 @@ as_block <- function(data, ...) {
 
 #' @rdname adf_block
 #' @export
-new_block <- function() {
-  as_block(raw(512))
+new_adf_block <- function() {
+  as_adf_block(raw(512))
 }

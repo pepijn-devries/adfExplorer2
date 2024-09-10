@@ -156,6 +156,10 @@ list adf_path_to_entry(
 
 r_string adf_entry_to_path(SEXP connection, int vol_num, int sectnum, bool full) {
   AdfDevice * dev = get_adf_dev_internal(connection);
+  return adf_entry_to_path_internal(dev, vol_num, sectnum, full);
+}
+
+r_string adf_entry_to_path_internal(AdfDevice * dev, int vol_num, int sectnum, bool full) {
   check_volume_number(dev, vol_num);
   AdfVolume * vol = dev->volList[vol_num];
   
@@ -187,7 +191,7 @@ r_string adf_entry_to_path(SEXP connection, int vol_num, int sectnum, bool full)
   return r_string(result);
 }
 
-list adf_dir_list_(SEXP connection, strings filename, logicals recursive) {
+list list_adf_entries_(SEXP connection, strings filename, logicals recursive) {
   if (recursive.size() != 1 || recursive.at(0) == NA_LOGICAL)
     Rf_error("'recursive' should be of length 1 and not NA.");
   writable::list result;
@@ -203,11 +207,11 @@ list adf_dir_list_(SEXP connection, strings filename, logicals recursive) {
     Rf_error("Path does not exist");
   
   AdfVolume * vol = dev->volList[vol_num];
-  result = adf_dir_list2_(connection, vol, sect, vol_num, recursive.at(0));
+  result = list_adf_entries2_(connection, vol, sect, vol_num, recursive.at(0));
   return result;
 }
 
-list adf_dir_list2_(SEXP connection, AdfVolume * vol,
+list list_adf_entries2_(SEXP connection, AdfVolume * vol,
                     SECTNUM sector, int vol_num, r_bool recursive) {
   writable::list result;
   auto alist = new AdfList;
@@ -225,7 +229,7 @@ list adf_dir_list2_(SEXP connection, AdfVolume * vol,
     alist = alist->next;
     if (entry->type == ST_DIR && recursive) {
       result.push_back(
-        adf_dir_list2_(connection, vol, entry->sector, vol_num, recursive)
+        list_adf_entries2_(connection, vol, entry->sector, vol_num, recursive)
       );
     }
     
@@ -343,7 +347,7 @@ SEXP adf_remove_entry(SEXP connection, strings path, logicals flush) {
       r_bool new_state = (r_bool)adfIsBlockFree(vol, i);
       r_bool old_state = (r_bool)block_bit[i - 2];
       if (!old_state && new_state) {
-        write_adf_block(connection, i, empty);
+        write_adf_block_(connection, i, empty);
       }
     }
   }
@@ -411,4 +415,37 @@ SEXP move_adf_internal(SEXP connection, strings source, strings destination) {
   // Currently this function only checks if the move is allowed
   // It doesn't actually move anything
   return R_NilValue;
+}
+
+SEXP adf_entry_info_(SEXP connection, strings path) {
+  int sector, vol_num, sectype;
+  writable::list result;
+  if (Rf_inherits(connection, "adf_device")) {
+    AdfDevice * dev = get_adf_dev_internal(connection);
+    
+    list entry = adf_path_to_entry(connection, strings(path), 0);
+    sector  = integers(entry["sector"]).at(0);
+    vol_num = integers(entry["volume"]).at(0);
+    sectype = integers(entry["header_sectype"]).at(0);
+    check_volume_number(dev, vol_num);
+    if (sectype == ST_ROOT) result = interpret_root_header(connection, vol_num);
+    if (sectype == ST_DIR)  result = interpret_dir_header(connection, vol_num, sector);
+    if (sectype == ST_FILE) result = interpret_file_header(connection, vol_num, sector);
+  } else if (Rf_inherits(connection, "adf_file_con")) {
+    Rconnection con = R_GetConnection(connection);
+    if (!con->isopen) Rf_error("Connection is closed");
+    adf_file_con_str *afc = (adf_file_con_str *) con->private_ptr;
+    AdfFile *af = afc->adf_file;
+    sector = af->fileHdr->headerKey;
+    sectype = af->fileHdr->secType;
+    vol_num = afc->vol_num;
+    AdfDevice * dev = af->volume->dev;
+    if (sectype == ST_ROOT) result = interpret_root_header_internal(dev, vol_num);
+    if (sectype == ST_DIR)  result = interpret_dir_header_internal(dev, vol_num, sector);
+    if (sectype == ST_FILE) result = interpret_file_header_internal(dev, vol_num, sector);
+  } else {
+    Rf_error("`connection` should by of class `adf_device` or `adf_file_con`.");
+  }
+  
+  return result;
 }

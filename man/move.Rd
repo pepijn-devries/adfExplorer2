@@ -71,7 +71,7 @@ copy_adf_entry(
 )
 
 ## List all entries on the virtual device
-adf_dir_list(my_device, recursive = TRUE)
+list_adf_entries(my_device, recursive = TRUE)
 
 ## Move the entire virtual device content to
 ## the tempdir on your physical device

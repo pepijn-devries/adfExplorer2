@@ -65,8 +65,8 @@ floppy disks became less important anyway. Note that this package cannot
 read extended ADF files containing information on the disk’s [Modified
 Frequency Modulation
 (MFM)](https://en.wikipedia.org/wiki/Modified_Frequency_Modulation).
-This information is typically only required for copy protected disk’s
-and is therefore out of the scope of this package.
+This information is typically only required for copy protected disks and
+is therefore out of the scope of this package.
 
 ## Example
 

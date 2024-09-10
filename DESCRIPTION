@@ -32,7 +32,7 @@ Collate:
     'device_create.R'
     'helpers.R'
     'directory.R'
-    'entryinfo.R'
+    'entry_info.R'
     'imports.R'
     'init.R'
     'move.R'

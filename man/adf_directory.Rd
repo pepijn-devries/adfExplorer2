@@ -8,11 +8,11 @@
 \alias{adf_directory<-.adf_device}
 \alias{adf_directory.adf_device<-.character}
 \alias{adf_directory.adf_device<-.virtual_path}
-\alias{adf_make_dir}
-\alias{adf_make_dir.adf_device}
-\alias{adf_make_dir.virtual_path}
-\alias{adf_make_dir.adf_device.character}
-\alias{adf_make_dir.adf_device.virtual_path}
+\alias{make_adf_dir}
+\alias{make_adf_dir.adf_device}
+\alias{make_adf_dir.virtual_path}
+\alias{make_adf_dir.adf_device.character}
+\alias{make_adf_dir.adf_device.virtual_path}
 \title{Changing and creating directories on a virtual device}
 \usage{
 adf_directory(dev, ...)
@@ -27,15 +27,15 @@ adf_directory(dev, ...) <- value
 
 \method{adf_directory.adf_device}{virtual_path}(dev, ...) <- value
 
-adf_make_dir(x, virtual_path, ...)
+make_adf_dir(x, virtual_path, ...)
 
-\method{adf_make_dir}{adf_device}(x, virtual_path, ...)
+\method{make_adf_dir}{adf_device}(x, virtual_path, ...)
 
-\method{adf_make_dir}{virtual_path}(x, virtual_path, ...)
+\method{make_adf_dir}{virtual_path}(x, virtual_path, ...)
 
-\method{adf_make_dir.adf_device}{character}(x, virtual_path, ...)
+\method{make_adf_dir.adf_device}{character}(x, virtual_path, ...)
 
-\method{adf_make_dir.adf_device}{virtual_path}(x, virtual_path, ...)
+\method{make_adf_dir.adf_device}{virtual_path}(x, virtual_path, ...)
 }
 \arguments{
 \item{dev}{The virtual adf device for which information needs to be obtained.
@@ -56,7 +56,7 @@ specifying the name of the new directory to be created. Should be missing when \
 of class \code{virtual_path}}
 }
 \value{
-\code{adf_make_dir()} returns the device connection. \code{adf_directory()} returns
+\code{make_adf_dir()} returns the device connection. \code{adf_directory()} returns
 the current directory as a \code{virtual_path} class object.
 }
 \description{
@@ -66,7 +66,7 @@ directory is the disk's root by default. To change the current directory,
 use \code{adf_directory()} in combination with the assign operator (\verb{<-}).
 }
 \details{
-To create a new directory on a device use \code{adf_make_dir()} and use a full or
+To create a new directory on a device use \code{make_adf_dir()} and use a full or
 relative path name to specify the new directory name.
 
 See \code{vignette("virtual_paths")} for a note on file and directory names on the Amiga.
@@ -80,7 +80,7 @@ my_device <- connect_adf(adz_file)
 adf_directory(my_device)
 
 ## Create a new directory
-adf_make_dir(my_device, "DF0:s/newdir")
+make_adf_dir(my_device, "DF0:s/newdir")
 
 ## Change the current dir to the new directory:
 adf_directory(my_device) <- "DF0:s/newdir"

@@ -26,7 +26,7 @@ static void file_close(Rconnection con)
     // close all registered file_connections:
     for (int & i : * fc) {
       Rconnection con_in = R_GetConnection(get_connection(Rf_ScalarInteger(i)));
-      con_in->close(con_in);
+      if (con_in->isopen) con_in->close(con_in);
     }
 
     fc->clear();

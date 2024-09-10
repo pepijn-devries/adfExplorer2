@@ -6,17 +6,17 @@
 #include <R_ext/Visibility.h>
 
 // block_adf.h
-SEXP read_adf_block(SEXP connection, int sector);
-extern "C" SEXP _adfExplorer2_read_adf_block(SEXP connection, SEXP sector) {
+SEXP read_adf_block_(SEXP connection, int sector);
+extern "C" SEXP _adfExplorer2_read_adf_block_(SEXP connection, SEXP sector) {
   BEGIN_CPP11
-    return cpp11::as_sexp(read_adf_block(cpp11::as_cpp<cpp11::decay_t<SEXP>>(connection), cpp11::as_cpp<cpp11::decay_t<int>>(sector)));
+    return cpp11::as_sexp(read_adf_block_(cpp11::as_cpp<cpp11::decay_t<SEXP>>(connection), cpp11::as_cpp<cpp11::decay_t<int>>(sector)));
   END_CPP11
 }
 // block_adf.h
-SEXP write_adf_block(SEXP connection, int sector, raws block);
-extern "C" SEXP _adfExplorer2_write_adf_block(SEXP connection, SEXP sector, SEXP block) {
+SEXP write_adf_block_(SEXP connection, int sector, raws block);
+extern "C" SEXP _adfExplorer2_write_adf_block_(SEXP connection, SEXP sector, SEXP block) {
   BEGIN_CPP11
-    return cpp11::as_sexp(write_adf_block(cpp11::as_cpp<cpp11::decay_t<SEXP>>(connection), cpp11::as_cpp<cpp11::decay_t<int>>(sector), cpp11::as_cpp<cpp11::decay_t<raws>>(block)));
+    return cpp11::as_sexp(write_adf_block_(cpp11::as_cpp<cpp11::decay_t<SEXP>>(connection), cpp11::as_cpp<cpp11::decay_t<int>>(sector), cpp11::as_cpp<cpp11::decay_t<raws>>(block)));
   END_CPP11
 }
 // block_adf.h
@@ -181,10 +181,10 @@ extern "C" SEXP _adfExplorer2_adf_entry_to_path(SEXP connection, SEXP vol_num, S
   END_CPP11
 }
 // file_info_adf.h
-list adf_dir_list_(SEXP connection, strings filename, logicals recursive);
-extern "C" SEXP _adfExplorer2_adf_dir_list_(SEXP connection, SEXP filename, SEXP recursive) {
+list list_adf_entries_(SEXP connection, strings filename, logicals recursive);
+extern "C" SEXP _adfExplorer2_list_adf_entries_(SEXP connection, SEXP filename, SEXP recursive) {
   BEGIN_CPP11
-    return cpp11::as_sexp(adf_dir_list_(cpp11::as_cpp<cpp11::decay_t<SEXP>>(connection), cpp11::as_cpp<cpp11::decay_t<strings>>(filename), cpp11::as_cpp<cpp11::decay_t<logicals>>(recursive)));
+    return cpp11::as_sexp(list_adf_entries_(cpp11::as_cpp<cpp11::decay_t<SEXP>>(connection), cpp11::as_cpp<cpp11::decay_t<strings>>(filename), cpp11::as_cpp<cpp11::decay_t<logicals>>(recursive)));
   END_CPP11
 }
 // file_info_adf.h
@@ -236,6 +236,13 @@ extern "C" SEXP _adfExplorer2_adf_file_exists_(SEXP connection, SEXP path) {
     return cpp11::as_sexp(adf_file_exists_(cpp11::as_cpp<cpp11::decay_t<SEXP>>(connection), cpp11::as_cpp<cpp11::decay_t<strings>>(path)));
   END_CPP11
 }
+// file_info_adf.h
+SEXP adf_entry_info_(SEXP connection, strings path);
+extern "C" SEXP _adfExplorer2_adf_entry_info_(SEXP connection, SEXP path) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(adf_entry_info_(cpp11::as_cpp<cpp11::decay_t<SEXP>>(connection), cpp11::as_cpp<cpp11::decay_t<strings>>(path)));
+  END_CPP11
+}
 
 extern "C" {
 static const R_CallMethodDef CallEntries[] = {
@@ -248,7 +255,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_adfExplorer2_adf_dev_size",           (DL_FUNC) &_adfExplorer2_adf_dev_size,           1},
     {"_adfExplorer2_adf_dev_type",           (DL_FUNC) &_adfExplorer2_adf_dev_type,           1},
     {"_adfExplorer2_adf_dir_exists_",        (DL_FUNC) &_adfExplorer2_adf_dir_exists_,        2},
-    {"_adfExplorer2_adf_dir_list_",          (DL_FUNC) &_adfExplorer2_adf_dir_list_,          3},
+    {"_adfExplorer2_adf_entry_info_",        (DL_FUNC) &_adfExplorer2_adf_entry_info_,        2},
     {"_adfExplorer2_adf_entry_to_path",      (DL_FUNC) &_adfExplorer2_adf_entry_to_path,      4},
     {"_adfExplorer2_adf_file_con_",          (DL_FUNC) &_adfExplorer2_adf_file_con_,          3},
     {"_adfExplorer2_adf_file_con_info",      (DL_FUNC) &_adfExplorer2_adf_file_con_info,      1},
@@ -269,9 +276,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_adfExplorer2_interpret_dir_header",   (DL_FUNC) &_adfExplorer2_interpret_dir_header,   3},
     {"_adfExplorer2_interpret_file_header",  (DL_FUNC) &_adfExplorer2_interpret_file_header,  3},
     {"_adfExplorer2_interpret_root_header",  (DL_FUNC) &_adfExplorer2_interpret_root_header,  2},
+    {"_adfExplorer2_list_adf_entries_",      (DL_FUNC) &_adfExplorer2_list_adf_entries_,      3},
     {"_adfExplorer2_move_adf_internal",      (DL_FUNC) &_adfExplorer2_move_adf_internal,      3},
-    {"_adfExplorer2_read_adf_block",         (DL_FUNC) &_adfExplorer2_read_adf_block,         2},
-    {"_adfExplorer2_write_adf_block",        (DL_FUNC) &_adfExplorer2_write_adf_block,        3},
+    {"_adfExplorer2_read_adf_block_",        (DL_FUNC) &_adfExplorer2_read_adf_block_,        2},
+    {"_adfExplorer2_write_adf_block_",       (DL_FUNC) &_adfExplorer2_write_adf_block_,       3},
     {NULL, NULL, 0}
 };
 }

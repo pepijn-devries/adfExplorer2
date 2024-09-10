@@ -27,7 +27,7 @@ for (i in seq_along(results2)) {
   con <- adf_file_con(my_disk2, "startup-sequence")
   readLines(con, warn = FALSE)
   close(con)
-  adf_dir_list(my_disk2, "DF0:")
+  list_adf_entries(my_disk2, "DF0:")
   close(my_disk2)
   rm(my_disk2)
   end2 <- Sys.time()

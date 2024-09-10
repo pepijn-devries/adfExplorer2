@@ -106,7 +106,7 @@ entries recursively (in all nested subdirectories):
 list.adf.files(my_disk1, "DF0:")
 
 # ---------------- adfExplorer2
-adf_dir_list(my_disk2, "DF0:", recursive = TRUE)
+list_adf_entries(my_disk2, "DF0:", recursive = TRUE)
 
 ```
 

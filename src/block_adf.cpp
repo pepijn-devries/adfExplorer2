@@ -2,7 +2,7 @@
 
 using namespace cpp11;
 
-SEXP read_adf_block(SEXP connection, int sector) {
+SEXP read_adf_block_(SEXP connection, int sector) {
   AdfDevice * dev = get_adf_dev_internal(connection);
   uint8_t buf[512] = {0};
   RETCODE rc = adfReadBlockDev(dev, sector, 512, buf);
@@ -18,7 +18,7 @@ SEXP read_adf_block(SEXP connection, int sector) {
   return result;
 }
 
-SEXP write_adf_block(SEXP connection, int sector, raws block) {
+SEXP write_adf_block_(SEXP connection, int sector, raws block) {
   AdfDevice * dev = get_adf_dev_internal(connection);
   if (block.size() != 512) Rf_error("Unexpected block size");
   if (dev->readOnly) Rf_error("Cannot write to read only device");
@@ -31,8 +31,7 @@ SEXP write_adf_block(SEXP connection, int sector, raws block) {
   return R_NilValue;
 }
 
-list interpret_file_header(SEXP connection, int vol_num, int sectnum) {
-  AdfDevice * dev = get_adf_dev_internal(connection);
+list interpret_file_header_internal(AdfDevice *dev, int vol_num, int sectnum) {
   check_volume_number(dev, vol_num);
   AdfVolume * vol = dev->volList[vol_num];
   uint8_t buf[512] = {0};
@@ -82,8 +81,12 @@ list interpret_file_header(SEXP connection, int vol_num, int sectnum) {
   return result;
 }
 
-list interpret_dir_header(SEXP connection, int vol_num, int sectnum) {
+list interpret_file_header(SEXP connection, int vol_num, int sectnum) {
   AdfDevice * dev = get_adf_dev_internal(connection);
+  return interpret_file_header_internal(dev, vol_num, sectnum);
+}
+
+list interpret_dir_header_internal(AdfDevice *dev, int vol_num, int sectnum) {
   check_volume_number(dev, vol_num);
   AdfVolume * vol = dev->volList[vol_num];
   uint8_t buf[512] = {0};
@@ -91,10 +94,10 @@ list interpret_dir_header(SEXP connection, int vol_num, int sectnum) {
   RETCODE rc = adfReadEntryBlock(vol, sectnum, entry);
   if (rc != RC_OK) Rf_error("Failed to read entry block");
   bDirBlock * dheader = (bDirBlock *) entry;
-
+  
   writable::integers hashtab(HT_SIZE);
   for (int i = 0; i < hashtab.size(); i++) hashtab[i] = dheader->hashTable[i];
-
+  
   uint8_t commlen = dheader->commLen;
   if (commlen > MAXCMMTLEN) {
     commlen = MAXCMMTLEN;
@@ -130,8 +133,12 @@ list interpret_dir_header(SEXP connection, int vol_num, int sectnum) {
   return result;
 }
 
-list interpret_root_header(SEXP connection, int vol_num) {
+list interpret_dir_header(SEXP connection, int vol_num, int sectnum) {
   AdfDevice * dev = get_adf_dev_internal(connection);
+  return interpret_dir_header_internal(dev, vol_num, sectnum);
+}
+
+list interpret_root_header_internal(AdfDevice *dev, int vol_num) {
   check_volume_number(dev, vol_num);
   AdfVolume * vol = dev->volList[vol_num];
   uint8_t buf_root[512] = {0};
@@ -173,6 +180,11 @@ list interpret_root_header(SEXP connection, int vol_num) {
       "secType"_nm      = secType_to_str(root->secType)});
   
   return result;
+}
+
+list interpret_root_header(SEXP connection, int vol_num) {
+  AdfDevice * dev = get_adf_dev_internal(connection);
+  return interpret_root_header_internal(dev, vol_num);
 }
 
 r_string headerKey_to_str(int headerKey) {

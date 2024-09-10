@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">adfExplorer2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9006</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9007</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -49,19 +49,13 @@
 
       <dl><dt>
 
-          <code><a href="adf_block.html">read_block()</a></code> <code><a href="adf_block.html">write_block()</a></code> <code><a href="adf_block.html">write_block.adf_device(<i>&lt;raw&gt;</i>)</a></code> <code><a href="adf_block.html">write_block.adf_device(<i>&lt;adf_block&gt;</i>)</a></code> <code><a href="adf_block.html">write_block.adf_device(<i>&lt;default&gt;</i>)</a></code> <code><a href="adf_block.html">as_block()</a></code> <code><a href="adf_block.html">new_block()</a></code>
+          <code><a href="adf_block.html">read_adf_block()</a></code> <code><a href="adf_block.html">write_adf_block()</a></code> <code><a href="adf_block.html">write_adf_block.adf_device(<i>&lt;raw&gt;</i>)</a></code> <code><a href="adf_block.html">write_adf_block.adf_device(<i>&lt;adf_block&gt;</i>)</a></code> <code><a href="adf_block.html">write_adf_block.adf_device(<i>&lt;default&gt;</i>)</a></code> <code><a href="adf_block.html">as_adf_block()</a></code> <code><a href="adf_block.html">new_adf_block()</a></code>
 
         </dt>
         <dd>Read or write raw data blocks to a virtual device</dd>
       </dl><dl><dt>
 
-          <code><a href="adf_dir_list.html">adf_dir_list()</a></code> <code><a href="adf_dir_list.html">adf_dir_list.adf_device(<i>&lt;character&gt;</i>)</a></code> <code><a href="adf_dir_list.html">adf_dir_list.adf_device(<i>&lt;virtual_path&gt;</i>)</a></code>
-
-        </dt>
-        <dd>List entries in a directory of a virtual ADF device</dd>
-      </dl><dl><dt>
-
-          <code><a href="adf_directory.html">adf_directory()</a></code> <code><a href="adf_directory.html">`adf_directory&lt;-`()</a></code> <code><a href="adf_directory.html">`adf_directory.adf_device&lt;-`(<i>&lt;character&gt;</i>)</a></code> <code><a href="adf_directory.html">`adf_directory.adf_device&lt;-`(<i>&lt;virtual_path&gt;</i>)</a></code> <code><a href="adf_directory.html">adf_make_dir()</a></code> <code><a href="adf_directory.html">adf_make_dir.adf_device(<i>&lt;character&gt;</i>)</a></code> <code><a href="adf_directory.html">adf_make_dir.adf_device(<i>&lt;virtual_path&gt;</i>)</a></code>
+          <code><a href="adf_directory.html">adf_directory()</a></code> <code><a href="adf_directory.html">`adf_directory&lt;-`()</a></code> <code><a href="adf_directory.html">`adf_directory.adf_device&lt;-`(<i>&lt;character&gt;</i>)</a></code> <code><a href="adf_directory.html">`adf_directory.adf_device&lt;-`(<i>&lt;virtual_path&gt;</i>)</a></code> <code><a href="adf_directory.html">make_adf_dir()</a></code> <code><a href="adf_directory.html">make_adf_dir.adf_device(<i>&lt;character&gt;</i>)</a></code> <code><a href="adf_directory.html">make_adf_dir.adf_device(<i>&lt;virtual_path&gt;</i>)</a></code>
 
         </dt>
         <dd>Changing and creating directories on a virtual device</dd>
@@ -97,10 +91,22 @@
         <dd>Obtain information about an <code>adf_device</code> connection</dd>
       </dl><dl><dt>
 
+          <code><a href="entry_info.html">adf_entry_info()</a></code> <code><a href="entry_info.html">adf_entry_info.adf_device(<i>&lt;virtual_path&gt;</i>)</a></code> <code><a href="entry_info.html">adf_entry_info.adf_device(<i>&lt;character&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Retrieve information from entry headers on virtual ADF devices</dd>
+      </dl><dl><dt>
+
           <code><a href="exists.html">adf_file_exists()</a></code> <code><a href="exists.html">adf_dir_exists()</a></code>
 
         </dt>
         <dd>Test if an entry exists on a virtual device</dd>
+      </dl><dl><dt>
+
+          <code><a href="list_adf_entries.html">list_adf_entries()</a></code> <code><a href="list_adf_entries.html">list_adf_entries.adf_device(<i>&lt;character&gt;</i>)</a></code> <code><a href="list_adf_entries.html">list_adf_entries.adf_device(<i>&lt;virtual_path&gt;</i>)</a></code>
+
+        </dt>
+        <dd>List entries in a directory of a virtual ADF device</dd>
       </dl><dl><dt>
 
           <code><a href="move.html">copy_adf_entry()</a></code> <code><a href="move.html">copy_adf_entry.character(<i>&lt;virtual_path&gt;</i>)</a></code> <code><a href="move.html">copy_adf_entry.virtual_path(<i>&lt;virtual_path&gt;</i>)</a></code> <code><a href="move.html">copy_adf_entry.virtual_path(<i>&lt;character&gt;</i>)</a></code> <code><a href="move.html">move_adf_entry()</a></code> <code><a href="move.html">move_adf_entry.character(<i>&lt;virtual_path&gt;</i>)</a></code> <code><a href="move.html">move_adf_entry.virtual_path(<i>&lt;virtual_path&gt;</i>)</a></code> <code><a href="move.html">move_adf_entry.virtual_path(<i>&lt;character&gt;</i>)</a></code>

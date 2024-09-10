@@ -13,7 +13,7 @@ use adf_directory() in combination with the assign operator (&amp;lt;-)."><meta 
 
     <a class="navbar-brand me-2" href="../index.html">adfExplorer2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9006</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9007</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -69,19 +69,19 @@ use <code>adf_directory()</code> in combination with the assign operator (<code>
 <span><span class="co"># S3 method for class 'virtual_path'</span></span>
 <span><span class="fu">adf_directory.adf_device</span><span class="op">(</span><span class="va">dev</span>, <span class="va">...</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span></span>
 <span></span>
-<span><span class="fu">adf_make_dir</span><span class="op">(</span><span class="va">x</span>, <span class="va">virtual_path</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">make_adf_dir</span><span class="op">(</span><span class="va">x</span>, <span class="va">virtual_path</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'adf_device'</span></span>
-<span><span class="fu">adf_make_dir</span><span class="op">(</span><span class="va">x</span>, <span class="va">virtual_path</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">make_adf_dir</span><span class="op">(</span><span class="va">x</span>, <span class="va">virtual_path</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'virtual_path'</span></span>
-<span><span class="fu">adf_make_dir</span><span class="op">(</span><span class="va">x</span>, <span class="va">virtual_path</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">make_adf_dir</span><span class="op">(</span><span class="va">x</span>, <span class="va">virtual_path</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'character'</span></span>
-<span><span class="fu">adf_make_dir.adf_device</span><span class="op">(</span><span class="va">x</span>, <span class="va">virtual_path</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">make_adf_dir.adf_device</span><span class="op">(</span><span class="va">x</span>, <span class="va">virtual_path</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'virtual_path'</span></span>
-<span><span class="fu">adf_make_dir.adf_device</span><span class="op">(</span><span class="va">x</span>, <span class="va">virtual_path</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">make_adf_dir.adf_device</span><span class="op">(</span><span class="va">x</span>, <span class="va">virtual_path</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -117,12 +117,12 @@ of class <code>virtual_path</code></p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p><code>adf_make_dir()</code> returns the device connection. <code>adf_directory()</code> returns
+    <p><code>make_adf_dir()</code> returns the device connection. <code>adf_directory()</code> returns
 the current directory as a <code>virtual_path</code> class object.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>To create a new directory on a device use <code>adf_make_dir()</code> and use a full or
+    <p>To create a new directory on a device use <code>make_adf_dir()</code> and use a full or
 relative path name to specify the new directory name.</p>
 <p>See <code><a href="../articles/virtual_paths.html">vignette("virtual_paths")</a></code> for a note on file and directory names on the Amiga.</p>
     </div>
@@ -142,7 +142,7 @@ relative path name to specify the new directory name.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ROOT                   adfExampleOFS</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Create a new directory</span></span></span>
-<span class="r-in"><span><span class="fu">adf_make_dir</span><span class="op">(</span><span class="va">my_device</span>, <span class="st">"DF0:s/newdir"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">make_adf_dir</span><span class="op">(</span><span class="va">my_device</span>, <span class="st">"DF0:s/newdir"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Bootable DOS Floppy DD</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Volume 0 [---]: adfExampleOFS (2.2%)</span>
 <span class="r-in"><span></span></span>

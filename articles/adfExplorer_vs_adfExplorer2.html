@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">adfExplorer2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9007</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -69,7 +69,7 @@
 <div class="section level2">
 <h2 id="motivation-for-adfexplorer2">Motivation for adfExplorer2<a class="anchor" aria-label="anchor" href="#motivation-for-adfexplorer2"></a>
 </h2>
-<p><code>adfExplorer2</code> is the succesor of <a href="https://pepijn-devries.github.io/adfExplorer" class="external-link"><code>adfExplorer</code></a>.
+<p><code>adfExplorer2</code> is the succesor of <a href="https://pepijn-devries.github.io/adfExplorer/" class="external-link"><code>adfExplorer</code></a>.
 This vignette explains why a complete overhaul was created and released
 separately with a different version. It will also provide some hands on
 examples showing how to modify your R code when you are switching from
@@ -165,17 +165,17 @@ subdirectories):</p>
 <span></span>
 <span><span class="co"># ---------------- adfExplorer2</span></span>
 <span><span class="fu"><a href="../reference/list_adf_entries.html">list_adf_entries</a></span><span class="op">(</span><span class="va">my_disk2</span>, <span class="st">"DF0:"</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; DIR  ...DEWR---- Devs</span></span>
-<span><span class="co">#&gt; FILE ...configuration</span></span>
-<span><span class="co">#&gt; DIR  ...   DEWR---- S</span></span>
-<span><span class="co">#&gt; FILE ...rtup-Sequence</span></span>
-<span><span class="co">#&gt; DIR  ...DEWR---- this</span></span>
-<span><span class="co">#&gt; DIR  ...  DEWR---- is</span></span>
-<span><span class="co">#&gt; DIR  ...   DEWR---- a</span></span>
-<span><span class="co">#&gt; DIR  ...DEWR---- deep</span></span>
-<span><span class="co">#&gt; DIR  ...DEWR---- path</span></span>
-<span><span class="co">#&gt; DIR  ...DEWR---- mods</span></span>
-<span><span class="co">#&gt; FILE ...--- mod.intro</span></span></code></pre></div>
+<span><span class="co">#&gt; DIR  DEWR...     Devs</span></span>
+<span><span class="co">#&gt; FILE DEWR...iguration</span></span>
+<span><span class="co">#&gt; DIR  DEWR...        S</span></span>
+<span><span class="co">#&gt; FILE DEWR...-Sequence</span></span>
+<span><span class="co">#&gt; DIR  DEWR...     this</span></span>
+<span><span class="co">#&gt; DIR  DEWR...       is</span></span>
+<span><span class="co">#&gt; DIR  DEWR...        a</span></span>
+<span><span class="co">#&gt; DIR  DEWR...     deep</span></span>
+<span><span class="co">#&gt; DIR  DEWR...     path</span></span>
+<span><span class="co">#&gt; DIR  DEWR...     mods</span></span>
+<span><span class="co">#&gt; FILE DEWR...mod.intro</span></span></code></pre></div>
 <p>Read from a file on the virtual disk:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># ---------------- adfExplorer</span></span>

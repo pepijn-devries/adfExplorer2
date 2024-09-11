@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">adfExplorer2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9007</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -110,7 +110,7 @@ directory. directories are separated by forward slashes on the Amiga. So
 you could use:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/virtual_path.html">virtual_path</a></span><span class="op">(</span><span class="va">my_device</span>, <span class="st">"DF0:s/startup-sequence"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; FILE   0.6 kB DEWR---- Startup-Sequence</span></span></code></pre></div>
+<span><span class="co">#&gt; FILE DEWR----   0.6 kB Startup-Sequence</span></span></code></pre></div>
 <p>This refers to the file ‘startup-sequence’ in the directory ‘s’ which
 in turn is located on the disk’s root. Note that the resulting displayed
 file name contains uppercase characters, whereas the requested path does
@@ -125,7 +125,7 @@ the current directory is automatically set to the disk’s root. So you
 could skip the root if you wish to refer to the same file as above:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/virtual_path.html">virtual_path</a></span><span class="op">(</span><span class="va">my_device</span>, <span class="st">"s/startup-sequence"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; FILE   0.6 kB DEWR---- Startup-Sequence</span></span></code></pre></div>
+<span><span class="co">#&gt; FILE DEWR----   0.6 kB Startup-Sequence</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">

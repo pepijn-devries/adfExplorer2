@@ -8,7 +8,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Amiga Disk Files (ADF) are virtual representations of 3.5 inch floppy disks for the Commodore Amiga. Most disk drives from other systems (including modern drives) are not able to read these disks. The AdfExplorer2 package enables you to establish R connections to files on such virtual DOS-formatted disks, which can be use to read from and write to those files.
+Amiga Disk Files (ADF) are virtual representations of 3.5 inch floppy disks for the Commodore Amiga. Most disk drives from other systems (including modern drives) are not able to read these disks. The adfExplorer2 package enables you to establish R connections to files on such virtual DOS-formatted disks, which can be use to read from and write to those files.
 }
 \seealso{
 Useful links:

@@ -61,29 +61,29 @@ adf_directory.adf_device <- function(dev, ...) {
 
 #' @rdname adf_directory
 #' @name adf_directory<-
-#' @method adf_directory<- adf_device
 #' @export adf_directory<-.adf_device
-#' @export adf_directory.adf_device<-
-#' @aliases adf_directory<-.adf_device
+#' @method adf_directory<- adf_device
 #' @export
-`adf_directory.adf_device<-` <- `adf_directory<-.adf_device` <- function(dev, ..., value) {
-  UseMethod("adf_directory.adf_device<-", value)
+`adf_directory<-.adf_device` <- function(dev, ..., value) {
+  UseMethod("adf_directory<-.adf_device", value)
 }
 
+#' @name adf_directory<-.adf_device
 #' @rdname adf_directory
-#' @name adf_directory<-
-#' @method adf_directory.adf_device<- character
+#' @method adf_directory<- adf_device.character
+#' @export adf_directory<-.adf_device.character
 #' @export
-`adf_directory.adf_device<-.character` <- function(dev, ..., value) {
+`adf_directory<-.adf_device.character` <- function(dev, ..., value) {
   adf_change_dir(dev, value)
   dev
 }
 
+#' @name adf_directory<-.adf_device
 #' @rdname adf_directory
-#' @name adf_directory<-
-#' @method adf_directory.adf_device<- virtual_path
+#' @method adf_directory<- adf_device.virtual_path
+#' @export adf_directory<-.adf_device.virtual_path
 #' @export
-`adf_directory.adf_device<-.virtual_path` <- function(dev, ..., value) {
+`adf_directory<-.adf_device.virtual_path` <- function(dev, ..., value) {
   .check_dev(dev, value)
   adf_change_dir(dev, value$path)
   dev

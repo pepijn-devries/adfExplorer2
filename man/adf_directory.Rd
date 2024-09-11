@@ -4,10 +4,9 @@
 \alias{adf_directory}
 \alias{adf_directory.adf_device}
 \alias{adf_directory<-}
-\alias{adf_directory.adf_device<-}
 \alias{adf_directory<-.adf_device}
-\alias{adf_directory.adf_device<-.character}
-\alias{adf_directory.adf_device<-.virtual_path}
+\alias{adf_directory<-.adf_device.character}
+\alias{adf_directory<-.adf_device.virtual_path}
 \alias{make_adf_dir}
 \alias{make_adf_dir.adf_device}
 \alias{make_adf_dir.virtual_path}
@@ -23,9 +22,9 @@ adf_directory(dev, ...) <- value
 
 \method{adf_directory}{adf_device}(dev, ...) <- value
 
-\method{adf_directory.adf_device}{character}(dev, ...) <- value
+\method{adf_directory}{adf_device.character}(dev, ...) <- value
 
-\method{adf_directory.adf_device}{virtual_path}(dev, ...) <- value
+\method{adf_directory}{adf_device.virtual_path}(dev, ...) <- value
 
 make_adf_dir(x, virtual_path, ...)
 

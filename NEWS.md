@@ -1,4 +1,4 @@
-adfExplorer2 v0.0.1
+adfExplorer2 v0.0.2
 -------------
 
   * Initial commit, which can:

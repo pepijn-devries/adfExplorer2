@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 ## Motivation for adfExplorer2
 
 `adfExplorer2` is the succesor of
-[`adfExplorer`](https://pepijn-devries.github.io/adfExplorer). This vignette explains why
+[`adfExplorer`](https://pepijn-devries.github.io/adfExplorer/). This vignette explains why
 a complete overhaul was created and released separately with a different version. It
 will also provide some hands on examples showing how to modify your R code when you
 are switching from `adfExplorer` to `adfExplorer2`.

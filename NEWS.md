@@ -1,4 +1,4 @@
-adfExplorer2 v0.0.9007
+adfExplorer2 v0.0.1
 -------------
 
   * Initial commit, which can:
@@ -6,7 +6,9 @@ adfExplorer2 v0.0.9007
     * Create new virtual floppy disks (including file system)
     * Connect to files on virtual floppy disks
     * Move files between virtual and physical devices
-    * Obtain device information
+    * Obtain information
+      * On virtual device
+      * On files and directories on the virtual device
     * List files and directories on virtual device
-    * Remove files and directories from virtual device
     * Create directories on virtual device
+    * Remove files and directories from virtual device

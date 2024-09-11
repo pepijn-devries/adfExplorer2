@@ -61,7 +61,7 @@ static void checkInternals(void);
  * adfInitEnv
  *
  */
-void adfEnvInitDefault()
+void adfEnvInitDefault(void) /* Edit PdV - comply with ISO C */
 {
     checkInternals();
 
@@ -92,7 +92,7 @@ void adfEnvInitDefault()
  * adfEnvCleanUp
  *
  */
-void adfEnvCleanUp()
+void adfEnvCleanUp(void) /* Edit PdV - comply with ISO C */
 {
     free(adfEnv.nativeFct);
 }
@@ -169,7 +169,7 @@ void adfSetEnvFct ( const AdfLogFct    eFct,
  * adfGetVersionNumber
  *
  */
-char* adfGetVersionNumber()
+char* adfGetVersionNumber(void) /* Edit PdV - comply with ISO C */
 {
 	return(ADFLIB_VERSION);
 }
@@ -179,7 +179,7 @@ char* adfGetVersionNumber()
  * adfGetVersionDate
  *
  */
-char* adfGetVersionDate()
+char* adfGetVersionDate(void) /* Edit PdV - comply with ISO C */
 {
 	return(ADFLIB_DATE);
 }

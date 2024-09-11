@@ -69,12 +69,12 @@ format.virtual_path <- function(x, width = 20L, ...) {
              names(info$access), "-") |> paste(collapse = "")
     result <- sprintf("%-4s %s %s %s",
                       info$secType,
-                      size,
                       access,
+                      size,
                       info[grepl("NAME", toupper(names(info)))])
     if (abbr) {
       len <- nchar(result)
-      l <- 5L
+      l <- 9L
       r <- width - 3L - l
       if (len > width) {
         result <- paste0(

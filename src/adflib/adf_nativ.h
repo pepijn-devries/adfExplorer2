@@ -56,7 +56,7 @@ struct AdfNativeFunctions {
     BOOL (*adfIsDevNative)( const char * const devName );
 };
 
-void adfInitNativeFct();
+void adfInitNativeFct(void); /* Edit PdV - comply with ISO C */
 
 #ifdef __cplusplus
 }

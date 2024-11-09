@@ -1,3 +1,8 @@
+adfExplorer2 v0.0.2.0001
+-------------
+
+  * Cleaned out redundant code
+
 adfExplorer2 v0.0.2
 -------------
 

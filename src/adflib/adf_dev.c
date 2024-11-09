@@ -30,7 +30,7 @@
 #include "adf_dev_dump.h"
 #include "adf_dev_flop.h"
 #include "adf_dev_hd.h"
-#include "adf_env.h"
+// #include "adf_env.h"
 #include "adf_nativ.h"
 
 #include <stdlib.h>
@@ -58,23 +58,24 @@ struct AdfDevice * adfOpenDev ( const char * const filename,
     struct AdfDevice * dev = ( struct AdfDevice * )
         malloc ( sizeof ( struct AdfDevice ) );
     if ( ! dev ) {
-        (*adfEnv.eFct)("adfOpenDev : malloc error");
+        // (*adfEnv.eFct)("adfOpenDev : malloc error");
         return NULL;
     }
 
     dev->readOnly = ro;
 
     /* switch between dump files and real devices */
-    struct AdfNativeFunctions * nFct = adfEnv.nativeFct;
-    dev->isNativeDev = ( *nFct->adfIsDevNative )( filename );
-
+    // struct AdfNativeFunctions * nFct = adfEnv.nativeFct;
+    //dev->isNativeDev = ( *nFct->adfIsDevNative )( filename );
+    dev->isNativeDev = FALSE;
+    
     RETCODE rc;
-    if ( dev->isNativeDev )
-        rc = ( *nFct->adfInitDevice )( dev, filename, ro );
-    else
+    // if ( dev->isNativeDev )
+    //     rc = ( *nFct->adfInitDevice )( dev, filename, ro );
+    // else
         rc = adfInitDumpDevice ( dev, filename, ro );
     if ( rc != RC_OK ) {
-        ( *adfEnv.eFct )( "adfOpenDev : device init error" );
+        // ( *adfEnv.eFct )( "adfOpenDev : device init error" );
         free ( dev );
         return NULL;
     }
@@ -129,8 +130,8 @@ void adfCloseDev ( struct AdfDevice * const dev )
     }
 
     if ( dev->isNativeDev ) {
-        struct AdfNativeFunctions * const nFct = adfEnv.nativeFct;
-        ( *nFct->adfReleaseDevice )( dev );
+        // struct AdfNativeFunctions * const nFct = adfEnv.nativeFct;
+        // ( *nFct->adfReleaseDevice )( dev );
     } else
         adfReleaseDumpDevice ( dev );
 
@@ -305,8 +306,9 @@ RETCODE adfReadBlockDev ( struct AdfDevice * const dev,
 
 /*printf("pSect R =%ld\n",pSect);*/
     if ( dev->isNativeDev ) {
-        struct AdfNativeFunctions * const nFct = adfEnv.nativeFct;
-        rc = (*nFct->adfNativeReadSector)( dev, pSect, size, buf );
+      return RC_ERROR;
+        // struct AdfNativeFunctions * const nFct = adfEnv.nativeFct;
+        // rc = (*nFct->adfNativeReadSector)( dev, pSect, size, buf );
     } else
         rc = adfReadDumpSector( dev, pSect, size, buf );
 /*printf("rc=%ld\n",rc);*/
@@ -323,8 +325,9 @@ RETCODE adfWriteBlockDev ( struct AdfDevice * const dev,
 
 /*printf("nativ=%d\n",dev->isNativeDev);*/
     if ( dev->isNativeDev ) {
-        struct AdfNativeFunctions * const nFct = adfEnv.nativeFct;
-        rc = (*nFct->adfNativeWriteSector)( dev, pSect, size, buf );
+      return RC_ERROR;
+        // struct AdfNativeFunctions * const nFct = adfEnv.nativeFct;
+        // rc = (*nFct->adfNativeWriteSector)( dev, pSect, size, buf );
     } else
         rc = adfWriteDumpSector ( dev, pSect, size, buf );
 

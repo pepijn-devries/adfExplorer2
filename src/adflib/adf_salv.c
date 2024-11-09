@@ -31,7 +31,7 @@
 #include "adf_bitm.h"
 #include "adf_cache.h"
 #include "adf_dir.h"
-#include "adf_env.h"
+// #include "adf_env.h"
 #include "adf_file_block.h"
 #include "adf_util.h"
 
@@ -173,7 +173,7 @@ RETCODE adfCheckParent ( struct AdfVolume * vol,
     struct GenBlock block;
 
     if (adfIsBlockFree(vol, pSect)) {
-        (*adfEnv.wFct)("adfCheckParent : parent doesn't exists");
+        // (*adfEnv.wFct)("adfCheckParent : parent doesn't exists");
         return RC_ERROR;
     }
 
@@ -184,7 +184,7 @@ RETCODE adfCheckParent ( struct AdfVolume * vol,
 
     if ( block.type!=T_HEADER 
         || (block.secType!=ST_DIR && block.secType!=ST_ROOT) ) {
-        (*adfEnv.wFct)("adfCheckParent : parent secType is incorrect");
+        // (*adfEnv.wFct)("adfCheckParent : parent secType is incorrect");
         return RC_ERROR;
     }
 
@@ -365,19 +365,19 @@ RETCODE adfCheckFile ( struct AdfVolume * const              vol,
             if ( rc != RC_OK )
                 goto adfCheckFile_free;
 
-            if (dataBlock.headerKey!=fileBlocks.header)
-                (*adfEnv.wFct)("adfCheckFile : headerKey incorrect");
-            if ( dataBlock.seqNum != (unsigned) n + 1 )
-                (*adfEnv.wFct)("adfCheckFile : seqNum incorrect");
+            // if (dataBlock.headerKey!=fileBlocks.header)
+            //     (*adfEnv.wFct)("adfCheckFile : headerKey incorrect");
+            // if ( dataBlock.seqNum != (unsigned) n + 1 )
+            //     (*adfEnv.wFct)("adfCheckFile : seqNum incorrect");
             if (n<fileBlocks.nbData-1) {
-                if (dataBlock.nextData!=fileBlocks.data[n+1])
-                    (*adfEnv.wFct)("adfCheckFile : nextData incorrect");
-                if (dataBlock.dataSize!=vol->datablockSize)
-                    (*adfEnv.wFct)("adfCheckFile : dataSize incorrect");
+                // if (dataBlock.nextData!=fileBlocks.data[n+1])
+                //     (*adfEnv.wFct)("adfCheckFile : nextData incorrect");
+                // if (dataBlock.dataSize!=vol->datablockSize)
+                //     (*adfEnv.wFct)("adfCheckFile : dataSize incorrect");
             }
             else { /* last datablock */
-                if (dataBlock.nextData!=0)
-                    (*adfEnv.wFct)("adfCheckFile : nextData incorrect");
+                // if (dataBlock.nextData!=0)
+                //     (*adfEnv.wFct)("adfCheckFile : nextData incorrect");
             }
         }
     }
@@ -387,15 +387,15 @@ RETCODE adfCheckFile ( struct AdfVolume * const              vol,
         if ( rc != RC_OK )
             goto adfCheckFile_free;
 
-        if (extBlock.parent!=file->headerKey)
-            (*adfEnv.wFct)("adfCheckFile : extBlock parent incorrect");
+        // if (extBlock.parent!=file->headerKey)
+        //     (*adfEnv.wFct)("adfCheckFile : extBlock parent incorrect");
         if (n<fileBlocks.nbExtens-1) {
-            if (extBlock.extension!=fileBlocks.extens[n+1])
-                (*adfEnv.wFct)("adfCheckFile : nextData incorrect");
+            // if (extBlock.extension!=fileBlocks.extens[n+1])
+            //     (*adfEnv.wFct)("adfCheckFile : nextData incorrect");
         }
-        else
-            if (extBlock.extension!=0)
-                (*adfEnv.wFct)("adfCheckFile : nextData incorrect");
+        // else
+        //     if (extBlock.extension!=0)
+        //         (*adfEnv.wFct)("adfCheckFile : nextData incorrect");
     }
 
 adfCheckFile_free:

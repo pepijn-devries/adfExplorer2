@@ -30,7 +30,7 @@
 
 #include "adf_bitm.h"
 #include "adf_cache.h"
-#include "adf_env.h"
+// #include "adf_env.h"
 #include "adf_file_block.h"
 #include "adf_raw.h"
 #include "adf_util.h"
@@ -434,8 +434,9 @@ struct AdfList * adfGetRDirEnt ( struct AdfVolume * const vol,
     struct bEntryBlock parent;
 
 
-    if (adfEnv.useDirCache && isDIRCACHE(vol->dosType))
-        return (adfGetDirEntCache(vol, nSect, recurs ));
+    // if (adfEnv.useDirCache && isDIRCACHE(vol->dosType))
+    if (isDIRCACHE(vol->dosType))
+      return (adfGetDirEntCache(vol, nSect, recurs ));
 
 
     if (adfReadEntryBlock(vol,nSect,&parent)!=RC_OK)

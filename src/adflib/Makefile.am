@@ -41,7 +41,6 @@ adfinc_HEADERS = \
     adf_dev.h \
     adf_dev_hd.h \
     adf_dir.h \
-    adf_env.h \
     adf_err.h \
     adf_file_block.h \
     adf_file.h \

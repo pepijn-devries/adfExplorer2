@@ -29,7 +29,7 @@
 #include "adf_dev_hd.h"
 
 #include "adf_dev_dump.h"
-#include "adf_env.h"
+// #include "adf_env.h"
 #include "adf_raw.h"
 #include "adf_util.h"
 #include "adf_vol.h"
@@ -357,7 +357,7 @@ RETCODE adfCreateHd ( struct AdfDevice * const               dev,
 /*struct AdfVolume *vol;*/
 
     if ( dev == NULL || partList == NULL ) {
-        (*adfEnv.eFct)("adfCreateHd : illegal parameter(s)");
+        // (*adfEnv.eFct)("adfCreateHd : illegal parameter(s)");
         return RC_ERROR;
     }
 
@@ -414,24 +414,25 @@ RETCODE adfReadRDSKblock ( struct AdfDevice * const  dev,
 #endif
 
     if ( strncmp(blk->id,"RDSK",4)!=0 ) {
-        (*adfEnv.eFct)("ReadRDSKblock : RDSK id not found");
+        // (*adfEnv.eFct)("ReadRDSKblock : RDSK id not found");
         return RC_ERROR;
     }
 
     if ( blk->size != 64 )
-        (*adfEnv.wFct)("ReadRDSKBlock : size != 64");				/* BV */
+      return RC_ERROR;
+        // (*adfEnv.wFct)("ReadRDSKBlock : size != 64");				/* BV */
 
     if ( blk->checksum != adfNormalSum(buf,8,256) ) {
-         (*adfEnv.wFct)("ReadRDSKBlock : incorrect checksum");
-         /* BV FIX: Due to malicious Win98 write to sector
-         rc|=RC_BLOCKSUM;*/
+         // (*adfEnv.wFct)("ReadRDSKBlock : incorrect checksum");
+         /* BV FIX: Due to malicious Win98 write to sector */
+         rc|=RC_BLOCKSUM;
     }
 	
-    if ( blk->blockSize != 512 )
-         (*adfEnv.wFct)("ReadRDSKBlock : blockSize != 512");		/* BV */
+    if ( blk->blockSize != 512 ) return RC_ERROR;
+         // (*adfEnv.wFct)("ReadRDSKBlock : blockSize != 512");		/* BV */
 
-    if ( blk->cylBlocks !=  blk->sectors*blk->heads )
-        (*adfEnv.wFct)( "ReadRDSKBlock : cylBlocks != sectors*heads");
+    if ( blk->cylBlocks !=  blk->sectors*blk->heads ) return RC_ERROR;
+        // (*adfEnv.wFct)( "ReadRDSKBlock : cylBlocks != sectors*heads");
 
     return rc;
 }
@@ -448,7 +449,7 @@ RETCODE adfWriteRDSKblock ( struct AdfDevice * const  dev,
     uint32_t newSum;
 
     if (dev->readOnly) {
-        (*adfEnv.wFct)("adfWriteRDSKblock : can't write block, read only device");
+        // (*adfEnv.wFct)("adfWriteRDSKblock : can't write block, read only device");
         return RC_ERROR;
     }
 
@@ -497,20 +498,20 @@ RETCODE adfReadPARTblock ( struct AdfDevice * const  dev,
 #endif
 
     if ( strncmp(blk->id,"PART",4)!=0 ) {
-    	(*adfEnv.eFct)("ReadPARTblock : PART id not found");
+    	// (*adfEnv.eFct)("ReadPARTblock : PART id not found");
         return RC_ERROR;
     }
 
-    if ( blk->size != 64 )
-        (*adfEnv.wFct)("ReadPARTBlock : size != 64");
+    if ( blk->size != 64 ) return RC_ERROR;
+        // (*adfEnv.wFct)("ReadPARTBlock : size != 64");
 
     if ( blk->blockSize!=128 ) {
-    	(*adfEnv.eFct)("ReadPARTblock : blockSize!=512, not supported (yet)");
+    	// (*adfEnv.eFct)("ReadPARTblock : blockSize!=512, not supported (yet)");
         return RC_ERROR;
     }
 
-    if ( blk->checksum != adfNormalSum(buf,8,256) )
-        (*adfEnv.wFct)( "ReadPARTBlock : incorrect checksum");
+    if ( blk->checksum != adfNormalSum(buf,8,256) ) return RC_ERROR;
+        // (*adfEnv.wFct)( "ReadPARTBlock : incorrect checksum");
 
     return rc;
 }
@@ -528,7 +529,7 @@ RETCODE adfWritePARTblock ( struct AdfDevice * const  dev,
     uint32_t newSum;
 	
     if (dev->readOnly) {
-        (*adfEnv.wFct)("adfWritePARTblock : can't write block, read only device");
+        // (*adfEnv.wFct)("adfWritePARTblock : can't write block, read only device");
         return RC_ERROR;
     }
 
@@ -575,15 +576,15 @@ RETCODE adfReadFSHDblock ( struct AdfDevice * const  dev,
 #endif
 
     if ( strncmp(blk->id,"FSHD",4)!=0 ) {
-    	(*adfEnv.eFct)("ReadFSHDblock : FSHD id not found");
+    	// (*adfEnv.eFct)("ReadFSHDblock : FSHD id not found");
         return RC_ERROR;
     }
 
-    if ( blk->size != 64 )
-         (*adfEnv.wFct)("ReadFSHDblock : size != 64");
+    if ( blk->size != 64 ) return RC_ERROR;
+         // (*adfEnv.wFct)("ReadFSHDblock : size != 64");
 
-    if ( blk->checksum != adfNormalSum(buf,8,256) )
-        (*adfEnv.wFct)( "ReadFSHDblock : incorrect checksum");
+    if ( blk->checksum != adfNormalSum(buf,8,256) ) return RC_ERROR;
+        // (*adfEnv.wFct)( "ReadFSHDblock : incorrect checksum");
 
     return rc;
 }
@@ -601,7 +602,7 @@ RETCODE adfWriteFSHDblock ( struct AdfDevice * const  dev,
     uint32_t newSum;
 
     if (dev->readOnly) {
-        (*adfEnv.wFct)("adfWriteFSHDblock : can't write block, read only device");
+        // (*adfEnv.wFct)("adfWriteFSHDblock : can't write block, read only device");
         return RC_ERROR;
     }
 
@@ -645,15 +646,16 @@ RETCODE adfReadLSEGblock ( struct AdfDevice * const  dev,
 #endif
 
     if ( strncmp(blk->id,"LSEG",4)!=0 ) {
-    	(*adfEnv.eFct)("ReadLSEGblock : LSEG id not found");
+    	// (*adfEnv.eFct)("ReadLSEGblock : LSEG id not found");
         return RC_ERROR;
     }
 
     if ( blk->checksum != adfNormalSum(buf,8,sizeof(struct bLSEGblock)) )
-        (*adfEnv.wFct)("ReadLSEGBlock : incorrect checksum");
+      return RC_ERROR;
+        // (*adfEnv.wFct)("ReadLSEGBlock : incorrect checksum");
 
-    if ( blk->next!=-1 && blk->size != 128 )
-        (*adfEnv.wFct)("ReadLSEGBlock : size != 128");
+    if ( blk->next!=-1 && blk->size != 128 ) return RC_ERROR;
+        // (*adfEnv.wFct)("ReadLSEGBlock : size != 128");
 
     return RC_OK;
 }
@@ -671,7 +673,7 @@ RETCODE adfWriteLSEGblock ( struct AdfDevice * const  dev,
     uint32_t newSum;
 
     if (dev->readOnly) {
-        (*adfEnv.wFct)("adfWriteLSEGblock : can't write block, read only device");
+        // (*adfEnv.wFct)("adfWriteLSEGblock : can't write block, read only device");
         return RC_ERROR;
     }
 

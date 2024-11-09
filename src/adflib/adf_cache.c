@@ -29,7 +29,7 @@
 
 #include "adf_bitm.h"
 #include "adf_dir.h"
-#include "adf_env.h"
+// #include "adf_env.h"
 #include "adf_raw.h"
 #include "adf_util.h"
 #include "defendian.h"
@@ -375,7 +375,8 @@ RETCODE adfDelFromCache ( struct AdfVolume * const         vol,
     }while(nSect!=0 && !found);
 
     if (!found)
-        (*adfEnv.wFct)("adfUpdateCache : entry not found");
+      return RC_ERROR;
+        // (*adfEnv.wFct)("adfUpdateCache : entry not found");
 
     return rc;
 }
@@ -444,7 +445,7 @@ RETCODE adfAddInCache ( struct AdfVolume * const  vol,
         /* request one new block free */
         nCache = adfGet1FreeBlock(vol);
         if (nCache==-1) {
-           (*adfEnv.wFct)("adfCreateDir : nCache==-1");
+           // (*adfEnv.wFct)("adfCreateDir : nCache==-1");
            return RC_VOLFULL;
         }
 
@@ -455,7 +456,8 @@ RETCODE adfAddInCache ( struct AdfVolume * const  vol,
         else if (parent->secType==ST_DIR)
             newDirc.parent = parent->headerKey;
         else
-            (*adfEnv.wFct)("adfAddInCache : unknown secType");
+          return RC_ERROR;
+            // (*adfEnv.wFct)("adfAddInCache : unknown secType");
         newDirc.recordsNb = 0L;
         newDirc.nextDirC = 0L;
 
@@ -565,7 +567,8 @@ RETCODE adfUpdateCache ( struct AdfVolume * const   vol,
         return adfUpdateBitmap ( vol );
     }
     else
-        (*adfEnv.wFct)("adfUpdateCache : entry not found");
+      return RC_ERROR;
+        // (*adfEnv.wFct)("adfUpdateCache : entry not found");
 
     return RC_OK;
 }
@@ -585,7 +588,7 @@ RETCODE adfCreateEmptyCache ( struct AdfVolume * const   vol,
     if (nSect==-1) {
         nCache = adfGet1FreeBlock(vol);
         if (nCache==-1) {
-           (*adfEnv.wFct)("adfCreateDir : nCache==-1");
+           // (*adfEnv.wFct)("adfCreateDir : nCache==-1");
            return RC_VOLFULL;
         }
     }
@@ -602,7 +605,8 @@ RETCODE adfCreateEmptyCache ( struct AdfVolume * const   vol,
     else if (parent->secType==ST_DIR)
         dirc.parent = parent->headerKey;
     else {
-        (*adfEnv.wFct)("adfCreateEmptyCache : unknown secType");
+      return RC_ERROR;
+        // (*adfEnv.wFct)("adfCreateEmptyCache : unknown secType");
 /*printf("secType=%ld\n",parent->secType);*/
     }
         
@@ -632,11 +636,14 @@ RETCODE adfReadDirCBlock ( struct AdfVolume * const      vol,
     swapEndian((uint8_t*)dirc,SWBL_CACHE);
 #endif
     if (dirc->checkSum!=adfNormalSum(buf,20,512))
-        (*adfEnv.wFct)("adfReadDirCBlock : invalid checksum");
+      return RC_ERROR;
+        // (*adfEnv.wFct)("adfReadDirCBlock : invalid checksum");
     if (dirc->type!=T_DIRC)
-        (*adfEnv.wFct)("adfReadDirCBlock : T_DIRC not found");
+      return RC_ERROR;
+        // (*adfEnv.wFct)("adfReadDirCBlock : T_DIRC not found");
     if (dirc->headerKey!=nSect)
-        (*adfEnv.wFct)("adfReadDirCBlock : headerKey!=nSect");
+      return RC_ERROR;
+        // (*adfEnv.wFct)("adfReadDirCBlock : headerKey!=nSect");
 
     return RC_OK;
 }

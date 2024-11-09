@@ -28,7 +28,7 @@
 #include "adf_dev_dump.h"
 
 #include "adf_blk.h"
-#include "adf_env.h"
+// #include "adf_env.h"
 
 #include <errno.h>
 #include <stdio.h>
@@ -52,8 +52,8 @@ RETCODE adfInitDumpDevice ( struct AdfDevice * const dev,
         if ( ! dev->fd && ( errno == EACCES || errno == EROFS ) ) {
             dev->fd = fopen ( name, "rb" );
             dev->readOnly = TRUE;
-            if ( dev->fd )
-                (*adfEnv.wFct)("myInitDevice : fopen, read-only mode forced");
+            // if ( dev->fd )
+            //     (*adfEnv.wFct)("myInitDevice : fopen, read-only mode forced");
         }
     }
     else
@@ -61,7 +61,7 @@ RETCODE adfInitDumpDevice ( struct AdfDevice * const dev,
         dev->fd = fopen ( name, "rb" );
 
     if ( ! dev->fd ) {
-        (*adfEnv.eFct)("myInitDevice : fopen");
+        // (*adfEnv.eFct)("myInitDevice : fopen");
         return RC_ERROR;
     }
 
@@ -144,12 +144,12 @@ RETCODE adfCreateHdFile ( struct AdfDevice * const dev,
                           const uint8_t            volType )
 {
     if (dev==NULL) {
-        (*adfEnv.eFct)("adfCreateHdFile : dev==NULL");
+        // (*adfEnv.eFct)("adfCreateHdFile : dev==NULL");
         return RC_ERROR;
     }
     dev->volList = (struct AdfVolume **) malloc (sizeof(struct Volume *));
     if (!dev->volList) { 
-                (*adfEnv.eFct)("adfCreateHdFile : unknown device type");
+                // (*adfEnv.eFct)("adfCreateHdFile : unknown device type");
         return RC_ERROR;
     }
 
@@ -183,14 +183,14 @@ struct AdfDevice * adfCreateDumpDevice ( const char * const filename,
     struct AdfDevice * dev = (struct AdfDevice *)
         malloc (sizeof(struct AdfDevice));
     if (!dev) { 
-        (*adfEnv.eFct)("adfCreateDumpDevice : malloc dev");
+        // (*adfEnv.eFct)("adfCreateDumpDevice : malloc dev");
         return NULL;
     }
 
     dev->fd = fopen ( filename, "wb" );
     if ( ! dev->fd ) {
         free ( dev );
-        (*adfEnv.eFct)("adfCreateDumpDevice : fopen");
+        // (*adfEnv.eFct)("adfCreateDumpDevice : fopen");
         return NULL;
     }
 
@@ -203,7 +203,7 @@ struct AdfDevice * adfCreateDumpDevice ( const char * const filename,
     if (r==-1) {
         fclose ( dev->fd );
         free ( dev );
-        (*adfEnv.eFct)("adfCreateDumpDevice : fseek");
+        // (*adfEnv.eFct)("adfCreateDumpDevice : fseek");
         return NULL;
     }
 
@@ -212,7 +212,7 @@ struct AdfDevice * adfCreateDumpDevice ( const char * const filename,
     if ( blocksWritten != 1 ) {
         fclose ( dev->fd );
         free ( dev );
-        (*adfEnv.eFct)("adfCreateDumpDevice : fwrite");
+        // (*adfEnv.eFct)("adfCreateDumpDevice : fwrite");
         return NULL;
     }
 
@@ -221,7 +221,7 @@ struct AdfDevice * adfCreateDumpDevice ( const char * const filename,
     dev->fd = fopen ( filename, "rb+" );
     if ( ! dev->fd ) {
         free ( dev );
-        (*adfEnv.eFct)("adfCreateDumpDevice : fopen");
+        // (*adfEnv.eFct)("adfCreateDumpDevice : fopen");
         return NULL;
     }
     dev->cylinders = cylinders;

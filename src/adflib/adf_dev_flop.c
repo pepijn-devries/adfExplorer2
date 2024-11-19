@@ -27,7 +27,7 @@
 
 #include "adf_dev_flop.h"
 
-#include "adf_env.h"
+// #include "adf_env.h"
 #include "adf_raw.h"
 #include "adf_vol.h"
 
@@ -103,16 +103,16 @@ RETCODE adfCreateFlop ( struct AdfDevice * const dev,
                         const uint8_t            volType )
 {
     if (dev==NULL) {
-        (*adfEnv.eFct)("adfCreateFlop : dev==NULL");
+        // (*adfEnv.eFct)("adfCreateFlop : dev==NULL");
         return RC_ERROR;
     }
     if ( volName == NULL ) {
-        (*adfEnv.eFct)("adfCreateFlop : volName == NULL");
+        // (*adfEnv.eFct)("adfCreateFlop : volName == NULL");
         return RC_ERROR;
     }
     dev->volList = (struct AdfVolume **) malloc (sizeof(struct AdfVolume *));
     if (!dev->volList) { 
-        (*adfEnv.eFct)("adfCreateFlop : malloc");
+        // (*adfEnv.eFct)("adfCreateFlop : malloc");
         return RC_ERROR;
     }
     dev->volList[0] = adfCreateVol( dev, 0L, 80L, volName, volType );

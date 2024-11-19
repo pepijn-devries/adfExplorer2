@@ -25,7 +25,7 @@
 
 #include "adf_str.h"
 
-#include "adf_env.h"
+// #include "adf_env.h"
 
 #include <stdlib.h>
 
@@ -40,7 +40,7 @@ struct AdfList * newCell ( struct AdfList * const list,
     struct AdfList * const cell = ( struct AdfList * )
         malloc ( sizeof ( struct AdfList ) );
     if (!cell) {
-        (*adfEnv.eFct)("newCell : malloc");
+        // (*adfEnv.eFct)("newCell : malloc");
         return NULL;
     }
     cell->content = content;

@@ -10,10 +10,21 @@
 #' @param vol Volume index number on the device starting at `0`. Default is `0`.
 #' Note that floppy disks can only have 1 volume installed.
 #' @param ... Ignored
+#' @param value Replacement value. In case of `volume_name()` it can be used to
+#' assign a new name to the volume.
+#' @returns Returns the requested information, or an updated copy of `dev` in case
+#' of an assign operation (`<-`).
 #' @rdname device_info
 #' @examples
-#' adz_file <- system.file("example.adz", package = "adfExplorer2")
-#' my_device <- connect_adf(adz_file)
+#' ## ADZ files can only be opened in 'write protected' mode
+#' ## extract it to a temporary file to allow writing to the virtual disk
+#' adf_file <- tempfile(fileext = ".adf")
+#' decompress_adz(
+#'   system.file("example.adz", package = "adfExplorer2"),
+#'   adf_file)
+#'
+#' ## Open virtual device to demonstrate methods
+#' my_device <- connect_adf(adf_file, write_protected = FALSE)
 #' 
 #' device_type(my_device)
 #' 
@@ -24,6 +35,8 @@
 #' n_volumes(my_device) # number of volumes available on device
 #' 
 #' volume_name(my_device) # name of the volume
+#' 
+#' volume_name(my_device) <- "new_name" # rename the volume
 #' 
 #' bytes_free(my_device) # bytes available for writing
 #' 
@@ -39,6 +52,7 @@
 #' 
 #' close(my_device)
 #' @author Pepijn de Vries
+#' @include move.R
 #' @export
 device_type <- function(dev, ...) {
   UseMethod("device_type", dev)
@@ -84,10 +98,26 @@ volume_name <- function(dev, ...) {
 }
 
 #' @rdname device_info
+#' @export
+`volume_name<-` <- function(dev, ..., value) {
+  UseMethod("volume_name<-", dev)
+}
+
+#' @rdname device_info
 #' @name volume_name
 #' @export
 volume_name.adf_device <- function(dev, vol = 0L, ...) {
   adf_dev_name(dev, vol)
+}
+
+#' @rdname device_info
+#' @name volume_name<-
+#' @export
+`volume_name<-.adf_device` <- function(dev, vol = 0L, ..., value) {
+  if (length(value) != 1 || any(is.na(value)))
+    stop("New name should have one element and not be `NA`")
+  adf_set_dev_name(dev, vol, .sanitise_name_nonamiga2(value))
+  return(dev)
 }
 
 #' @rdname device_info

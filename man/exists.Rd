@@ -9,22 +9,22 @@
 \alias{adf_dir_exists.virtual_path}
 \title{Test if an entry exists on a virtual device}
 \usage{
-adf_file_exists(x, virtual_path, ...)
+adf_file_exists(x, path, ...)
 
-\method{adf_file_exists}{adf_device}(x, virtual_path, ...)
+\method{adf_file_exists}{adf_device}(x, path, ...)
 
-\method{adf_file_exists}{virtual_path}(x, virtual_path, ...)
+\method{adf_file_exists}{virtual_path}(x, path, ...)
 
-adf_dir_exists(x, virtual_path, ...)
+adf_dir_exists(x, path, ...)
 
-\method{adf_dir_exists}{adf_device}(x, virtual_path, ...)
+\method{adf_dir_exists}{adf_device}(x, path, ...)
 
-\method{adf_dir_exists}{virtual_path}(x, virtual_path, ...)
+\method{adf_dir_exists}{virtual_path}(x, path, ...)
 }
 \arguments{
 \item{x}{Either a virtual device or virtual path.}
 
-\item{virtual_path}{A \code{\link[=virtual_path]{virtual_path()}} to be checked for existence. Should
+\item{path}{A \code{\link[=virtual_path]{virtual_path()}} pointing to the targeted entry (file or directory). Should
 be omitted when \code{x} is already a virtual path.}
 
 \item{...}{Ignored}

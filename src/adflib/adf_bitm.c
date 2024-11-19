@@ -27,7 +27,7 @@
 
 #include "adf_bitm.h"
 
-#include "adf_env.h"
+// #include "adf_env.h"
 #include "adf_raw.h"
 #include "adf_util.h"
 #include "defendian.h"
@@ -127,7 +127,8 @@ RETCODE adfReadBitmap ( struct AdfVolume * const        vol,
     while ( i < BM_SIZE && root->bmPages[i] != 0 ) {
             vol->bitmapBlocks[j] = nSect = root->bmPages[i];
         if ( ! isSectNumValid ( vol, nSect ) ) {
-            adfEnv.wFct ( "adfReadBitmap : sector %d out of range", nSect );
+          return RC_ERROR;
+            // adfEnv.wFct ( "adfReadBitmap : sector %d out of range", nSect );
             // abort here?
         }
 
@@ -150,7 +151,8 @@ RETCODE adfReadBitmap ( struct AdfVolume * const        vol,
         while ( i < 127 && j < vol->bitmapSize ) {
             nSect = bmExt.bmPages[i];
             if ( ! isSectNumValid ( vol, nSect ) ) {
-                adfEnv.wFct ( "adfReadBitmap : sector %d out of range", nSect );
+              return RC_ERROR;
+                // adfEnv.wFct ( "adfReadBitmap : sector %d out of range", nSect );
                 // abort here?
             }
             vol->bitmapBlocks[j] = nSect;
@@ -420,7 +422,8 @@ RETCODE adfReadBitmapBlock ( struct AdfVolume *    vol,
 #endif
 
     if ( bitm->checkSum != adfNormalSum ( buf, 0, LOGICAL_BLOCK_SIZE ) ) {
-        adfEnv.wFct("adfReadBitmapBlock : invalid checksum");
+        // adfEnv.wFct("adfReadBitmapBlock : invalid checksum");
+      return RC_ERROR;
         // return error here?
     }
 
@@ -533,14 +536,14 @@ static RETCODE adfBitmapAllocate ( struct AdfVolume * const vol )
     vol->bitmapTable = (struct bBitmapBlock**)
         malloc ( sizeof(struct bBitmapBlock*) * vol->bitmapSize );
     if ( vol->bitmapTable == NULL ) {
-        adfEnv.eFct("adfBitmapAllocate : malloc, vol->bitmapTable");
+        // adfEnv.eFct("adfBitmapAllocate : malloc, vol->bitmapTable");
         return RC_MALLOC;
     }
 
     vol->bitmapBlocks = (SECTNUM*) malloc ( sizeof(SECTNUM) * vol->bitmapSize );
     if ( vol->bitmapBlocks == NULL ) {
         free ( vol->bitmapTable );
-        adfEnv.eFct("adfBitmapAllocate : malloc, vol->bitmapBlocks");
+        // adfEnv.eFct("adfBitmapAllocate : malloc, vol->bitmapBlocks");
         return RC_MALLOC;
     }
 
@@ -548,7 +551,7 @@ static RETCODE adfBitmapAllocate ( struct AdfVolume * const vol )
     if ( vol->bitmapBlocksChg == NULL ) {
         free ( vol->bitmapTable );
         free ( vol->bitmapBlocks );
-        adfEnv.eFct("adfBitmapAllocate : malloc, vol->bitmapBlocksChg");
+        // adfEnv.eFct("adfBitmapAllocate : malloc, vol->bitmapBlocksChg");
         return RC_MALLOC;
     }
 
@@ -562,8 +565,10 @@ static RETCODE adfBitmapAllocate ( struct AdfVolume * const vol )
             for ( unsigned j = 0 ; j < i ; j++ )
                 free ( vol->bitmapTable[j] );
             free ( vol->bitmapTable );
-            adfEnv.eFct("adfBitmapAllocate : malloc");
+            // adfEnv.eFct("adfBitmapAllocate : malloc");
             return RC_MALLOC;
+        } else { /* Edit PdV Make sure to initialize bitmap: */
+            memset(vol->bitmapTable[i], 0, sizeof(struct bBitmapBlock));
         }
     }
     return RC_OK;

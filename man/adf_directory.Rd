@@ -26,15 +26,15 @@ adf_directory(dev, ...) <- value
 
 \method{adf_directory}{adf_device.virtual_path}(dev, ...) <- value
 
-make_adf_dir(x, virtual_path, ...)
+make_adf_dir(x, path, ...)
 
-\method{make_adf_dir}{adf_device}(x, virtual_path, ...)
+\method{make_adf_dir}{adf_device}(x, path, ...)
 
-\method{make_adf_dir}{virtual_path}(x, virtual_path, ...)
+\method{make_adf_dir}{virtual_path}(x, path, ...)
 
-\method{make_adf_dir.adf_device}{character}(x, virtual_path, ...)
+\method{make_adf_dir.adf_device}{character}(x, path, ...)
 
-\method{make_adf_dir.adf_device}{virtual_path}(x, virtual_path, ...)
+\method{make_adf_dir.adf_device}{virtual_path}(x, path, ...)
 }
 \arguments{
 \item{dev}{The virtual adf device for which information needs to be obtained.
@@ -50,7 +50,7 @@ representing directory you wish to set as current.}
 the device on which a directory needs to be created. The latter specifies
 both the directory and the device on which it needs to be created.}
 
-\item{virtual_path}{A \code{character} string or a \code{virtual_path} (see \code{\link[=virtual_path]{virtual_path()}})
+\item{path}{A \code{character} string or a \code{virtual_path} (see \code{\link[=virtual_path]{virtual_path()}})
 specifying the name of the new directory to be created. Should be missing when \code{x} is
 of class \code{virtual_path}}
 }
@@ -71,9 +71,15 @@ relative path name to specify the new directory name.
 See \code{vignette("virtual_paths")} for a note on file and directory names on the Amiga.
 }
 \examples{
-## First setup a connection to a virtual device
-adz_file <- system.file("example.adz", package = "adfExplorer2")
-my_device <- connect_adf(adz_file)
+## ADZ files can only be opened in 'write protected' mode
+## extract it to a temporary file to allow writing to the virtual disk
+adf_file <- tempfile(fileext = ".adf")
+decompress_adz(
+  system.file("example.adz", package = "adfExplorer2"),
+  adf_file)
+
+## Open virtual device to demonstrate methods
+my_device <- connect_adf(adf_file, write_protected = FALSE)
 
 ## Show the current directory
 adf_directory(my_device)

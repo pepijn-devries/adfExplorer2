@@ -1,3 +1,10 @@
+adfExplorer2 v0.0.3
+-------------
+
+  * Cleaned out redundant code
+  * Some debugging with valgrind and lldb
+  * User can now rename a entries
+
 adfExplorer2 v0.0.2
 -------------
 

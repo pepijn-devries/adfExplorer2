@@ -23,7 +23,7 @@
 connect_adf <- function(filename, write_protected = TRUE) {
   if (toupper(filename) |> endsWith(".ADZ")) {
     if (!write_protected) warning("ADZ files can only be opened in write-protected mode.")
-    write_protected <- FALSE
+    write_protected <- TRUE
     
     ## Get file size of gzip'd adf:
     con <- file(filename, "rb", raw = TRUE)
@@ -43,7 +43,7 @@ connect_adf <- function(filename, write_protected = TRUE) {
     
     ## open the temp file
   }
-  connect_adf_(filename, write_protected)
+  open_adf_(filename, write_protected)
 }
 
 #' Open a connection to a file on a virtual ADF device
@@ -54,8 +54,8 @@ connect_adf <- function(filename, write_protected = TRUE) {
 #' @include cpp11.R
 #' @param x Either a connection to a virtual ADF device created with [`connect_adf()`],
 #' or a `virtual_path` created with [`virtual_path()`].
-#' @param virtual_path Only required when `x` is a virtual device of class `adf_device`.
-#' In that case `virtual_path` should be a character string representing the
+#' @param path Only required when `x` is a virtual device of class `adf_device`.
+#' In that case `path` should be a character string representing the
 #' path to the file on the virtual device. See also `vignette("virtual_paths")`.
 #' @param writable A `logical` value. When `TRUE` the connection can be used to
 #' write to the file on the virtual device. When `FALSE` it can only be used to read.
@@ -95,16 +95,16 @@ adf_file_con <- function(x, ..., writable = FALSE) {
 #' @method adf_file_con adf_device
 #' @export adf_file_con.adf_device
 #' @export
-adf_file_con.adf_device <- function(x, virtual_path, ..., writable = FALSE) {
-  UseMethod("adf_file_con.adf_device", virtual_path)
+adf_file_con.adf_device <- function(x, path, ..., writable = FALSE) {
+  UseMethod("adf_file_con.adf_device", path)
 }
 
 #' @rdname adf_file_con
 #' @name adf_file_con
 #' @method adf_file_con.adf_device character
 #' @export
-adf_file_con.adf_device.character <- function(x, virtual_path, ..., writable = FALSE) {
-  virtual_path(x, virtual_path) |>
+adf_file_con.adf_device.character <- function(x, path, ..., writable = FALSE) {
+  virtual_path(x, path) |>
     adf_file_con.virtual_path(..., writable = writable)
 }
 

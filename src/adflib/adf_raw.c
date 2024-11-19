@@ -27,7 +27,7 @@
 
 #include "adf_raw.h"
 
-#include "adf_env.h"
+// #include "adf_env.h"
 #include "adf_util.h"
 #include "defendian.h"
 
@@ -79,7 +79,7 @@ void swapEndian ( uint8_t * const buf,
     assert ( type <= MAX_SWTYPE );
     if ( type > MAX_SWTYPE || type < 0 ) {
         /* this should never happen */
-        adfEnv.eFct ( "SwapEndian: type %d do not exist", type );
+        // adfEnv.eFct ( "SwapEndian: type %d do not exist", type );
         return;
     }
 
@@ -103,8 +103,8 @@ void swapEndian ( uint8_t * const buf,
         }
         i += 2;
     }
-    if ( p != swapTable[type][i + 1] )
-        (*adfEnv.wFct)("Warning: Endian Swapping length");		/* BV */
+    // if ( p != swapTable[type][i + 1] )
+    //     (*adfEnv.wFct)("Warning: Endian Swapping length");		/* BV */
 }
 
 
@@ -138,8 +138,8 @@ RETCODE adfReadRootBlock ( struct AdfVolume * const  vol,
 
     uint32_t checksumCalculated = adfNormalSum ( buf, 0x14, LOGICAL_BLOCK_SIZE );
     if ( root->checkSum != checksumCalculated ) {
-        adfEnv.wFct ( "adfReadRootBlock : invalid checksum 0x%x, calculated 0x%x",
-                      root->checkSum, checksumCalculated );
+        // adfEnv.wFct ( "adfReadRootBlock : invalid checksum 0x%x, calculated 0x%x",
+        //               root->checkSum, checksumCalculated );
         //return RC_BLOCKSUM;
     }
 
@@ -208,7 +208,7 @@ RETCODE adfReadBootBlock ( struct AdfVolume * const  vol,
     swapEndian((uint8_t*)boot,SWBL_BOOT);
 #endif
     if ( strncmp ( "DOS", boot->dosType, 3 ) != 0 ) {
-        adfEnv.wFct("adfReadBootBlock : DOS id not found");
+        // adfEnv.wFct("adfReadBootBlock : DOS id not found");
         return RC_ERROR;
     }
 
@@ -217,8 +217,8 @@ RETCODE adfReadBootBlock ( struct AdfVolume * const  vol,
         uint32_t checksumCalculated = adfBootSum ( buf );
 /*printf("compsum=%lx sum=%lx\n",	adfBootSum(buf),boot->checkSum );*/		/* BV */
         if ( boot->checkSum != checksumCalculated ) {
-            adfEnv.wFct ( "adfReadBootBlock : incorrect checksum 0x%x, calculated 0x%x",
-                          boot->checkSum, checksumCalculated );
+            // adfEnv.wFct ( "adfReadBootBlock : incorrect checksum 0x%x, calculated 0x%x",
+            //               boot->checkSum, checksumCalculated );
             //return RC_BLOCKSUM;
         }
     }

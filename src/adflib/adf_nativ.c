@@ -26,7 +26,7 @@
 #include<string.h>
 #include"adf_nativ.h"
 #include"adf_err.h"
-#include "adf_env.h"
+// #include "adf_env.h"
 
 
 /*
@@ -98,14 +98,14 @@ BOOL myIsDevNative ( const char * const devName )
  */
 void adfInitNativeFct(void) /* Edit PdV - comply with ISO C */
 {
-    struct AdfNativeFunctions * nFct =
-        ( struct AdfNativeFunctions * ) adfEnv.nativeFct;
+    // struct AdfNativeFunctions * nFct =
+    //     ( struct AdfNativeFunctions * ) adfEnv.nativeFct;
 
-    nFct->adfInitDevice = myInitDevice ;
-    nFct->adfNativeReadSector = myReadSector ;
-    nFct->adfNativeWriteSector = myWriteSector ;
-    nFct->adfReleaseDevice = myReleaseDevice ;
-    nFct->adfIsDevNative = myIsDevNative;
+    // nFct->adfInitDevice = myInitDevice ;
+    // nFct->adfNativeReadSector = myReadSector ;
+    // nFct->adfNativeWriteSector = myWriteSector ;
+    // nFct->adfReleaseDevice = myReleaseDevice ;
+    // nFct->adfIsDevNative = myIsDevNative;
 }
 
 /*##########################################################################*/

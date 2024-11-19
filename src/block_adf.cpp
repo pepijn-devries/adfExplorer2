@@ -2,6 +2,7 @@
 
 using namespace cpp11;
 
+[[cpp11::register]]
 SEXP read_adf_block_(SEXP connection, int sector) {
   AdfDevice * dev = get_adf_dev_internal(connection);
   uint8_t buf[512] = {0};
@@ -18,6 +19,7 @@ SEXP read_adf_block_(SEXP connection, int sector) {
   return result;
 }
 
+[[cpp11::register]]
 SEXP write_adf_block_(SEXP connection, int sector, raws block) {
   AdfDevice * dev = get_adf_dev_internal(connection);
   if (block.size() != 512) Rf_error("Unexpected block size");
@@ -81,6 +83,7 @@ list interpret_file_header_internal(AdfDevice *dev, int vol_num, int sectnum) {
   return result;
 }
 
+[[cpp11::register]]
 list interpret_file_header(SEXP connection, int vol_num, int sectnum) {
   AdfDevice * dev = get_adf_dev_internal(connection);
   return interpret_file_header_internal(dev, vol_num, sectnum);
@@ -133,6 +136,7 @@ list interpret_dir_header_internal(AdfDevice *dev, int vol_num, int sectnum) {
   return result;
 }
 
+[[cpp11::register]]
 list interpret_dir_header(SEXP connection, int vol_num, int sectnum) {
   AdfDevice * dev = get_adf_dev_internal(connection);
   return interpret_dir_header_internal(dev, vol_num, sectnum);
@@ -182,13 +186,14 @@ list interpret_root_header_internal(AdfDevice *dev, int vol_num) {
   return result;
 }
 
+[[cpp11::register]]
 list interpret_root_header(SEXP connection, int vol_num) {
   AdfDevice * dev = get_adf_dev_internal(connection);
   return interpret_root_header_internal(dev, vol_num);
 }
 
-r_string headerKey_to_str(int headerKey) {
-  r_string result;
+std::string headerKey_to_str(int headerKey) {
+  std::string result;
   switch(headerKey) {
   case 0:
     result = "NULL";
@@ -212,8 +217,8 @@ r_string headerKey_to_str(int headerKey) {
   return result;
 }
 
-r_string secType_to_str(int secType) {
-  r_string result;
+std::string secType_to_str(int secType) {
+  std::string result;
   switch(secType) {
   case 0:
     result = "NULL";
@@ -279,4 +284,23 @@ raws adf_bootable_code(void) {
     0x6c, 0x69, 0x62, 0x72, 0x61, 0x72, 0x79, 0x00, 0x22, 0x65, 0x78, 0x70, 0x61, 0x6e,
     0x73, 0x69, 0x6f, 0x6e, 0x2e, 0x6c, 0x69, 0x62, 0x72, 0x61, 0x72, 0x79
   });
+}
+
+RETCODE updateBootSum ( struct AdfVolume * const vol ) {
+  uint8_t buf[1024];
+  RETCODE rc = RC_OK;
+  
+  rc = adfReadBlock (vol, 0, buf);
+  if (rc == RC_OK) rc = adfReadBlock (vol, 1, buf + LOGICAL_BLOCK_SIZE);
+  if (rc != RC_OK) return rc;
+  
+  uint32_t calc_checksum = adfBootSum(buf);
+  swLong(buf+4, calc_checksum);
+  
+  rc = adfWriteBlock ( vol, 0, buf );
+  if ( rc != RC_OK )
+    return rc;
+  
+  rc = adfWriteBlock ( vol, 1, buf + 512 );
+  return rc;
 }

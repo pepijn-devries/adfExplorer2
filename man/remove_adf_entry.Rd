@@ -8,15 +8,15 @@
 \alias{remove_adf_entry.adf_device.virtual_path}
 \title{Remove entry (file / directory) from a virtual ADF device}
 \usage{
-remove_adf_entry(x, virtual_path, flush = FALSE, ...)
+remove_adf_entry(x, path, flush = FALSE, ...)
 
-\method{remove_adf_entry}{adf_device}(x, virtual_path, flush = FALSE, ...)
+\method{remove_adf_entry}{adf_device}(x, path, flush = FALSE, ...)
 
-\method{remove_adf_entry}{virtual_path}(x, virtual_path, flush = FALSE, ...)
+\method{remove_adf_entry}{virtual_path}(x, path, flush = FALSE, ...)
 
-\method{remove_adf_entry.adf_device}{character}(x, virtual_path, flush = FALSE, ...)
+\method{remove_adf_entry.adf_device}{character}(x, path, flush = FALSE, ...)
 
-\method{remove_adf_entry.adf_device}{virtual_path}(x, virtual_path, flush = FALSE, ...)
+\method{remove_adf_entry.adf_device}{virtual_path}(x, path, flush = FALSE, ...)
 }
 \arguments{
 \item{x}{The virtual ADF device from which an entry needs to be deleted or a virtual path pointing
@@ -24,8 +24,8 @@ at the entry to be deleted. In case of a virtual device, it should be of class \
 can be created with \code{\link[=create_adf_device]{create_adf_device()}} or \code{\link[=connect_adf]{connect_adf()}}. In case of a virtual path use
 \code{\link[=virtual_path]{virtual_path()}}.}
 
-\item{virtual_path}{A \code{character} string or a virtual_path (see \code{\link[=virtual_path]{virtual_path()}})
-representing a file or directory you wish to delete. Should be omitted when \code{x} is alreade a
+\item{path}{A \code{character} string or a virtual_path (see \code{\link[=virtual_path]{virtual_path()}})
+representing a file or directory you wish to delete. Should be omitted when \code{x} is already a
 virtual path.}
 
 \item{flush}{A \code{logical} value. When set to \code{FALSE} (default), only the entry's registry in its

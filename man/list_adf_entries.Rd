@@ -8,33 +8,37 @@
 \alias{list_adf_entries.adf_device.virtual_path}
 \title{List entries in a directory of a virtual ADF device}
 \usage{
-list_adf_entries(x, virtual_path, recursive = FALSE, ...)
+list_adf_entries(x, path, recursive = FALSE, nested = FALSE, ...)
 
-\method{list_adf_entries}{adf_device}(x, virtual_path, recursive = FALSE, ...)
+\method{list_adf_entries}{adf_device}(x, path, recursive = FALSE, nested = FALSE, ...)
 
-\method{list_adf_entries}{virtual_path}(x, virtual_path, recursive = FALSE, ...)
+\method{list_adf_entries}{virtual_path}(x, path, recursive = FALSE, nested = FALSE, ...)
 
-\method{list_adf_entries.adf_device}{character}(x, virtual_path, recursive = FALSE, ...)
+\method{list_adf_entries.adf_device}{character}(x, path, recursive = FALSE, nested = FALSE, ...)
 
-\method{list_adf_entries.adf_device}{virtual_path}(x, virtual_path, recursive = FALSE, ...)
+\method{list_adf_entries.adf_device}{virtual_path}(x, path, recursive = FALSE, ...)
 }
 \arguments{
 \item{x}{Either an \code{adf_device} class object, in which case the \code{virtual_path}
 argument needs to be specified; or, a \code{virtual_path} class object.}
 
-\item{virtual_path}{The virtual path for which you wish to obtain a list
+\item{path}{The virtual path for which you wish to obtain a list
 of entries (see also \code{vignette("virtual_paths")}). When missing,
 entries for the current directory (\code{\link[=adf_directory]{adf_directory()}}) are returned, wen
 \code{x} is an \code{adf_device} class object. If \code{x} is a \code{virtual_path} class
 object, content of the path defined in that object is listed}
 
 \item{recursive}{A \code{logical} value. When set to \code{TRUE}, the function is
-called recursively for all subdirectories in \code{virtual_path}.}
+called recursively for all subdirectories in \code{path}.}
+
+\item{nested}{A \code{logical} value. When set to The directory tree is returned
+as a nested list.}
 
 \item{...}{Ignored}
 }
 \value{
-A vector of \code{virtual_path} class objects
+A vector of \code{virtual_path} class objects, or a nested \code{list} in
+case \code{nested} is \code{TRUE}.
 }
 \description{
 Get an overview of all entries (files and directories) in a specific

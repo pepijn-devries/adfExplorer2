@@ -8,7 +8,9 @@
 \alias{volume_capacity}
 \alias{volume_capacity.adf_device}
 \alias{volume_name}
+\alias{volume_name<-}
 \alias{volume_name.adf_device}
+\alias{volume_name<-.adf_device}
 \alias{n_volumes}
 \alias{n_volumes.adf_device}
 \alias{bytes_free}
@@ -39,7 +41,11 @@ volume_capacity(dev, ...)
 
 volume_name(dev, ...)
 
+volume_name(dev, ...) <- value
+
 \method{volume_name}{adf_device}(dev, vol = 0L, ...)
+
+\method{volume_name}{adf_device}(dev, vol = 0L, ...) <- value
 
 n_volumes(dev, ...)
 
@@ -78,6 +84,13 @@ or \code{\link[=connect_adf]{connect_adf()}}.}
 
 \item{vol}{Volume index number on the device starting at \code{0}. Default is \code{0}.
 Note that floppy disks can only have 1 volume installed.}
+
+\item{value}{Replacement value. In case of \code{volume_name()} it can be used to
+assign a new name to the volume.}
+}
+\value{
+Returns the requested information, or an updated copy of \code{dev} in case
+of an assign operation (\verb{<-}).
 }
 \description{
 A collection of functions to retrieve information about the virtual device, or
@@ -85,8 +98,15 @@ any volume (file system) available on the device. See examples for usage and
 results.
 }
 \examples{
-adz_file <- system.file("example.adz", package = "adfExplorer2")
-my_device <- connect_adf(adz_file)
+## ADZ files can only be opened in 'write protected' mode
+## extract it to a temporary file to allow writing to the virtual disk
+adf_file <- tempfile(fileext = ".adf")
+decompress_adz(
+  system.file("example.adz", package = "adfExplorer2"),
+  adf_file)
+
+## Open virtual device to demonstrate methods
+my_device <- connect_adf(adf_file, write_protected = FALSE)
 
 device_type(my_device)
 
@@ -97,6 +117,8 @@ volume_capacity(my_device) # in bytes
 n_volumes(my_device) # number of volumes available on device
 
 volume_name(my_device) # name of the volume
+
+volume_name(my_device) <- "new_name" # rename the volume
 
 bytes_free(my_device) # bytes available for writing
 

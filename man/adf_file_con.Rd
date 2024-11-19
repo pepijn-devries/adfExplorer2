@@ -9,9 +9,9 @@
 \usage{
 adf_file_con(x, ..., writable = FALSE)
 
-\method{adf_file_con}{adf_device}(x, virtual_path, ..., writable = FALSE)
+\method{adf_file_con}{adf_device}(x, path, ..., writable = FALSE)
 
-\method{adf_file_con.adf_device}{character}(x, virtual_path, ..., writable = FALSE)
+\method{adf_file_con.adf_device}{character}(x, path, ..., writable = FALSE)
 
 \method{adf_file_con}{virtual_path}(x, ..., writable = FALSE)
 }
@@ -26,8 +26,8 @@ write to the file on the virtual device. When \code{FALSE} it can only be used t
 Note that a writeable connection can only be setup on a virtual device that is
 not write protected.}
 
-\item{virtual_path}{Only required when \code{x} is a virtual device of class \code{adf_device}.
-In that case \code{virtual_path} should be a character string representing the
+\item{path}{Only required when \code{x} is a virtual device of class \code{adf_device}.
+In that case \code{path} should be a character string representing the
 path to the file on the virtual device. See also \code{vignette("virtual_paths")}.}
 }
 \value{

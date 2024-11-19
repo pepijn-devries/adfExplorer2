@@ -15,15 +15,21 @@
 #' both the directory and the device on which it needs to be created.
 #' @param value A `character` string or a `virtual_path` (see [`virtual_path()`])
 #' representing directory you wish to set as current.
-#' @param virtual_path A `character` string or a `virtual_path` (see [`virtual_path()`])
+#' @param path A `character` string or a `virtual_path` (see [`virtual_path()`])
 #' specifying the name of the new directory to be created. Should be missing when `x` is
 #' of class `virtual_path`
 #' @returns `make_adf_dir()` returns the device connection. `adf_directory()` returns
 #' the current directory as a `virtual_path` class object.
 #' @examples
-#' ## First setup a connection to a virtual device
-#' adz_file <- system.file("example.adz", package = "adfExplorer2")
-#' my_device <- connect_adf(adz_file)
+#' ## ADZ files can only be opened in 'write protected' mode
+#' ## extract it to a temporary file to allow writing to the virtual disk
+#' adf_file <- tempfile(fileext = ".adf")
+#' decompress_adz(
+#'   system.file("example.adz", package = "adfExplorer2"),
+#'   adf_file)
+#'
+#' ## Open virtual device to demonstrate methods
+#' my_device <- connect_adf(adf_file, write_protected = FALSE)
 #' 
 #' ## Show the current directory
 #' adf_directory(my_device)
@@ -92,7 +98,7 @@ adf_directory.adf_device <- function(dev, ...) {
 #' @rdname adf_directory
 #' @name make_adf_dir
 #' @export
-make_adf_dir <- function(x, virtual_path, ...) {
+make_adf_dir <- function(x, path, ...) {
   UseMethod("make_adf_dir")
 }
 
@@ -101,8 +107,8 @@ make_adf_dir <- function(x, virtual_path, ...) {
 #' @method make_adf_dir adf_device
 #' @export make_adf_dir.adf_device
 #' @export
-make_adf_dir.adf_device <- function(x, virtual_path, ...) {
-  UseMethod("make_adf_dir.adf_device", virtual_path)
+make_adf_dir.adf_device <- function(x, path, ...) {
+  UseMethod("make_adf_dir.adf_device", path)
 }
 
 #' @rdname adf_directory
@@ -110,9 +116,9 @@ make_adf_dir.adf_device <- function(x, virtual_path, ...) {
 #' @method make_adf_dir virtual_path
 #' @export make_adf_dir.virtual_path
 #' @export
-make_adf_dir.virtual_path <- function(x, virtual_path, ...) {
-  if (!missing(virtual_path))
-    stop("`virtual_path` argument should be missing when `x` is of class `virtual_path`.")
+make_adf_dir.virtual_path <- function(x, path, ...) {
+  if (!missing(path))
+    stop("`path` argument should be missing when `x` is of class `virtual_path`.")
   if (length(x) != 1)
     stop("Cannot create multiple virtual paths at once")
   x <- unclass(x)
@@ -123,15 +129,15 @@ make_adf_dir.virtual_path <- function(x, virtual_path, ...) {
 #' @name make_adf_dir
 #' @method make_adf_dir.adf_device character
 #' @export
-make_adf_dir.adf_device.character <- function(x, virtual_path, ...) {
-  adf_mkdir(x, virtual_path)
+make_adf_dir.adf_device.character <- function(x, path, ...) {
+  adf_mkdir(x, path)
 }
 
 #' @rdname adf_directory
 #' @name make_adf_dir
 #' @method make_adf_dir.adf_device virtual_path
 #' @export
-make_adf_dir.adf_device.virtual_path <- function(x, virtual_path, ...) {
+make_adf_dir.adf_device.virtual_path <- function(x, path, ...) {
   .check_dev(x, virtual_path())
   make_adf_dir(x, virtual_path$path, ...)
 }
@@ -142,15 +148,18 @@ make_adf_dir.adf_device.virtual_path <- function(x, virtual_path, ...) {
 #' directory.
 #' @param x Either an `adf_device` class object, in which case the `virtual_path`
 #' argument needs to be specified; or, a `virtual_path` class object.
-#' @param virtual_path The virtual path for which you wish to obtain a list
+#' @param path The virtual path for which you wish to obtain a list
 #' of entries (see also `vignette("virtual_paths")`). When missing,
 #' entries for the current directory ([`adf_directory()`]) are returned, wen
 #' `x` is an `adf_device` class object. If `x` is a `virtual_path` class
 #' object, content of the path defined in that object is listed
 #' @param recursive A `logical` value. When set to `TRUE`, the function is
-#' called recursively for all subdirectories in `virtual_path`.
+#' called recursively for all subdirectories in `path`.
+#' @param nested A `logical` value. When set to The directory tree is returned
+#' as a nested list.
 #' @param ... Ignored
-#' @returns A vector of `virtual_path` class objects
+#' @returns A vector of `virtual_path` class objects, or a nested `list` in
+#' case `nested` is `TRUE`.
 #' @examples
 #' ## First setup a connection to a virtual device
 #' adz_file <- system.file("example.adz", package = "adfExplorer2")
@@ -166,7 +175,7 @@ make_adf_dir.adf_device.virtual_path <- function(x, virtual_path, ...) {
 #' @name list_adf_entries
 #' @author Pepijn de Vries
 #' @export
-list_adf_entries <- function(x, virtual_path, recursive = FALSE, ...) {
+list_adf_entries <- function(x, path, recursive = FALSE, nested = FALSE, ...) {
   UseMethod("list_adf_entries", x)
 }
 
@@ -174,45 +183,48 @@ list_adf_entries <- function(x, virtual_path, recursive = FALSE, ...) {
 #' @method list_adf_entries adf_device
 #' @export list_adf_entries.adf_device
 #' @export
-list_adf_entries.adf_device <- function(x, virtual_path, recursive = FALSE, ...) {
-  if (missing(virtual_path)) {
-    list_adf_entries(x, adf_directory(x), recursive = recursive, ...)
-  } else UseMethod("list_adf_entries.adf_device", virtual_path)
+list_adf_entries.adf_device <- function(x, path, recursive = FALSE, nested = FALSE, ...) {
+  if (missing(path)) {
+    list_adf_entries(x, adf_directory(x), recursive = recursive, nested = nested, ...)
+  } else UseMethod("list_adf_entries.adf_device", path)
 }
 
 #' @rdname list_adf_entries
 #' @method list_adf_entries virtual_path
 #' @export list_adf_entries.virtual_path
 #' @export
-list_adf_entries.virtual_path <- function(x, virtual_path, recursive = FALSE, ...) {
-  if (!missing(virtual_path))
-    stop("`virtual_path` argument should be missing when `x` is of class `virtual_path`.")
+list_adf_entries.virtual_path <- function(x, path, recursive = FALSE, nested = FALSE, ...) {
+  if (!missing(path))
+    stop("`path` argument should be missing when `x` is of class `virtual_path`.")
   if (length(x) != 1)
     stop("Cannot list directory entries for multiple virtual paths")
   x <- unclass(x)
-  list_adf_entries(x$device[[1]], x$path, recursive = recursive, ...)
+  list_adf_entries(x$device[[1]], x$path, recursive = recursive, nested = nested, ...)
 }
 
 #' @rdname list_adf_entries
 #' @name list_adf_entries
 #' @method list_adf_entries.adf_device character
 #' @export
-list_adf_entries.adf_device.character <- function(x, virtual_path, recursive = FALSE, ...) {
-  result <- list_adf_entries_(x, virtual_path, recursive) |> unlist()
-  vctrs::new_rcrd(list(device = rep(list(x), length(result)),
-                       path   = result),
-                  class = "virtual_path")
-}
+list_adf_entries.adf_device.character <-
+  function(x, path, recursive = FALSE, nested = FALSE, ...) {
+    result <- list_adf_entries_(x, path, recursive, nested)
+    if (nested) return(result)
+    result <- unlist(result)
+    vctrs::new_rcrd(list(device = rep(list(x), length(result)),
+                         path   = result),
+                    class = "virtual_path")
+  }
 
 #' @rdname list_adf_entries
 #' @name list_adf_entries
 #' @method list_adf_entries.adf_device virtual_path
 #' @export
-list_adf_entries.adf_device.virtual_path <- function(x, virtual_path,
+list_adf_entries.adf_device.virtual_path <- function(x, path,
                                                  recursive = FALSE, ...) {
-  if (length(virtual_path) != 1)
+  if (length(path) != 1)
     stop("Cannot list directory entries for multiple virtual paths")
-  .check_dev(x, virtual_path)
-  virtual_path <- unclass(virtual_path[[1]])
-  list_adf_entries(x, virtual_path$path, recursive = recursive, ...)
+  .check_dev(x, path)
+  path <- unclass(path[[1]])
+  list_adf_entries(x, path$path, recursive = recursive, ...)
 }

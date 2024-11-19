@@ -9,28 +9,29 @@
 \alias{adf_entry_info.adf_file_con}
 \title{Retrieve information from entry headers on virtual ADF devices}
 \usage{
-adf_entry_info(x, virtual_path, ...)
+adf_entry_info(x, path, ...)
 
-\method{adf_entry_info}{adf_device}(x, virtual_path, ...)
+\method{adf_entry_info}{adf_device}(x, path, ...)
 
-\method{adf_entry_info.adf_device}{virtual_path}(x, virtual_path, ...)
+\method{adf_entry_info.adf_device}{virtual_path}(x, path, ...)
 
-\method{adf_entry_info.adf_device}{character}(x, virtual_path, ...)
+\method{adf_entry_info.adf_device}{character}(x, path, ...)
 
-\method{adf_entry_info}{virtual_path}(x, virtual_path, ...)
+\method{adf_entry_info}{virtual_path}(x, path, ...)
 
-\method{adf_entry_info}{adf_file_con}(x, virtual_path, ...)
+\method{adf_entry_info}{adf_file_con}(x, path, ...)
 }
 \arguments{
 \item{x}{Either a virtual device or virtual path.}
 
-\item{virtual_path}{A \code{\link[=virtual_path]{virtual_path()}} to be checked for existence. Should
+\item{path}{A \code{\link[=virtual_path]{virtual_path()}} pointing to the targeted entry (file or directory). Should
 be omitted when \code{x} is already a virtual path.}
 
 \item{...}{Ignored}
 }
 \value{
-Returns a named list of entry properties. Elements included in the list
+Returns a \code{list} of named \code{list}s of entry properties.
+Elements included in the named \code{list}
 depend on the type of entry (root, directory or file).
 }
 \description{

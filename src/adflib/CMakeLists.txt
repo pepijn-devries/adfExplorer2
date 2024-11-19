@@ -61,7 +61,6 @@ add_library ( adf
   adf_dir.c
   adf_dir.h
   adf_env.c
-  adf_env.h
   adf_err.h
   adf_file_block.c
   adf_file_block.h

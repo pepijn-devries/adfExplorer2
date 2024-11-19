@@ -168,8 +168,12 @@ move_adf_entry.virtual_path.character <- function(source, destination, ...) {
 }
 
 .sanitise_name_nonamiga <- function(x) {
-  x <- gsub("[:]", "/", as.character(x)) |> basename()
-  gsub("[/\\:*?\"<>|]", "", x)
+  x <- gsub("[:]", "/", as.character(x)) |> basename() |>
+    .sanitise_name_nonamiga2()
+}
+
+.sanitise_name_nonamiga2 <- function(x) {
+  gsub("[/\\:*?\"<>|/]", "", x)
 }
 
 .sanitise_name_amiga <- function(x) {

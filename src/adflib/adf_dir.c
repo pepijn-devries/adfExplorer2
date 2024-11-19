@@ -30,7 +30,7 @@
 
 #include "adf_bitm.h"
 #include "adf_cache.h"
-#include "adf_env.h"
+// #include "adf_env.h"
 #include "adf_file_block.h"
 #include "adf_raw.h"
 #include "adf_util.h"
@@ -56,7 +56,6 @@ RETCODE adfRenameEntry ( struct AdfVolume * const vol,
     SECTNUM nSect2, nSect, prevSect, tmpSect;
     char name2[MAXNAMELEN+1], name3[MAXNAMELEN+1];
 	BOOL intl;
-
 
     if ( pSect == nPSect  &&
          strcmp ( oldName, newName ) == 0 )
@@ -123,7 +122,7 @@ RETCODE adfRenameEntry ( struct AdfVolume * const vol,
         rc = adfWriteDirBlock ( vol, pSect, (struct bDirBlock*) &parent );
     if ( rc != RC_OK )
         return rc;
-
+    
     rc = adfReadEntryBlock ( vol, nPSect, &nParent );
     if ( rc != RC_OK )
         return rc;
@@ -197,6 +196,7 @@ RETCODE adfRenameEntry ( struct AdfVolume * const vol,
             rc = adfAddInCache ( vol, &nParent, &entry );
         }
     }
+
 /*
     if (isDIRCACHE(vol->dosType) && pSect!=nPSect) {
         adfUpdateCache(vol, &nParent, (struct bEntryBlock*)&entry,TRUE);
@@ -434,8 +434,9 @@ struct AdfList * adfGetRDirEnt ( struct AdfVolume * const vol,
     struct bEntryBlock parent;
 
 
-    if (adfEnv.useDirCache && isDIRCACHE(vol->dosType))
-        return (adfGetDirEntCache(vol, nSect, recurs ));
+    // if (adfEnv.useDirCache && isDIRCACHE(vol->dosType))
+    if (isDIRCACHE(vol->dosType))
+      return (adfGetDirEntCache(vol, nSect, recurs ));
 
 
     if (adfReadEntryBlock(vol,nSect,&parent)!=RC_OK)

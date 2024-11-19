@@ -4,7 +4,7 @@
 \alias{virtual_path}
 \title{A path pointing to a file or directory on a virtual ADF device}
 \usage{
-virtual_path(dev, virtual_path)
+virtual_path(dev, path)
 }
 \arguments{
 \item{dev}{A virtual ADF device (created with \code{\link[=connect_adf]{connect_adf()}} or
@@ -12,7 +12,7 @@ virtual_path(dev, virtual_path)
 Make sure a file system is present on the virtual device or install first when missing
 using \code{\link[=prepare_adf_device]{prepare_adf_device()}}.}
 
-\item{virtual_path}{A \code{character} string representing the path to a file or directory
+\item{path}{A \code{character} string representing the path to a file or directory
 on the virtual device.}
 }
 \value{

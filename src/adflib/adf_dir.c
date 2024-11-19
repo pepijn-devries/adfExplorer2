@@ -57,7 +57,6 @@ RETCODE adfRenameEntry ( struct AdfVolume * const vol,
     char name2[MAXNAMELEN+1], name3[MAXNAMELEN+1];
 	BOOL intl;
 
-
     if ( pSect == nPSect  &&
          strcmp ( oldName, newName ) == 0 )
     {
@@ -123,7 +122,7 @@ RETCODE adfRenameEntry ( struct AdfVolume * const vol,
         rc = adfWriteDirBlock ( vol, pSect, (struct bDirBlock*) &parent );
     if ( rc != RC_OK )
         return rc;
-
+    
     rc = adfReadEntryBlock ( vol, nPSect, &nParent );
     if ( rc != RC_OK )
         return rc;
@@ -197,6 +196,7 @@ RETCODE adfRenameEntry ( struct AdfVolume * const vol,
             rc = adfAddInCache ( vol, &nParent, &entry );
         }
     }
+
 /*
     if (isDIRCACHE(vol->dosType) && pSect!=nPSect) {
         adfUpdateCache(vol, &nParent, (struct bEntryBlock*)&entry,TRUE);

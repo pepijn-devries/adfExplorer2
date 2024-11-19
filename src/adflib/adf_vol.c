@@ -266,7 +266,6 @@ struct AdfVolume * adfCreateVol ( struct AdfDevice * const dev,
 /*    struct bDirCacheBlock dirc;*/
     SECTNUM blkList[2];
     struct AdfVolume* vol;
-
     // if (adfEnv.useProgressBar)
     //     (*adfEnv.progressBar)(0);
 
@@ -314,7 +313,8 @@ printf("name=%s root=%d\n", vol->volName, vol->rootBlock);
     // if (adfEnv.useProgressBar)
     //     (*adfEnv.progressBar)(20);
 
-    if (adfCreateBitmap( vol )!=RC_OK) {
+    RETCODE temp2 = adfCreateBitmap( vol );
+    if (temp2!=RC_OK) {
         free(vol->volName); free(vol);
         return NULL;
     }
@@ -349,7 +349,8 @@ printf("%3d %x, ",i,vol->bitmapTable[0]->map[i]);
     // if (adfEnv.useProgressBar)
     //     (*adfEnv.progressBar)(60);
     
-    if ( adfWriteRootBlock ( vol, (uint32_t) blkList[0], &root ) != RC_OK ) {
+    RETCODE temp = adfWriteRootBlock ( vol, (uint32_t) blkList[0], &root );
+    if ( temp != RC_OK ) {
         free(vol->volName); free(vol);
         return NULL;
     }
@@ -434,7 +435,7 @@ RETCODE adfWriteBlock ( struct AdfVolume * const vol,
     }
 
     if (vol->readOnly) {
-        // (*adfEnv.wFct)("adfWriteBlock : can't write block, read only volume");
+      // (*adfEnv.wFct)("adfWriteBlock : can't write block, read only volume");
         return RC_ERROR;
     }
 

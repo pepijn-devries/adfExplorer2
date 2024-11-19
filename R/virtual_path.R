@@ -9,7 +9,7 @@
 #' [`create_adf_device()`]).
 #' Make sure a file system is present on the virtual device or install first when missing
 #' using [`prepare_adf_device()`].
-#' @param virtual_path A `character` string representing the path to a file or directory
+#' @param path A `character` string representing the path to a file or directory
 #' on the virtual device.
 #' @returns Returns a `virtual_path` class object.
 #' @examples
@@ -25,10 +25,13 @@
 #' close(my_device)
 #' @author Pepijn de Vries
 #' @export
-virtual_path <- function(dev, virtual_path) {
+virtual_path <- function(dev, path) {
   if (!inherits(dev, "adf_device")) stop("`dev` should be of class `adf_device`.")
-  if (typeof(virtual_path) != "character") stop("`virtual_path` should be of type `character`.")
-  if (length(virtual_path) != 1) stop("Length of `virtual_path` should be 1.")
-  if (is.na(virtual_path)) stop("`virtual_path` cannot be `NA`")
-  vctrs::new_rcrd(list(device = list(dev), path = virtual_path), class = "virtual_path")
+  if (typeof(path) != "character") stop("`virtual_path` should be of type `character`.")
+  if (any(is.na(path))) stop("`virtual_path` cannot be `NA`")
+  if (length(path) > 1) {
+    do.call(c, lapply(path, \(y) virtual_path(dev, y)))
+  } else {
+    vctrs::new_rcrd(list(device = list(dev), path = path), class = "virtual_path")
+  }
 }

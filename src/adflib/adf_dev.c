@@ -68,6 +68,15 @@ struct AdfDevice * adfOpenDev ( const char * const filename,
     // struct AdfNativeFunctions * nFct = adfEnv.nativeFct;
     //dev->isNativeDev = ( *nFct->adfIsDevNative )( filename );
     dev->isNativeDev = FALSE;
+    /* Edit PdV Prevent uninitialized values as it results in unexpected behaviour */
+    dev->size = 0;
+    dev->nVol = 0;
+    dev->volList = NULL;
+    dev->cylinders = 0;
+    dev->heads = 0;
+    dev->sectors = 0;
+    dev->fd = NULL;
+    /* PdV end edit */
     
     RETCODE rc;
     // if ( dev->isNativeDev )
@@ -84,25 +93,23 @@ struct AdfDevice * adfOpenDev ( const char * const filename,
     dev->nVol    = 0;
     dev->volList = NULL;
 
-    /*
+    /* PdV Not setting device format here will break adding volumes to disk! */
     if ( dev->devType == DEVTYPE_FLOPDD ) {
-        device->sectors = 11;
-        device->heads = 2;
-        fdtype = "DD";
+      dev->sectors = 11;
+      dev->heads = 2;
     } else if ( dev->devType == DEVTYPE_FLOPHD ) {
-        device->sectors = 22;
-        device->heads = 2;
-        fdtype = "HD";
+      dev->sectors = 22;
+      dev->heads = 2;
+    } else if ( dev->devType == DEVTYPE_HARDFILE ) {
+      dev->sectors = 1;
+      dev->heads = 1;
     } else if ( dev->devType == DEVTYPE_HARDDISK ) {
-        fprintf ( stderr, "adfOpenDev(): harddisk devices not implemented - aborting...\n" );
-        return 1;
+      return NULL;
     } else {
-        fprintf ( stderr, "adfOpenDev(): unknown device type - aborting...\n" );
-        return 1;
+      return NULL;
     }
-    device->cylinders = device->size / ( device->sectors * device->heads * 512 );
-    */
-
+    dev->cylinders = dev->size / ( dev->sectors * dev->heads * 512 );
+    
     return dev;
 }
 

@@ -1,12 +1,14 @@
 Package: adfExplorer2
 Title: Access and Manipulate Amiga Disk Files
-Version: 0.0.2.0001
+Version: 0.0.3
 Authors@R:
+    c(
     person("Pepijn", "de Vries", role = c("aut", "cre"),
     email = "pepijn.devries@outlook.com",
-    comment = c(ORCID = "0000-0002-7961-6646"))
-Author:
-    Pepijn de Vries [aut, cre] (0000-0002-7961-6646)
+    comment = c(ORCID = "0000-0002-7961-6646")),
+    person("Laurent", "Clévy", role = c("aut", "cph"),
+    comment = c("Creator of the original ADFlib library"))
+    )
 Maintainer: Pepijn de Vries <pepijn.devries@outlook.com>
 Description: Amiga Disk Files (ADF) are virtual
     representations of 3.5 inch floppy disks for the
@@ -28,14 +30,12 @@ Collate:
     'compress.R'
     'cpp11.R'
     'connect_adf.R'
+    'move.R'
     'device_info.R'
     'device_create.R'
     'helpers.R'
     'directory.R'
     'entry_info.R'
-    'imports.R'
-    'init.R'
-    'move.R'
     'remove.R'
     's3_methods.R'
     'virtual_path.R'

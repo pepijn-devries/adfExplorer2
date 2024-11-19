@@ -567,6 +567,8 @@ static RETCODE adfBitmapAllocate ( struct AdfVolume * const vol )
             free ( vol->bitmapTable );
             // adfEnv.eFct("adfBitmapAllocate : malloc");
             return RC_MALLOC;
+        } else { /* Edit PdV Make sure to initialize bitmap: */
+            memset(vol->bitmapTable[i], 0, sizeof(struct bBitmapBlock));
         }
     }
     return RC_OK;

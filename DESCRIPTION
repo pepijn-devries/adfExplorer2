@@ -1,6 +1,6 @@
 Package: adfExplorer2
 Title: Access and Manipulate Amiga Disk Files
-Version: 0.0.3
+Version: 0.0.3.0001
 Authors@R:
     c(
     person("Pepijn", "de Vries", role = c("aut", "cre"),
@@ -47,7 +47,9 @@ Imports:
 Suggests:
     adfExplorer,
     knitr,
-    rmarkdown
+    rmarkdown,
+    testthat (>= 3.0.0)
 VignetteBuilder: knitr
 URL: https://pepijn-devries.github.io/adfExplorer2/
 BugReports: https://github.com/pepijn-devries/adfExplorer2/issues
+Config/testthat/edition: 3

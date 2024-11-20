@@ -1,3 +1,9 @@
+adfExplorer2 v0.0.3.0001
+-------------
+
+  * Added testthat workflow
+  * Added test coverage workflow
+
 adfExplorer2 v0.0.3
 -------------
 

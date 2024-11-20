@@ -6,7 +6,7 @@ SEXP adf_dev_format(
     SEXP connection, std::string name,
     bool ffs, bool intl, bool dircache,
     bool bootable) {
-  AdfDevice * dev = get_adf_dev_internal(connection);
+  AdfDevice * dev = get_adf_dev(connection);
   if (dev->readOnly) Rf_error("Cannot format 'read-only' device.");
   uint8_t boot_code[1024] = {0};
   uint8_t vol_type = 0;
@@ -32,13 +32,13 @@ SEXP adf_dev_format(
   if (dev->devType == DEVTYPE_FLOPDD || dev->devType == DEVTYPE_FLOPHD) {
     
     if (adfMountFlop(dev) != RC_OK ) Rf_error("Failed to mount floppy");
-    set_adf_vol_internal(connection, 0);
+    set_adf_vol(connection, 0);
 
   } else {
 
     if (adfMountHdFile(dev) != RC_OK)
       Rf_error("Failed to mount harddisk");
-    set_adf_vol_internal(connection, 0);
+    set_adf_vol(connection, 0);
 
   }
   

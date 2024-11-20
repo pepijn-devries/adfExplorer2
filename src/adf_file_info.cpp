@@ -58,8 +58,8 @@ list adf_path_to_entry(SEXP connection, std::string filename, int mode) {
       "name"_nm = writable::strings(r_string(entry_name)),
       "remainder"_nm = writable::strings(r_string(entry_name))});
   
-  AdfDevice * dev = get_adf_dev_internal(connection);
-  int cur_vol     = get_adf_vol_internal(connection);
+  AdfDevice * dev = get_adf_dev(connection);
+  int cur_vol     = get_adf_vol(connection);
   check_volume_number(dev, cur_vol);
   int parent      = -1;
   SECTNUM cur_pos = dev->volList[cur_vol]->curDirPtr;
@@ -146,7 +146,7 @@ list adf_path_to_entry(SEXP connection, std::string filename, int mode) {
 }
 
 void adf_change_dir_internal(SEXP connection, SECTNUM sector, int volume) {
-  AdfDevice * dev = get_adf_dev_internal(connection);
+  AdfDevice * dev = get_adf_dev(connection);
   check_volume_number(dev, volume);
   AdfVolume * vol = dev->volList[volume];
   vol->curDirPtr = sector;
@@ -177,7 +177,7 @@ list adf_entry_info_(SEXP connection, std::string path) {
   int sector, vol_num, sectype;
   writable::list result;
   if (Rf_inherits(connection, "adf_device")) {
-    AdfDevice * dev = get_adf_dev_internal(connection);
+    AdfDevice * dev = get_adf_dev(connection);
     
     list entry = adf_path_to_entry(connection, path, 0);
     sector  = integers(entry["sector"]).at(0);
@@ -238,6 +238,6 @@ std::string adf_entry_to_path_internal(AdfDevice * dev, int vol_num, int sectnum
 }
 
 std::string adf_entry_to_path(SEXP connection, int vol_num, int sectnum, bool full) {
-  AdfDevice * dev = get_adf_dev_internal(connection);
+  AdfDevice * dev = get_adf_dev(connection);
   return adf_entry_to_path_internal(dev, vol_num, sectnum, full);
 }

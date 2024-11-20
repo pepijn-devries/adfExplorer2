@@ -16,8 +16,8 @@ SEXP adf_change_dir(SEXP connection, std::string path) {
 
 [[cpp11::register]]
 SEXP adf_get_current_dir(SEXP connection) {
-  AdfDevice * dev = get_adf_dev_internal(connection);
-  int cur_vol = get_adf_vol_internal(connection);
+  AdfDevice * dev = get_adf_dev(connection);
+  int cur_vol = get_adf_vol(connection);
   AdfVolume * vol = dev->volList[cur_vol];
   writable::list dev_l((R_xlen_t)0);
   dev_l.push_back(connection);
@@ -87,7 +87,7 @@ list list_adf_entries2_(SEXP connection, AdfVolume * vol,
 [[cpp11::register]]
 list list_adf_entries_(SEXP connection, std::string filename, bool recursive, bool nested) {
   writable::list result;
-  AdfDevice * dev = get_adf_dev_internal(connection);
+  AdfDevice * dev = get_adf_dev(connection);
   
   int mode = ADF_FI_EXPECT_DIR | ADF_FI_THROW_ERROR | ADF_FI_EXPECT_EXIST |
     ADF_FI_EXPECT_VALID_CHECKSUM;
@@ -109,7 +109,7 @@ list list_adf_entries_(SEXP connection, std::string filename, bool recursive, bo
 
 [[cpp11::register]]
 SEXP adf_mkdir(SEXP connection, std::string path) {
-  AdfDevice * dev = get_adf_dev_internal(connection);
+  AdfDevice * dev = get_adf_dev(connection);
   
   list entry = adf_path_to_entry(connection, path, 0);
   std::string remainder = strings(entry["remainder"]).at(0);
@@ -131,7 +131,7 @@ SEXP adf_mkdir(SEXP connection, std::string path) {
 
 [[cpp11::register]]
 SEXP adf_remove_entry(SEXP connection, std::string path, bool flush) {
-  AdfDevice * dev = get_adf_dev_internal(connection);
+  AdfDevice * dev = get_adf_dev(connection);
   
   int mode = ADF_FI_THROW_ERROR | ADF_FI_EXPECT_EXIST |
     ADF_FI_EXPECT_VALID_CHECKSUM;
@@ -193,7 +193,7 @@ SEXP adf_set_entry_name_(SEXP connection, std::string path, std::string replacem
   std::string name;
   RETCODE rc = RC_OK;
   if (Rf_inherits(connection, "adf_device")) {
-    AdfDevice * dev = get_adf_dev_internal(connection);
+    AdfDevice * dev = get_adf_dev(connection);
     if (dev->readOnly) Rf_error("Cannot change entry name on 'readonly' device.");
     
     list entry = adf_path_to_entry(connection, path, 0);
@@ -261,7 +261,7 @@ SEXP move_adf_internal(SEXP connection, std::string source, std::string destinat
   int src_check = integers(entry_src["sector"]).at(0);
   int cur_vol = integers(entry_src["volume"]).at(0);
   
-  AdfDevice * dev = get_adf_dev_internal(connection);
+  AdfDevice * dev = get_adf_dev(connection);
   auto vol = dev->volList[cur_vol];
   
   // Check if the source header is not in the path of the destination

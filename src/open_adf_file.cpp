@@ -104,7 +104,7 @@ bool adf_check_file_state(AdfDevice *dev, int vol, SECTNUM sect) {
 
 [[cpp11::register]]
 SEXP adf_file_con_(SEXP connection, std::string filename, bool writable) {
-  AdfDevice * dev = get_adf_dev_internal(connection);
+  AdfDevice * dev = get_adf_dev(connection);
   Rconnection con_in = R_GetConnection(connection);
   if (!con_in->canwrite && writable)
     Rf_error("Cannot open a writable connection from a write-protected disk");
@@ -122,7 +122,7 @@ SEXP adf_file_con_(SEXP connection, std::string filename, bool writable) {
     Rf_error("Can only open 1 connection per file on a virtual device");
 
   auto vol = dev->volList[vol_num];
-  int vol_old = get_adf_vol_internal(connection);
+  int vol_old = get_adf_vol(connection);
   SECTNUM cur_dir = vol->curDirPtr;
   
   adf_change_dir_internal(connection, parent, vol_num);

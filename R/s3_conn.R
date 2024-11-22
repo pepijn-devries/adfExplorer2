@@ -1,0 +1,1 @@
+#TODO setup generics and specifics for pseudo connections (adf_file_con)

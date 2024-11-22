@@ -16,10 +16,10 @@ using namespace cpp11;
 #define ADF_FI_EXPECT_EXIST           0b10000
 #define ADF_FI_EXPECT_VALID_CHECKSUM 0b100000
 
-list adf_path_to_entry(SEXP connection, std::string filename, int mode);
-void adf_change_dir_internal(SEXP connection, SECTNUM sector, int volume);
+list adf_path_to_entry(SEXP extptr, std::string filename, int mode);
+void adf_change_dir_internal(SEXP extptr, SECTNUM sector, int volume);
 void check_adf_name(std::string name);
-std::string adf_entry_to_path(SEXP connection, int vol_num, int sectnum, bool full);
+std::string adf_entry_to_path(SEXP extptr, int vol_num, int sectnum, bool full);
 std::string adf_entry_to_path_internal(AdfDevice * dev, int vol_num, int sectnum, bool full);
 
 #endif /* __FILE_INFO_ADF__ */

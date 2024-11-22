@@ -3,8 +3,8 @@
 using namespace cpp11;
 
 [[cpp11::register]]
-SEXP read_adf_block_(SEXP connection, int sector) {
-  AdfDevice * dev = get_adf_dev(connection);
+SEXP read_adf_block_(SEXP extptr, int sector) {
+  AdfDevice * dev = get_adf_dev(extptr);
   uint8_t buf[512] = {0};
   RETCODE rc = adfReadBlockDev(dev, sector, 512, buf);
   if (rc != RC_OK) Rf_error("Failed to read block");
@@ -20,8 +20,8 @@ SEXP read_adf_block_(SEXP connection, int sector) {
 }
 
 [[cpp11::register]]
-SEXP write_adf_block_(SEXP connection, int sector, raws block) {
-  AdfDevice * dev = get_adf_dev(connection);
+SEXP write_adf_block_(SEXP extptr, int sector, raws block) {
+  AdfDevice * dev = get_adf_dev(extptr);
   if (block.size() != 512) Rf_error("Unexpected block size");
   if (dev->readOnly) Rf_error("Cannot write to read only device");
   uint8_t buf[512];
@@ -84,8 +84,8 @@ list interpret_file_header_internal(AdfDevice *dev, int vol_num, int sectnum) {
 }
 
 [[cpp11::register]]
-list interpret_file_header(SEXP connection, int vol_num, int sectnum) {
-  AdfDevice * dev = get_adf_dev(connection);
+list interpret_file_header(SEXP extptr, int vol_num, int sectnum) {
+  AdfDevice * dev = get_adf_dev(extptr);
   return interpret_file_header_internal(dev, vol_num, sectnum);
 }
 
@@ -137,8 +137,8 @@ list interpret_dir_header_internal(AdfDevice *dev, int vol_num, int sectnum) {
 }
 
 [[cpp11::register]]
-list interpret_dir_header(SEXP connection, int vol_num, int sectnum) {
-  AdfDevice * dev = get_adf_dev(connection);
+list interpret_dir_header(SEXP extptr, int vol_num, int sectnum) {
+  AdfDevice * dev = get_adf_dev(extptr);
   return interpret_dir_header_internal(dev, vol_num, sectnum);
 }
 
@@ -187,8 +187,8 @@ list interpret_root_header_internal(AdfDevice *dev, int vol_num) {
 }
 
 [[cpp11::register]]
-list interpret_root_header(SEXP connection, int vol_num) {
-  AdfDevice * dev = get_adf_dev(connection);
+list interpret_root_header(SEXP extptr, int vol_num) {
+  AdfDevice * dev = get_adf_dev(extptr);
   return interpret_root_header_internal(dev, vol_num);
 }
 

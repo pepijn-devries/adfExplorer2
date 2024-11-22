@@ -1,13 +1,13 @@
 #include "adf_file_info.h"
 
 [[cpp11::register]]
-SEXP adf_change_dir(SEXP connection, std::string path) {
+SEXP adf_change_dir(SEXP extptr, std::string path) {
   int mode = ADF_FI_EXPECT_DIR | ADF_FI_THROW_ERROR | ADF_FI_EXPECT_EXIST |
     ADF_FI_EXPECT_VALID_CHECKSUM;
   
-  list entry = adf_path_to_entry(connection, path, mode);
+  list entry = adf_path_to_entry(extptr, path, mode);
   adf_change_dir_internal(
-    connection,
+    extptr,
     (SECTNUM)integers(entry["sector"]).at(0),
     integers(entry["volume"]).at(0)
   );
@@ -15,20 +15,20 @@ SEXP adf_change_dir(SEXP connection, std::string path) {
 }
 
 [[cpp11::register]]
-SEXP adf_get_current_dir(SEXP connection) {
-  AdfDevice * dev = get_adf_dev(connection);
-  int cur_vol = get_adf_vol(connection);
+SEXP adf_get_current_dir(SEXP extptr) {
+  AdfDevice * dev = get_adf_dev(extptr);
+  int cur_vol = get_adf_vol(extptr);
   AdfVolume * vol = dev->volList[cur_vol];
   writable::list dev_l((R_xlen_t)0);
-  dev_l.push_back(connection);
+  dev_l.push_back(extptr);
   writable::list result({
     "device"_nm = dev_l,
-      "path"_nm = adf_entry_to_path(connection, cur_vol, vol->curDirPtr, TRUE)
+      "path"_nm = adf_entry_to_path(extptr, cur_vol, vol->curDirPtr, TRUE)
   });
   return result;
 }
 
-list list_adf_entries3_(SEXP connection, AdfVolume * vol,
+list list_adf_entries3_(SEXP extptr, AdfVolume * vol,
                         SECTNUM sector, int vol_num, bool recursive) {
   writable::list result;
   auto alist = new AdfList;
@@ -45,7 +45,7 @@ list list_adf_entries3_(SEXP connection, AdfVolume * vol,
     alist = alist->next;
     if (entry->type == ST_DIR && recursive) {
       result[entry->name] =
-        list_adf_entries3_(connection, vol, entry->sector, vol_num, recursive);
+        list_adf_entries3_(extptr, vol, entry->sector, vol_num, recursive);
     }
     
   }
@@ -55,7 +55,7 @@ list list_adf_entries3_(SEXP connection, AdfVolume * vol,
   return result;
 }
 
-list list_adf_entries2_(SEXP connection, AdfVolume * vol,
+list list_adf_entries2_(SEXP extptr, AdfVolume * vol,
                         SECTNUM sector, int vol_num, bool recursive) {
   writable::list result;
   auto alist = new AdfList;
@@ -67,13 +67,13 @@ list list_adf_entries2_(SEXP connection, AdfVolume * vol,
     
     result.push_back(
       writable::strings({
-        adf_entry_to_path(connection, vol_num, entry->sector, TRUE)
+        adf_entry_to_path(extptr, vol_num, entry->sector, TRUE)
       })
     );
     alist = alist->next;
     if (entry->type == ST_DIR && recursive) {
       result.push_back(
-        list_adf_entries2_(connection, vol, entry->sector, vol_num, recursive)
+        list_adf_entries2_(extptr, vol, entry->sector, vol_num, recursive)
       );
     }
     
@@ -85,13 +85,13 @@ list list_adf_entries2_(SEXP connection, AdfVolume * vol,
 }
 
 [[cpp11::register]]
-list list_adf_entries_(SEXP connection, std::string filename, bool recursive, bool nested) {
+list list_adf_entries_(SEXP extptr, std::string filename, bool recursive, bool nested) {
   writable::list result;
-  AdfDevice * dev = get_adf_dev(connection);
+  AdfDevice * dev = get_adf_dev(extptr);
   
   int mode = ADF_FI_EXPECT_DIR | ADF_FI_THROW_ERROR | ADF_FI_EXPECT_EXIST |
     ADF_FI_EXPECT_VALID_CHECKSUM;
-  list entry_pos = adf_path_to_entry(connection, filename, mode);
+  list entry_pos = adf_path_to_entry(extptr, filename, mode);
   int vol_num  = integers(entry_pos["volume"]).at(0);
   SECTNUM sect = integers(entry_pos["sector"]).at(0);
   
@@ -100,18 +100,18 @@ list list_adf_entries_(SEXP connection, std::string filename, bool recursive, bo
   
   AdfVolume * vol = dev->volList[vol_num];
   if (nested) {
-    result = list_adf_entries3_(connection, vol, sect, vol_num, recursive);
+    result = list_adf_entries3_(extptr, vol, sect, vol_num, recursive);
   } else {
-    result = list_adf_entries2_(connection, vol, sect, vol_num, recursive);
+    result = list_adf_entries2_(extptr, vol, sect, vol_num, recursive);
   }
   return result;
 }
 
 [[cpp11::register]]
-SEXP adf_mkdir(SEXP connection, std::string path) {
-  AdfDevice * dev = get_adf_dev(connection);
+SEXP adf_mkdir(SEXP extptr, std::string path) {
+  AdfDevice * dev = get_adf_dev(extptr);
   
-  list entry = adf_path_to_entry(connection, path, 0);
+  list entry = adf_path_to_entry(extptr, path, 0);
   std::string remainder = strings(entry["remainder"]).at(0);
   int vol_num = integers(entry["volume"]).at(0);
   int sectype = integers(entry["header_sectype"]).at(0);
@@ -126,17 +126,17 @@ SEXP adf_mkdir(SEXP connection, std::string path) {
   check_adf_name(remainder);
   RETCODE rc = adfCreateDir(vol, parent, remainder.c_str());
   if (rc != RC_OK) Rf_error("Failed to create directory '%s'.", remainder.c_str());
-  return connection;
+  return extptr;
 }
 
 [[cpp11::register]]
-SEXP adf_remove_entry(SEXP connection, std::string path, bool flush) {
-  AdfDevice * dev = get_adf_dev(connection);
+SEXP adf_remove_entry(SEXP extptr, std::string path, bool flush) {
+  AdfDevice * dev = get_adf_dev(extptr);
   
   int mode = ADF_FI_THROW_ERROR | ADF_FI_EXPECT_EXIST |
     ADF_FI_EXPECT_VALID_CHECKSUM;
   
-  list entry    = adf_path_to_entry(connection, path, mode);
+  list entry    = adf_path_to_entry(extptr, path, mode);
   int sectype   = integers(entry["header_sectype"]).at(0);
   if (sectype == ST_ROOT) Rf_error("Cannot remove a device's root");
   
@@ -179,7 +179,7 @@ SEXP adf_remove_entry(SEXP connection, std::string path, bool flush) {
       r_bool new_state = (r_bool)adfIsBlockFree(vol, i);
       r_bool old_state = (r_bool)block_bit[i - 2];
       if (!old_state && new_state) {
-        write_adf_block_(connection, i, empty);
+        write_adf_block_(extptr, i, empty);
       }
     }
   }
@@ -188,15 +188,15 @@ SEXP adf_remove_entry(SEXP connection, std::string path, bool flush) {
 }
 
 [[cpp11::register]]
-SEXP adf_set_entry_name_(SEXP connection, std::string path, std::string replacement) {
+SEXP adf_set_entry_name_(SEXP extptr, std::string path, std::string replacement) {
   int parent, vol_num, sectype;
   std::string name;
   RETCODE rc = RC_OK;
-  if (Rf_inherits(connection, "adf_device")) {
-    AdfDevice * dev = get_adf_dev(connection);
+  if (Rf_inherits(extptr, "adf_device")) {
+    AdfDevice * dev = get_adf_dev(extptr);
     if (dev->readOnly) Rf_error("Cannot change entry name on 'readonly' device.");
     
-    list entry = adf_path_to_entry(connection, path, 0);
+    list entry = adf_path_to_entry(extptr, path, 0);
     vol_num = integers(entry["volume"]).at(0);
     sectype = integers(entry["header_sectype"]).at(0);
     parent  = integers(entry["parent"]).at(0);
@@ -204,16 +204,14 @@ SEXP adf_set_entry_name_(SEXP connection, std::string path, std::string replacem
     check_volume_number(dev, vol_num);
     AdfVolume * vol = dev->volList[vol_num];
     if (sectype == ST_ROOT) {
-      if (!adf_set_dev_name(connection, vol_num, replacement))
+      if (!adf_set_dev_name(extptr, vol_num, replacement))
         rc = RC_ERROR;
     } else {
       rc =
         adfRenameEntry (vol, parent, name.c_str(), parent, replacement.c_str());
     }
-  } else if (Rf_inherits(connection, "adf_file_con")) {
-    Rconnection con = R_GetConnection(connection);
-    if (!con->isopen) Rf_error("Connection is closed");
-    AdfFile *af = (AdfFile *) con->private_ptr;
+  } else if (Rf_inherits(extptr, "adf_file_con")) {
+    AdfFile *af = get_adffile(extptr);
     int nl = af->fileHdr->nameLen;
     if (nl > MAXNAMELEN) nl = MAXNAMELEN;
     
@@ -231,22 +229,22 @@ SEXP adf_set_entry_name_(SEXP connection, std::string path, std::string replacem
     }
 
   } else {
-    Rf_error("`connection` should by of class `adf_device` or `adf_file_con`.");
+    Rf_error("External pointer should by of class `adf_device` or `adf_file_con`.");
   }
   if (rc != RC_OK) Rf_error("Failed to rename entry.");
   
-  return connection;
+  return extptr;
 }
 
 [[cpp11::register]]
-SEXP move_adf_internal(SEXP connection, std::string source, std::string destination) {
+SEXP move_adf_internal(SEXP extptr, std::string source, std::string destination) {
   if (source.size() != 1 && destination.size() != 1)
     Rf_error("`move_adf_internal` can only handle length 1 arguments");
   int mode = ADF_FI_THROW_ERROR | ADF_FI_EXPECT_EXIST |
     ADF_FI_EXPECT_VALID_CHECKSUM;
   
-  list entry_src = adf_path_to_entry(connection, source, mode);
-  list entry_dst = adf_path_to_entry(connection, destination, mode);
+  list entry_src = adf_path_to_entry(extptr, source, mode);
+  list entry_dst = adf_path_to_entry(extptr, destination, mode);
   writable::list entry_traverse;
   
   int sec_type_src = integers(entry_src["header_sectype"]).at(0);
@@ -261,7 +259,7 @@ SEXP move_adf_internal(SEXP connection, std::string source, std::string destinat
   int src_check = integers(entry_src["sector"]).at(0);
   int cur_vol = integers(entry_src["volume"]).at(0);
   
-  AdfDevice * dev = get_adf_dev(connection);
+  AdfDevice * dev = get_adf_dev(extptr);
   auto vol = dev->volList[cur_vol];
   
   // Check if the source header is not in the path of the destination

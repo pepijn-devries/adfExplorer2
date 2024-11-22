@@ -13,122 +13,122 @@ extern "C" SEXP _adfExplorer2_adf_upper(SEXP x, SEXP intl) {
   END_CPP11
 }
 // adf_file_info.cpp
-list adf_path_to_entry(SEXP connection, std::string filename, int mode);
-extern "C" SEXP _adfExplorer2_adf_path_to_entry(SEXP connection, SEXP filename, SEXP mode) {
+list adf_path_to_entry(SEXP extptr, std::string filename, int mode);
+extern "C" SEXP _adfExplorer2_adf_path_to_entry(SEXP extptr, SEXP filename, SEXP mode) {
   BEGIN_CPP11
-    return cpp11::as_sexp(adf_path_to_entry(cpp11::as_cpp<cpp11::decay_t<SEXP>>(connection), cpp11::as_cpp<cpp11::decay_t<std::string>>(filename), cpp11::as_cpp<cpp11::decay_t<int>>(mode)));
+    return cpp11::as_sexp(adf_path_to_entry(cpp11::as_cpp<cpp11::decay_t<SEXP>>(extptr), cpp11::as_cpp<cpp11::decay_t<std::string>>(filename), cpp11::as_cpp<cpp11::decay_t<int>>(mode)));
   END_CPP11
 }
 // adf_file_info.cpp
-bool adf_file_exists_(SEXP connection, std::string path);
-extern "C" SEXP _adfExplorer2_adf_file_exists_(SEXP connection, SEXP path) {
+bool adf_file_exists_(SEXP extptr, std::string path);
+extern "C" SEXP _adfExplorer2_adf_file_exists_(SEXP extptr, SEXP path) {
   BEGIN_CPP11
-    return cpp11::as_sexp(adf_file_exists_(cpp11::as_cpp<cpp11::decay_t<SEXP>>(connection), cpp11::as_cpp<cpp11::decay_t<std::string>>(path)));
+    return cpp11::as_sexp(adf_file_exists_(cpp11::as_cpp<cpp11::decay_t<SEXP>>(extptr), cpp11::as_cpp<cpp11::decay_t<std::string>>(path)));
   END_CPP11
 }
 // adf_file_info.cpp
-bool adf_dir_exists_(SEXP connection, std::string path);
-extern "C" SEXP _adfExplorer2_adf_dir_exists_(SEXP connection, SEXP path) {
+bool adf_dir_exists_(SEXP extptr, std::string path);
+extern "C" SEXP _adfExplorer2_adf_dir_exists_(SEXP extptr, SEXP path) {
   BEGIN_CPP11
-    return cpp11::as_sexp(adf_dir_exists_(cpp11::as_cpp<cpp11::decay_t<SEXP>>(connection), cpp11::as_cpp<cpp11::decay_t<std::string>>(path)));
+    return cpp11::as_sexp(adf_dir_exists_(cpp11::as_cpp<cpp11::decay_t<SEXP>>(extptr), cpp11::as_cpp<cpp11::decay_t<std::string>>(path)));
   END_CPP11
 }
 // adf_file_info.cpp
-list adf_entry_info_(SEXP connection, std::string path);
-extern "C" SEXP _adfExplorer2_adf_entry_info_(SEXP connection, SEXP path) {
+list adf_entry_info_(SEXP extptr, std::string path);
+extern "C" SEXP _adfExplorer2_adf_entry_info_(SEXP extptr, SEXP path) {
   BEGIN_CPP11
-    return cpp11::as_sexp(adf_entry_info_(cpp11::as_cpp<cpp11::decay_t<SEXP>>(connection), cpp11::as_cpp<cpp11::decay_t<std::string>>(path)));
+    return cpp11::as_sexp(adf_entry_info_(cpp11::as_cpp<cpp11::decay_t<SEXP>>(extptr), cpp11::as_cpp<cpp11::decay_t<std::string>>(path)));
   END_CPP11
 }
 // adf_file_operators.cpp
-SEXP adf_change_dir(SEXP connection, std::string path);
-extern "C" SEXP _adfExplorer2_adf_change_dir(SEXP connection, SEXP path) {
+SEXP adf_change_dir(SEXP extptr, std::string path);
+extern "C" SEXP _adfExplorer2_adf_change_dir(SEXP extptr, SEXP path) {
   BEGIN_CPP11
-    return cpp11::as_sexp(adf_change_dir(cpp11::as_cpp<cpp11::decay_t<SEXP>>(connection), cpp11::as_cpp<cpp11::decay_t<std::string>>(path)));
+    return cpp11::as_sexp(adf_change_dir(cpp11::as_cpp<cpp11::decay_t<SEXP>>(extptr), cpp11::as_cpp<cpp11::decay_t<std::string>>(path)));
   END_CPP11
 }
 // adf_file_operators.cpp
-SEXP adf_get_current_dir(SEXP connection);
-extern "C" SEXP _adfExplorer2_adf_get_current_dir(SEXP connection) {
+SEXP adf_get_current_dir(SEXP extptr);
+extern "C" SEXP _adfExplorer2_adf_get_current_dir(SEXP extptr) {
   BEGIN_CPP11
-    return cpp11::as_sexp(adf_get_current_dir(cpp11::as_cpp<cpp11::decay_t<SEXP>>(connection)));
+    return cpp11::as_sexp(adf_get_current_dir(cpp11::as_cpp<cpp11::decay_t<SEXP>>(extptr)));
   END_CPP11
 }
 // adf_file_operators.cpp
-list list_adf_entries_(SEXP connection, std::string filename, bool recursive, bool nested);
-extern "C" SEXP _adfExplorer2_list_adf_entries_(SEXP connection, SEXP filename, SEXP recursive, SEXP nested) {
+list list_adf_entries_(SEXP extptr, std::string filename, bool recursive, bool nested);
+extern "C" SEXP _adfExplorer2_list_adf_entries_(SEXP extptr, SEXP filename, SEXP recursive, SEXP nested) {
   BEGIN_CPP11
-    return cpp11::as_sexp(list_adf_entries_(cpp11::as_cpp<cpp11::decay_t<SEXP>>(connection), cpp11::as_cpp<cpp11::decay_t<std::string>>(filename), cpp11::as_cpp<cpp11::decay_t<bool>>(recursive), cpp11::as_cpp<cpp11::decay_t<bool>>(nested)));
+    return cpp11::as_sexp(list_adf_entries_(cpp11::as_cpp<cpp11::decay_t<SEXP>>(extptr), cpp11::as_cpp<cpp11::decay_t<std::string>>(filename), cpp11::as_cpp<cpp11::decay_t<bool>>(recursive), cpp11::as_cpp<cpp11::decay_t<bool>>(nested)));
   END_CPP11
 }
 // adf_file_operators.cpp
-SEXP adf_mkdir(SEXP connection, std::string path);
-extern "C" SEXP _adfExplorer2_adf_mkdir(SEXP connection, SEXP path) {
+SEXP adf_mkdir(SEXP extptr, std::string path);
+extern "C" SEXP _adfExplorer2_adf_mkdir(SEXP extptr, SEXP path) {
   BEGIN_CPP11
-    return cpp11::as_sexp(adf_mkdir(cpp11::as_cpp<cpp11::decay_t<SEXP>>(connection), cpp11::as_cpp<cpp11::decay_t<std::string>>(path)));
+    return cpp11::as_sexp(adf_mkdir(cpp11::as_cpp<cpp11::decay_t<SEXP>>(extptr), cpp11::as_cpp<cpp11::decay_t<std::string>>(path)));
   END_CPP11
 }
 // adf_file_operators.cpp
-SEXP adf_remove_entry(SEXP connection, std::string path, bool flush);
-extern "C" SEXP _adfExplorer2_adf_remove_entry(SEXP connection, SEXP path, SEXP flush) {
+SEXP adf_remove_entry(SEXP extptr, std::string path, bool flush);
+extern "C" SEXP _adfExplorer2_adf_remove_entry(SEXP extptr, SEXP path, SEXP flush) {
   BEGIN_CPP11
-    return cpp11::as_sexp(adf_remove_entry(cpp11::as_cpp<cpp11::decay_t<SEXP>>(connection), cpp11::as_cpp<cpp11::decay_t<std::string>>(path), cpp11::as_cpp<cpp11::decay_t<bool>>(flush)));
+    return cpp11::as_sexp(adf_remove_entry(cpp11::as_cpp<cpp11::decay_t<SEXP>>(extptr), cpp11::as_cpp<cpp11::decay_t<std::string>>(path), cpp11::as_cpp<cpp11::decay_t<bool>>(flush)));
   END_CPP11
 }
 // adf_file_operators.cpp
-SEXP adf_set_entry_name_(SEXP connection, std::string path, std::string replacement);
-extern "C" SEXP _adfExplorer2_adf_set_entry_name_(SEXP connection, SEXP path, SEXP replacement) {
+SEXP adf_set_entry_name_(SEXP extptr, std::string path, std::string replacement);
+extern "C" SEXP _adfExplorer2_adf_set_entry_name_(SEXP extptr, SEXP path, SEXP replacement) {
   BEGIN_CPP11
-    return cpp11::as_sexp(adf_set_entry_name_(cpp11::as_cpp<cpp11::decay_t<SEXP>>(connection), cpp11::as_cpp<cpp11::decay_t<std::string>>(path), cpp11::as_cpp<cpp11::decay_t<std::string>>(replacement)));
+    return cpp11::as_sexp(adf_set_entry_name_(cpp11::as_cpp<cpp11::decay_t<SEXP>>(extptr), cpp11::as_cpp<cpp11::decay_t<std::string>>(path), cpp11::as_cpp<cpp11::decay_t<std::string>>(replacement)));
   END_CPP11
 }
 // adf_file_operators.cpp
-SEXP move_adf_internal(SEXP connection, std::string source, std::string destination);
-extern "C" SEXP _adfExplorer2_move_adf_internal(SEXP connection, SEXP source, SEXP destination) {
+SEXP move_adf_internal(SEXP extptr, std::string source, std::string destination);
+extern "C" SEXP _adfExplorer2_move_adf_internal(SEXP extptr, SEXP source, SEXP destination) {
   BEGIN_CPP11
-    return cpp11::as_sexp(move_adf_internal(cpp11::as_cpp<cpp11::decay_t<SEXP>>(connection), cpp11::as_cpp<cpp11::decay_t<std::string>>(source), cpp11::as_cpp<cpp11::decay_t<std::string>>(destination)));
+    return cpp11::as_sexp(move_adf_internal(cpp11::as_cpp<cpp11::decay_t<SEXP>>(extptr), cpp11::as_cpp<cpp11::decay_t<std::string>>(source), cpp11::as_cpp<cpp11::decay_t<std::string>>(destination)));
   END_CPP11
 }
 // block_adf.cpp
-SEXP read_adf_block_(SEXP connection, int sector);
-extern "C" SEXP _adfExplorer2_read_adf_block_(SEXP connection, SEXP sector) {
+SEXP read_adf_block_(SEXP extptr, int sector);
+extern "C" SEXP _adfExplorer2_read_adf_block_(SEXP extptr, SEXP sector) {
   BEGIN_CPP11
-    return cpp11::as_sexp(read_adf_block_(cpp11::as_cpp<cpp11::decay_t<SEXP>>(connection), cpp11::as_cpp<cpp11::decay_t<int>>(sector)));
+    return cpp11::as_sexp(read_adf_block_(cpp11::as_cpp<cpp11::decay_t<SEXP>>(extptr), cpp11::as_cpp<cpp11::decay_t<int>>(sector)));
   END_CPP11
 }
 // block_adf.cpp
-SEXP write_adf_block_(SEXP connection, int sector, raws block);
-extern "C" SEXP _adfExplorer2_write_adf_block_(SEXP connection, SEXP sector, SEXP block) {
+SEXP write_adf_block_(SEXP extptr, int sector, raws block);
+extern "C" SEXP _adfExplorer2_write_adf_block_(SEXP extptr, SEXP sector, SEXP block) {
   BEGIN_CPP11
-    return cpp11::as_sexp(write_adf_block_(cpp11::as_cpp<cpp11::decay_t<SEXP>>(connection), cpp11::as_cpp<cpp11::decay_t<int>>(sector), cpp11::as_cpp<cpp11::decay_t<raws>>(block)));
+    return cpp11::as_sexp(write_adf_block_(cpp11::as_cpp<cpp11::decay_t<SEXP>>(extptr), cpp11::as_cpp<cpp11::decay_t<int>>(sector), cpp11::as_cpp<cpp11::decay_t<raws>>(block)));
   END_CPP11
 }
 // block_adf.cpp
-list interpret_file_header(SEXP connection, int vol_num, int sectnum);
-extern "C" SEXP _adfExplorer2_interpret_file_header(SEXP connection, SEXP vol_num, SEXP sectnum) {
+list interpret_file_header(SEXP extptr, int vol_num, int sectnum);
+extern "C" SEXP _adfExplorer2_interpret_file_header(SEXP extptr, SEXP vol_num, SEXP sectnum) {
   BEGIN_CPP11
-    return cpp11::as_sexp(interpret_file_header(cpp11::as_cpp<cpp11::decay_t<SEXP>>(connection), cpp11::as_cpp<cpp11::decay_t<int>>(vol_num), cpp11::as_cpp<cpp11::decay_t<int>>(sectnum)));
+    return cpp11::as_sexp(interpret_file_header(cpp11::as_cpp<cpp11::decay_t<SEXP>>(extptr), cpp11::as_cpp<cpp11::decay_t<int>>(vol_num), cpp11::as_cpp<cpp11::decay_t<int>>(sectnum)));
   END_CPP11
 }
 // block_adf.cpp
-list interpret_dir_header(SEXP connection, int vol_num, int sectnum);
-extern "C" SEXP _adfExplorer2_interpret_dir_header(SEXP connection, SEXP vol_num, SEXP sectnum) {
+list interpret_dir_header(SEXP extptr, int vol_num, int sectnum);
+extern "C" SEXP _adfExplorer2_interpret_dir_header(SEXP extptr, SEXP vol_num, SEXP sectnum) {
   BEGIN_CPP11
-    return cpp11::as_sexp(interpret_dir_header(cpp11::as_cpp<cpp11::decay_t<SEXP>>(connection), cpp11::as_cpp<cpp11::decay_t<int>>(vol_num), cpp11::as_cpp<cpp11::decay_t<int>>(sectnum)));
+    return cpp11::as_sexp(interpret_dir_header(cpp11::as_cpp<cpp11::decay_t<SEXP>>(extptr), cpp11::as_cpp<cpp11::decay_t<int>>(vol_num), cpp11::as_cpp<cpp11::decay_t<int>>(sectnum)));
   END_CPP11
 }
 // block_adf.cpp
-list interpret_root_header(SEXP connection, int vol_num);
-extern "C" SEXP _adfExplorer2_interpret_root_header(SEXP connection, SEXP vol_num) {
+list interpret_root_header(SEXP extptr, int vol_num);
+extern "C" SEXP _adfExplorer2_interpret_root_header(SEXP extptr, SEXP vol_num) {
   BEGIN_CPP11
-    return cpp11::as_sexp(interpret_root_header(cpp11::as_cpp<cpp11::decay_t<SEXP>>(connection), cpp11::as_cpp<cpp11::decay_t<int>>(vol_num)));
+    return cpp11::as_sexp(interpret_root_header(cpp11::as_cpp<cpp11::decay_t<SEXP>>(extptr), cpp11::as_cpp<cpp11::decay_t<int>>(vol_num)));
   END_CPP11
 }
 // dev_format.cpp
-SEXP adf_dev_format(SEXP connection, std::string name, bool ffs, bool intl, bool dircache, bool bootable);
-extern "C" SEXP _adfExplorer2_adf_dev_format(SEXP connection, SEXP name, SEXP ffs, SEXP intl, SEXP dircache, SEXP bootable) {
+SEXP adf_dev_format(SEXP extptr, std::string name, bool ffs, bool intl, bool dircache, bool bootable);
+extern "C" SEXP _adfExplorer2_adf_dev_format(SEXP extptr, SEXP name, SEXP ffs, SEXP intl, SEXP dircache, SEXP bootable) {
   BEGIN_CPP11
-    return cpp11::as_sexp(adf_dev_format(cpp11::as_cpp<cpp11::decay_t<SEXP>>(connection), cpp11::as_cpp<cpp11::decay_t<std::string>>(name), cpp11::as_cpp<cpp11::decay_t<bool>>(ffs), cpp11::as_cpp<cpp11::decay_t<bool>>(intl), cpp11::as_cpp<cpp11::decay_t<bool>>(dircache), cpp11::as_cpp<cpp11::decay_t<bool>>(bootable)));
+    return cpp11::as_sexp(adf_dev_format(cpp11::as_cpp<cpp11::decay_t<SEXP>>(extptr), cpp11::as_cpp<cpp11::decay_t<std::string>>(name), cpp11::as_cpp<cpp11::decay_t<bool>>(ffs), cpp11::as_cpp<cpp11::decay_t<bool>>(intl), cpp11::as_cpp<cpp11::decay_t<bool>>(dircache), cpp11::as_cpp<cpp11::decay_t<bool>>(bootable)));
   END_CPP11
 }
 // dev_info.cpp
@@ -230,17 +230,17 @@ extern "C" SEXP _adfExplorer2_open_adf_(SEXP filename, SEXP write_protected) {
   END_CPP11
 }
 // open_adf_file.cpp
-SEXP adf_file_con_(SEXP connection, std::string filename, bool writable);
-extern "C" SEXP _adfExplorer2_adf_file_con_(SEXP connection, SEXP filename, SEXP writable) {
+SEXP adf_file_con_(SEXP extptr, std::string filename, bool writable);
+extern "C" SEXP _adfExplorer2_adf_file_con_(SEXP extptr, SEXP filename, SEXP writable) {
   BEGIN_CPP11
-    return cpp11::as_sexp(adf_file_con_(cpp11::as_cpp<cpp11::decay_t<SEXP>>(connection), cpp11::as_cpp<cpp11::decay_t<std::string>>(filename), cpp11::as_cpp<cpp11::decay_t<bool>>(writable)));
+    return cpp11::as_sexp(adf_file_con_(cpp11::as_cpp<cpp11::decay_t<SEXP>>(extptr), cpp11::as_cpp<cpp11::decay_t<std::string>>(filename), cpp11::as_cpp<cpp11::decay_t<bool>>(writable)));
   END_CPP11
 }
 // open_adf_file.cpp
-std::string adf_file_con_info(SEXP connection);
-extern "C" SEXP _adfExplorer2_adf_file_con_info(SEXP connection) {
+std::string adf_file_con_info(SEXP extptr);
+extern "C" SEXP _adfExplorer2_adf_file_con_info(SEXP extptr) {
   BEGIN_CPP11
-    return cpp11::as_sexp(adf_file_con_info(cpp11::as_cpp<cpp11::decay_t<SEXP>>(connection)));
+    return cpp11::as_sexp(adf_file_con_info(cpp11::as_cpp<cpp11::decay_t<SEXP>>(extptr)));
   END_CPP11
 }
 

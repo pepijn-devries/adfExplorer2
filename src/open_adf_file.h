@@ -2,17 +2,6 @@
 #ifndef __OPEN_ADF_FILE__
 #define __OPEN_ADF_FILE__
 
-/* R connection definitions: */
-#define class class_name
-#define private private_ptr
-/* the RConnection API is experimental and subject to change */
-#include <R_ext/Connections.h>
-#if ! defined(R_CONNECTIONS_VERSION) || R_CONNECTIONS_VERSION != 1
-#error "Unsupported connections API version"
-#endif
-#undef class
-#undef private
-
 #define R_EOF -1
 
 /* Define BSWAP_32 on Big Endian systems */

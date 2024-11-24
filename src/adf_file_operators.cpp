@@ -1,5 +1,22 @@
 #include "adf_file_info.h"
 
+static size_t adf_file_read(AdfFile * af, size_t req_size, void *target) {
+  int filesize = af->fileHdr->byteSize;
+  int pos      = af->pos;
+  size_t get_size = min(filesize - pos, (int)req_size);
+  adfFileRead(af, get_size, (uint8_t *)target);
+  return get_size;
+}
+
+static int adf_getc(AdfFile * af) {
+  int x = 0;
+#ifdef WORDS_BIGENDIAN
+  return adf_file_read(af, 1, &x) ? BSWAP_32(x) : R_EOF;
+#else
+  return adf_file_read(af, 1, &x) ? x : R_EOF;
+#endif
+}
+
 [[cpp11::register]]
 SEXP adf_change_dir(SEXP extptr, std::string path) {
   int mode = ADF_FI_EXPECT_DIR | ADF_FI_THROW_ERROR | ADF_FI_EXPECT_EXIST |
@@ -227,7 +244,7 @@ SEXP adf_set_entry_name_(SEXP extptr, std::string path, std::string replacement)
       strcpy(af->fileHdr->fileName, replacement.c_str());
       // Don't think it is necesarry to update the checksum here
     }
-
+    
   } else {
     Rf_error("External pointer should by of class `adf_device` or `adf_file_con`.");
   }
@@ -283,4 +300,307 @@ SEXP move_adf_internal(SEXP extptr, std::string source, std::string destination)
   // Currently this function only checks if the move is allowed
   // It doesn't actually move anything
   return R_NilValue;
+}
+
+/*================================== */
+
+static void swapb(void *result, int size)
+{
+  int i;
+  char *p = (char *)result, tmp;
+  
+  if (size == 1) return;
+  for (i = 0; i < size/2; i++) {
+    tmp = p[i];
+    p[i] = p[size - i - 1];
+    p[size - i - 1] = tmp;
+  }
+}
+
+static SEXP readOneString(AdfFile * af)
+{
+  char buf[10001], *p;
+  int pos, m;
+  
+  for(pos = 0; pos < 10000; pos++) {
+    p = buf + pos;
+    m = (int) adf_file_read(af, sizeof(char), (uint8_t *)p);
+    if (m < 0) Rf_error("error reading from the connection");
+    if(!m) {
+      if(pos > 0)
+        Rf_warning("incomplete string at end of file has been discarded");
+      return R_NilValue;
+    }
+    if(*p == '\0') break;
+  }
+  if(pos == 10000)
+    Rf_warning("null terminator not found: breaking string at 10000 bytes");
+  return strings(r_string(std::string(buf)));
+}
+
+[[cpp11::register]]
+SEXP adf_readbin(SEXP extptr, int what, int n, int sz, bool sgn, bool swap) {
+  size_t block = 8096;
+  int sizedef= 4, mode = 1;
+  
+  SEXP ans = R_NilValue;
+  R_xlen_t i, m = 0, size = sz;
+  void *p = NULL;
+  AdfFile * af = get_adffile(extptr);
+  if (what == 7) { // =========================character
+    writable::strings res((R_xlen_t)0);
+    res.reserve(n);
+    SEXP onechar;
+    for(i = 0, m = 0; i < n; i++) {
+      onechar = readOneString(af);
+      if (onechar == R_NilValue) break;
+      res.push_back(r_string(onechar));
+    }
+    return res;
+  } else if (what == 5) { // ==================complex
+    if(size == NA_INTEGER) size = sizeof(Rcomplex);
+    if(size != sizeof(Rcomplex))
+      Rf_error("size changing is not supported for complex vectors");
+    PROTECT(ans = Rf_allocVector(CPLXSXP, n));
+    p = (void *) COMPLEX(ans);
+    uint8_t *pp = (uint8_t *)p;
+    R_xlen_t m0, n0 = n;
+    m = 0;
+    while(n0) {
+      size_t n1 = (n0 < (R_xlen_t)block) ? n0 : block;
+      m0 = (int) adf_file_read(af, n1 * size, pp);
+      if (m0 < 0) Rf_error("error reading from the connection");
+      m += m0;
+      if ((uint32_t)m0 < n1) break;
+      n0 -= n1;
+      pp += n1 * size;
+    }
+    if(swap) {
+      for(i = 0; i < m; i++) {
+        swapb(&(COMPLEX(ans)[i].r), sizeof(double));
+        swapb(&(COMPLEX(ans)[i].i), sizeof(double));
+      }
+    }
+    UNPROTECT(1);
+    return ans;
+  } else if (what == 3 || what == 4) { // =========integer or int
+    sizedef = sizeof(int); mode = 1;
+    
+#if (SIZEOF_LONG == 8) && (SIZEOF_LONG > SIZEOF_INT)
+#  define CASE_LONG_ETC case sizeof(long):
+#elif (SIZEOF_LONG_LONG == 8) && (SIZEOF_LONG_LONG > SIZEOF_INT)
+#  define CASE_LONG_ETC case sizeof(_lli_t):
+#else
+#  define CASE_LONG_ETC
+#endif
+    
+#define CHECK_INT_SIZES(SIZE, DEF) do {					                        \
+    if(SIZE == NA_INTEGER) SIZE = DEF;				                          \
+    switch (SIZE) {						                                          \
+    case sizeof(signed char):					                                  \
+    case sizeof(short):						                                      \
+    case sizeof(int):						                                        \
+      CASE_LONG_ETC						                                          \
+      break;							                                              \
+    default:							                                              \
+      Rf_error("size %d is unknown on this machine", SIZE);	            \
+    }								                                                    \
+} while(0)
+
+CHECK_INT_SIZES(size, sizedef);
+PROTECT(ans = Rf_allocVector(INTSXP, n));
+p = (void *) INTEGER(ans);
+  }  else if (what == 5) { // =======================logical
+    sizedef = sizeof(int); mode = 1;
+    CHECK_INT_SIZES(size, sizedef);
+    PROTECT(ans = Rf_allocVector(LGLSXP, n));
+    p = (void *) LOGICAL(ans);
+  } else if (what == 8) { // =========================raw
+    sizedef = 1; mode = 1;
+    if(size == NA_INTEGER) size = sizedef;
+    switch (size) {
+    case 1:
+      break;
+    default:
+      Rf_error("raw is always of size 1");
+    }
+    PROTECT(ans = Rf_allocVector(RAWSXP, n));
+    p = (void *) RAW(ans);
+  } else if (what == 2 || what == 3) { //===============double or integer
+    sizedef = sizeof(double); mode = 2;
+    if(size == NA_INTEGER) size = sizedef;
+    switch (size) {
+    case sizeof(double):
+    case sizeof(float):
+#if HAVE_LONG_DOUBLE && (SIZEOF_LONG_DOUBLE > SIZEOF_DOUBLE)
+    case sizeof(long double):
+#endif
+      break;
+    default:
+      Rf_error("size %d is unknown on this machine", size);
+    }
+    PROTECT(ans = Rf_allocVector(REALSXP, n));
+    p = (void *) REAL(ans);
+  } else
+    Rf_error("invalid 'what' argument");
+  
+  if(!sgn && (mode != 1 || size > 2))
+    warning("'signed = FALSE' is only valid for integers of sizes 1 and 2");
+  
+  if (size == sizedef) {
+    
+    /* Do this in blocks to avoid large buffers in the connection */
+    char *pp = (char *)p;
+    R_xlen_t m0, n0 = n;
+    m = 0;
+    while(n0) {
+      size_t n1 = (n0 < (R_xlen_t)block) ? n0 : block;
+      m0 = (int) adf_file_read(af, size*n1, (uint8_t *)pp);
+      if (m0 < 0) Rf_error("error reading from the connection");
+      m += m0;
+      if ((uint32_t)m0 < n1) break;
+      n0 -= n1;
+      pp += n1 * size;
+    }
+    if(swap && size > 1)
+      for(i = 0; i < m; i++) swapb((char *)p+i*size, size);
+  } else {
+    R_xlen_t s;
+    union {
+      signed char sch;
+      unsigned char uch;
+      signed short ssh;
+      unsigned short ush;
+      long l;
+      long long ll;
+      float f;
+#if HAVE_LONG_DOUBLE
+      long double ld;
+#endif
+    } u;
+    if (size > (R_xlen_t)sizeof u)
+      Rf_error("size %d is unknown on this machine", size);
+    if(mode == 1) { /* integer result */
+    for(i = 0, m = 0; i < n; i++) {
+      s = (int) adf_file_read(af, size, (uint8_t *)&u);
+      if (s < 0) Rf_error("error reading from the connection");
+      if(s) m++; else break;
+      if(swap && size > 1) swapb((char *) &u, size);
+      switch(size) {
+      case sizeof(signed char):
+        if(sgn)
+          INTEGER(ans)[i] = u.sch;
+        else
+          INTEGER(ans)[i] = u.uch;
+        break;
+      case sizeof(short):
+        if(sgn)
+          INTEGER(ans)[i] = u.ssh;
+        else
+          INTEGER(ans)[i] = u.ush;
+        break;
+#if SIZEOF_LONG == 8
+      case sizeof(long):
+        INTEGER(ans)[i] = (int) u.l;
+        break;
+#elif SIZEOF_LONG_LONG == 8
+      case sizeof(_lli_t):
+        INTEGER(ans)[i] = (int) u.ll;
+        break;
+#endif
+      default:
+        Rf_error("size %d is unknown on this machine", size);
+      }
+    }
+    } else if (mode == 2) { /* double result */
+    for(i = 0, m = 0; i < n; i++) {
+      s = (int) adf_file_read(af, size, (uint8_t *)&u);
+      if (s < 0) Rf_error("error reading from the connection");
+      if(s) m++; else break;
+      if(swap && size > 1) swapb((char *) &u, size);
+      switch(size) {
+      case sizeof(float):
+        REAL(ans)[i] = u.f;
+        break;
+#if HAVE_LONG_DOUBLE && (SIZEOF_LONG_DOUBLE > SIZEOF_DOUBLE)
+      case sizeof(long double):
+        REAL(ans)[i] = (double) u.ld;
+        break;
+#endif
+      default:
+        Rf_error("size %d is unknown on this machine", size);
+      }
+    }
+    }
+    
+  }
+  if(m < n)
+    ans = Rf_xlengthgets(ans, m);
+  UNPROTECT(1);
+  return ans;
+}
+
+[[cpp11::register]]
+SEXP adf_readlines(SEXP extptr, int n_, bool ok, bool warn, std::string encoding, bool skipNul) {
+  Rboolean utf8locale = (Rboolean)false; // Note that this is an R definition that is not part of its API
+  size_t nbuf, buf_size = 1000;
+  int oenc = CE_NATIVE, c;
+  if (encoding.compare("UTF-8") == 0) oenc = CE_UTF8;
+  else if (encoding.compare("latin1") == 0) oenc = CE_LATIN1;
+  else if (encoding.compare("bytes") == 0) oenc = CE_BYTES;
+  
+  char *buf = (char *) malloc(buf_size);
+  if(!buf)
+    Rf_error("cannot allocate buffer in readLines");
+  
+  R_xlen_t n = n_, nnn, nread;
+  AdfFile * af = get_adffile(extptr);
+  writable::strings result((R_xlen_t)0);
+  result.reserve((R_xlen_t)1000);
+  
+  nnn = (n < 0) ? R_XLEN_T_MAX : n;
+  for(nread = 0; nread < nnn; nread++) {
+    nbuf = 0;
+    while((c = adf_getc(af)) != R_EOF) {
+      if(nbuf == buf_size-1) {  /* need space for the terminator */
+        buf_size *= 2;
+        char *tmp = (char *) realloc(buf, buf_size);
+        if(!tmp) {
+          free(buf);
+          Rf_error("cannot allocate buffer in readLines");
+        } else buf = tmp;
+      }
+      if(skipNul && c == '\0') continue;
+      if(c != '\n')
+        /* compiler-defined conversion behaviour */
+        buf[nbuf++] = (char) c;
+      else
+        break;
+    }
+    buf[nbuf] = '\0';
+    /* Remove UTF-8 BOM */
+    const char *qbuf = buf;
+    // avoid valgrind warning if < 3 bytes
+    if (nread == 0 && utf8locale && strlen(buf) >= 3 &&
+        !memcmp(buf, "\xef\xbb\xbf", 3)) qbuf = buf + 3;
+    result.push_back(r_string(Rf_mkCharCE(qbuf, (cetype_t)oenc)));
+    if (warn && strlen(buf) < nbuf)
+      Rf_warning("line %lld appears to contain an embedded nul",
+              (long long)nread + 1);
+    if(c == R_EOF) goto no_more_lines;
+  }
+  
+  return result;
+  no_more_lines:
+    if(nbuf > 0) { /* incomplete last line */
+      nread++;
+      if(warn)
+        Rf_warning("incomplete final line found on connection");
+    }
+    free(buf);
+    if(nread < nnn && !ok)
+      Rf_error("too few lines read in readLines");
+
+    return result;
+    
 }

@@ -8,6 +8,7 @@
 struct AdfContainer {
   AdfDevice * dev;
   int currentVol;
+  bool isopen;
 };
 
 #endif /* __OPEN_ADF__ */

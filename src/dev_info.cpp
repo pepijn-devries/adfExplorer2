@@ -14,7 +14,7 @@ void check_adf_ptr (SEXP extptr) {
 AdfContainer * getAC(SEXP extptr) {
   check_adf_ptr(extptr);
   AdfContainer *ac = reinterpret_cast<AdfContainer *>(R_ExternalPtrAddr(extptr));
-  if (!ac) Rf_error("Lost pointer to AdfContainer.");
+  if (!ac || !ac->isopen) Rf_error("Device is closed.");
   return ac;
 }
 

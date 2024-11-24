@@ -8,20 +8,25 @@ using namespace cpp11;
 std::vector<AdfFile *> openfiles;
 
 AdfFile * get_adffile(SEXP extptr) {
-  if (TYPEOF(extptr) != EXTPTRSXP || !Rf_inherits(extptr, "adf_file_con"))
-    Rf_error("Object should be an external pointer and inherit 'adf_file_con'.");
-  return reinterpret_cast<AdfFile *>(R_ExternalPtrAddr(extptr));
+  bool success = !(TYPEOF(extptr) != EXTPTRSXP || !Rf_inherits(extptr, "adf_file_con"));
+  if (success) {
+    AdfFile * af = reinterpret_cast<AdfFile *>(R_ExternalPtrAddr(extptr));
+    if (af->curDataPtr != 0) return af;
+  }
+  Rf_error("Object should be an external pointer and inherit 'adf_file_con'.");
+  return NULL;
 }
 
-static double adf_seek(SEXP extptr, double where, int origin, int rw) {
+static double adf_seek_internal(AdfFile * af, double where, int origin) {
   
   // origin 1 = start;
   // origin 2 = current;
   // origin 3 = end of file;
-  AdfFile *af = get_adffile(extptr);
   
   int filesize = af->fileHdr->byteSize;
   int pos      = af->pos;
+  
+  if (ISNA(where)) return pos;
   
   switch(origin) {
   case 2: break;
@@ -34,37 +39,43 @@ static double adf_seek(SEXP extptr, double where, int origin, int rw) {
   return (double)pos;
 }
 
-/*
-static size_t adf_file_read(void *target, size_t sz, size_t ni, Rconnection con) {
-  AdfFile *af = (AdfFile *) con->private_ptr;
-  
-  size_t request_size = sz*ni;
-  int filesize = af->fileHdr->byteSize;
-  int pos      = af->pos;
-  size_t get_size = min(filesize - pos, (int)request_size);
-  adfFileRead(af, get_size, (uint8_t *)target);
-  return get_size;
+[[cpp11::register]]
+double seek_adf(SEXP extptr, double where, int origin) {
+  AdfFile *af = get_adffile(extptr);
+  return adf_seek_internal(af, where, origin);
 }
 
-static size_t adf_file_write(const void *ptr, size_t sz, size_t ni,
-                             Rconnection con) {
-  AdfFile *af = (AdfFile *) con->private_ptr;
-  
-  size_t request_size = sz*ni;
-  size_t got_size = adfFileWrite(af, request_size, (uint8_t *)ptr);
-  return got_size;
-}
-
-static int adf_getc(Rconnection con) {
-  int x = 0;
-#ifdef WORDS_BIGENDIAN
-  return adf_file_read(&x, 1, 1, con) ? BSWAP_32(x) : R_EOF;
-#else
-  return adf_file_read(&x, 1, 1, con) ? x : R_EOF;
-#endif
-}
-*/
+/*//TODO
+ static size_t adf_file_read(void *target, size_t sz, size_t ni, Rconnection con) {
+ AdfFile *af = (AdfFile *) con->private_ptr;
  
+ size_t request_size = sz*ni;
+ int filesize = af->fileHdr->byteSize;
+ int pos      = af->pos;
+ size_t get_size = min(filesize - pos, (int)request_size);
+ adfFileRead(af, get_size, (uint8_t *)target);
+ return get_size;
+ }
+ 
+ static size_t adf_file_write(const void *ptr, size_t sz, size_t ni,
+ Rconnection con) {
+ AdfFile *af = (AdfFile *) con->private_ptr;
+ 
+ size_t request_size = sz*ni;
+ size_t got_size = adfFileWrite(af, request_size, (uint8_t *)ptr);
+ return got_size;
+ }
+ 
+ static int adf_getc(Rconnection con) {
+ int x = 0;
+#ifdef WORDS_BIGENDIAN
+ return adf_file_read(&x, 1, 1, con) ? BSWAP_32(x) : R_EOF;
+#else
+ return adf_file_read(&x, 1, 1, con) ? x : R_EOF;
+#endif
+ }
+ */
+
 int get_adf_file_volnum(AdfFile * adf_file) {
   AdfVolume * vol = adf_file->volume;
   AdfDevice * dev = vol->dev;
@@ -72,7 +83,7 @@ int get_adf_file_volnum(AdfFile * adf_file) {
   int result = -1;
   for (int i = 0; i < dev->nVol; i++) {
     AdfVolume * test_vol = dev->volList[i];
-
+    
     if (test_vol == vol) {
       result = i;
       break;
@@ -82,23 +93,29 @@ int get_adf_file_volnum(AdfFile * adf_file) {
 }
 
 bool adf_check_file_state(AdfDevice *dev, int vol, SECTNUM sect) {
-  for (auto it = openfiles.begin(); it != openfiles.end(); ++it) {
-    AdfFile * af = *it;
+  for (long unsigned i = 0; i < openfiles.size(); i++) {// it = openfiles.begin(); it != openfiles.end(); ++it) {
+    AdfFile * af = openfiles.at(i);
     int testvol = get_adf_file_volnum(af);
-    if (dev == af->volume->dev && testvol == vol && af->fileHdr->headerKey == sect)
+    if (af->curDataPtr != 0 && dev == af->volume->dev && testvol == vol && af->fileHdr->headerKey == sect)
       return true;
   }
   return false;
 }
 
-void destroyAdfFile(AdfFile * af) {
-  for (auto it = openfiles.begin(); it != openfiles.end(); ++it) {
-    if (*it == af) {
-      Rprintf("TODO erasing file at position %i\n", it - openfiles.begin());
-      openfiles.erase(it);
+[[cpp11::register]]
+SEXP adf_close_file_con(SEXP extptr) {
+  AdfFile * af = get_adffile(extptr);
+  for (long unsigned i = 0; i < openfiles.size(); i++) {// it = openfiles.begin(); it != openfiles.end(); ++it) {
+    AdfFile * af2 = openfiles.at(i);
+    if (af2 == af) {
+      openfiles.erase(openfiles.begin() + i);
+      break;
     }
   }
-  adfFileClose(af);
+  
+  adfFileFlush(af);
+  af->curDataPtr = 0; // Is invalid and indicates the connection is closed;
+  return R_NilValue; //TODO
 }
 
 [[cpp11::register]]
@@ -147,18 +164,13 @@ SEXP adf_file_con_(SEXP extptr, std::string filename, bool writable) {
   if (!adf_file) Rf_error("Failed to open file connection");
   
   openfiles.push_back(adf_file);
-  
-  external_pointer<AdfFile, destroyAdfFile>adfptr(adf_file);
+
+  external_pointer<AdfFile, adfFileClose>adfptr(adf_file);
   
   sexp result = as_sexp(adfptr);
   result.attr("class") = "adf_file_con";
   
   return result;
-}
-
-void adf_file_con_test_class(SEXP extptr) {
-  if (! Rf_inherits(extptr, "adf_file_con"))
-    Rf_error("Connection should inherit 'adf_file_con'.");
 }
 
 [[cpp11::register]]
@@ -176,4 +188,27 @@ std::string adf_file_con_info(SEXP extptr) {
   
   std::string result = "A " + access + " connection to virtual file:\n" + path;
   return result;
+}
+
+[[cpp11::register]]
+void close_adf(SEXP extptr) {
+  auto ac = getAC(extptr);
+  if (ac->isopen) {
+    ac->isopen = false;
+    AdfDevice * dev = ac->dev;
+    for (long i = openfiles.size() - 1; i>= 0; i--) {
+      if (i < 0) break;
+      AdfFile * af = openfiles.at(i);
+      if (af->curDataPtr != 0 && af->volume->dev == dev) {
+
+        adfFileFlush(af);
+        af->curDataPtr = 0; // Is invalid and indicates the connection is closed;
+        openfiles.erase(openfiles.begin() + i);
+      }
+    }
+
+    adfCloseDev(dev); // This closes the adf file and frees all allocated mem for dev
+  }
+
+  return;
 }

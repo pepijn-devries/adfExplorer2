@@ -48,6 +48,14 @@ move_adf_internal <- function(extptr, source, destination) {
   .Call(`_adfExplorer2_move_adf_internal`, extptr, source, destination)
 }
 
+adf_readbin <- function(extptr, what, n, sz, sgn, swap) {
+  .Call(`_adfExplorer2_adf_readbin`, extptr, what, n, sz, sgn, swap)
+}
+
+adf_readlines <- function(extptr, n_, ok, warn, encoding, skipNul) {
+  .Call(`_adfExplorer2_adf_readlines`, extptr, n_, ok, warn, encoding, skipNul)
+}
+
 read_adf_block_ <- function(extptr, sector) {
   .Call(`_adfExplorer2_read_adf_block_`, extptr, sector)
 }
@@ -128,10 +136,22 @@ open_adf_ <- function(filename, write_protected) {
   .Call(`_adfExplorer2_open_adf_`, filename, write_protected)
 }
 
+seek_adf <- function(extptr, where, origin) {
+  .Call(`_adfExplorer2_seek_adf`, extptr, where, origin)
+}
+
+adf_close_file_con <- function(extptr) {
+  .Call(`_adfExplorer2_adf_close_file_con`, extptr)
+}
+
 adf_file_con_ <- function(extptr, filename, writable) {
   .Call(`_adfExplorer2_adf_file_con_`, extptr, filename, writable)
 }
 
 adf_file_con_info <- function(extptr) {
   .Call(`_adfExplorer2_adf_file_con_info`, extptr)
+}
+
+close_adf <- function(extptr) {
+  invisible(.Call(`_adfExplorer2_close_adf`, extptr))
 }

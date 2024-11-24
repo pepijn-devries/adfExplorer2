@@ -7,6 +7,7 @@
 
 void check_volume_number(AdfDevice *dev, int vol_num);
 int get_adf_vol(SEXP extptr);
+AdfContainer * getAC(SEXP extptr);
 AdfDevice * get_adf_dev(SEXP extptr);
 void set_adf_vol(SEXP extptr, int cur_vol);
 std::string adf_dev_name_internal(AdfDevice * dev, int vol_num);

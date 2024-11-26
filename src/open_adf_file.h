@@ -25,6 +25,7 @@
 #endif
 #endif
 
+AdfFile * get_adffile(SEXP extptr);
 int get_adf_file_volnum(AdfFile * adf_file);
 bool adf_check_file_state(AdfDevice *dev, int vol, SECTNUM sect);
 

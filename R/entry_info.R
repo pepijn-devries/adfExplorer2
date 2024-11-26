@@ -32,7 +32,7 @@ adf_file_exists.adf_device <- function(x, path,...) {
     .check_dev(x, path)
     path <- unclass(path)$path
   }
-  lapply(path, \(y) adf_file_exists_(connection = x, path = y)) |> unlist()
+  lapply(path, \(y) adf_file_exists_(extptr = x, path = y)) |> unlist()
 }
 
 #' @export

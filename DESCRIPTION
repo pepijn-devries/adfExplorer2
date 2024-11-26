@@ -37,6 +37,7 @@ Collate:
     'directory.R'
     'entry_info.R'
     'remove.R'
+    's3_conn.R'
     's3_methods.R'
     'virtual_path.R'
 Depends:

@@ -6,49 +6,31 @@ void check_volume_number(AdfDevice *dev, int vol_num) {
   return;
 }
 
-void check_adf_con (SEXP con) {
-  if (! Rf_inherits(con, "adf_device"))
-    Rf_error("Connection should inherit 'adf_device'.");
+void check_adf_ptr (SEXP extptr) {
+  if (TYPEOF(extptr) != EXTPTRSXP || !Rf_inherits(extptr, "adf_device"))
+    Rf_error("Object should be an external pointer and inherit 'adf_device'.");
 }
 
-AdfContainer * getAC(Rconnection con) {
-  AdfContainer *ac = (AdfContainer *)con->private_ptr;
-  if (!ac) Rf_error("Lost pointer to AdfContainer.");
+AdfContainer * getAC(SEXP extptr) {
+  check_adf_ptr(extptr);
+  AdfContainer *ac = reinterpret_cast<AdfContainer *>(R_ExternalPtrAddr(extptr));
+  if (!ac || !ac->isopen) Rf_error("Device is closed.");
   return ac;
 }
 
-AdfDevice * get_adf_dev(Rconnection con) {
-  AdfContainer *ac = getAC(con);
-  if (!(ac->dev)) Rf_error("Lost pointer to AdfDevice.");
-  return ac->dev;
+AdfDevice * get_adf_dev(SEXP extptr) {
+  AdfContainer * ac = getAC(extptr);
+  return (ac->dev);
 }
 
-AdfDevice * get_adf_dev_internal(SEXP con) {
-  check_adf_con(con);
-  Rconnection con2 = R_GetConnection(con);
-  return (get_adf_dev(con2));
-}
-
-int get_adf_vol(Rconnection con) {
-  AdfContainer *ac = getAC(con);
+int get_adf_vol(SEXP extptr) {
+  AdfContainer *ac = getAC(extptr);
   return ac->currentVol;
 }
 
-int get_adf_vol_internal(SEXP con) {
-  check_adf_con(con);
-  Rconnection con2 = R_GetConnection(con);
-  return get_adf_vol(con2);
-}
-
-void set_adf_vol(Rconnection con, int cur_vol) {
-  AdfContainer *ac = getAC(con);
+void set_adf_vol(SEXP extptr, int cur_vol) {
+  AdfContainer *ac = getAC(extptr);
   ac->currentVol = cur_vol;
-}
-
-void set_adf_vol_internal(SEXP con, int cur_vol) {
-  check_adf_con(con);
-  Rconnection con2 = R_GetConnection(con);
-  return set_adf_vol(con2, cur_vol);
 }
 
 std::string adf_dev_name_internal(AdfDevice * dev, int vol_num) {
@@ -58,26 +40,26 @@ std::string adf_dev_name_internal(AdfDevice * dev, int vol_num) {
 }
 
 [[cpp11::register]]
-std::string adf_dev_name(SEXP connection, int vol_num) {
-  AdfDevice * dev = get_adf_dev_internal(connection);
+std::string adf_dev_name(SEXP extptr, int vol_num) {
+  AdfDevice * dev = get_adf_dev(extptr);
   return(adf_dev_name_internal(dev, vol_num));
 }
 
 [[cpp11::register]]
-int adf_dev_size(SEXP connection) {
-  AdfDevice * dev = get_adf_dev_internal(connection);
+int adf_dev_size(SEXP extptr) {
+  AdfDevice * dev = get_adf_dev(extptr);
   return (int)dev->size;
 }
 
 [[cpp11::register]]
-int adf_dev_nvol(SEXP connection) {
-  AdfDevice * dev = get_adf_dev_internal(connection);
+int adf_dev_nvol(SEXP exptr) {
+  AdfDevice * dev = get_adf_dev(exptr);
   return (int)dev->nVol;
 }
 
 [[cpp11::register]]
-std::string adf_dev_type(SEXP connection) {
-  AdfDevice * dev = get_adf_dev_internal(connection);
+std::string adf_dev_type(SEXP exptr) {
+  AdfDevice * dev = get_adf_dev(exptr);
   std::string result;
   
   switch (dev->devType) {
@@ -102,22 +84,22 @@ std::string adf_dev_type(SEXP connection) {
 }
 
 [[cpp11::register]]
-int adf_free_blocks(SEXP connection, int vol_num) {
-  AdfDevice * dev = get_adf_dev_internal(connection);
+int adf_free_blocks(SEXP exptr, int vol_num) {
+  AdfDevice * dev = get_adf_dev(exptr);
   check_volume_number(dev, vol_num);
   return (int) adfCountFreeBlocks ( dev->volList[vol_num] );
 }
 
 [[cpp11::register]]
-int adf_block_size(SEXP connection, int vol_num) {
-  AdfDevice * dev = get_adf_dev_internal(connection);
+int adf_block_size(SEXP exptr, int vol_num) {
+  AdfDevice * dev = get_adf_dev(exptr);
   check_volume_number(dev, vol_num);
   return (dev->volList[vol_num])->blockSize;
 }
 
 [[cpp11::register]]
-int adf_vol_size(SEXP connection, int vol_num) {
-  AdfDevice * dev = get_adf_dev_internal(connection);
+int adf_vol_size(SEXP exptr, int vol_num) {
+  AdfDevice * dev = get_adf_dev(exptr);
   check_volume_number(dev, vol_num);
   AdfVolume * vol = dev->volList[vol_num];
   // Also count the boot block
@@ -125,38 +107,38 @@ int adf_vol_size(SEXP connection, int vol_num) {
 }
 
 [[cpp11::register]]
-bool adf_is_intl(SEXP connection, int vol_num) {
-  AdfDevice * dev = get_adf_dev_internal(connection);
+bool adf_is_intl(SEXP exptr, int vol_num) {
+  AdfDevice * dev = get_adf_dev(exptr);
   check_volume_number(dev, vol_num);
   AdfVolume * vol = dev->volList[vol_num];
   return (bool)isINTL(vol->dosType);
 }
 
 [[cpp11::register]]
-bool adf_is_dircache(SEXP connection, int vol_num) {
-  AdfDevice * dev = get_adf_dev_internal(connection);
+bool adf_is_dircache(SEXP exptr, int vol_num) {
+  AdfDevice * dev = get_adf_dev(exptr);
   check_volume_number(dev, vol_num);
   AdfVolume * vol = dev->volList[vol_num];
   return (bool)isDIRCACHE(vol->dosType);
 }
 
 [[cpp11::register]]
-bool adf_is_ffs(SEXP connection, int vol_num) {
-  AdfDevice * dev = get_adf_dev_internal(connection);
+bool adf_is_ffs(SEXP exptr, int vol_num) {
+  AdfDevice * dev = get_adf_dev(exptr);
   check_volume_number(dev, vol_num);
   AdfVolume * vol = dev->volList[vol_num];
   return (bool)isFFS(vol->dosType);
 }
 
 [[cpp11::register]]
-bool adf_is_write_protected(SEXP connection) {
-  AdfDevice * dev = get_adf_dev_internal(connection);
+bool adf_is_write_protected(SEXP exptr) {
+  AdfDevice * dev = get_adf_dev(exptr);
   return dev->readOnly;
 }
 
 [[cpp11::register]]
-bool adf_is_bootable(SEXP connection, int vol_num) {
-  AdfDevice * dev = get_adf_dev_internal(connection);
+bool adf_is_bootable(SEXP exptr, int vol_num) {
+  AdfDevice * dev = get_adf_dev(exptr);
   bool result = false;
   
   uint8_t buf[1024];
@@ -188,11 +170,11 @@ bool adf_is_bootable(SEXP connection, int vol_num) {
 }
 
 [[cpp11::register]]
-bool adf_set_dev_name(SEXP connection, int vol_num, std::string new_name) {
+bool adf_set_dev_name(SEXP extptr, int vol_num, std::string new_name) {
   int size = new_name.length();
   if (size > MAXNAMELEN) size = MAXNAMELEN;
   if (size == 0) Rf_error("New name should be at least 1 character long");
-  AdfDevice * dev = get_adf_dev_internal(connection);
+  AdfDevice * dev = get_adf_dev(extptr);
   if (dev->readOnly) Rf_error("Virtual device is read-only!");
   check_volume_number(dev, vol_num);
   AdfVolume * vol = dev->volList[vol_num];

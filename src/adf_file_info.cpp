@@ -47,7 +47,7 @@ bool adf_check_volume(AdfDevice * dev, std::string vol_name,
 }
 
 [[cpp11::register]]
-list adf_path_to_entry(SEXP connection, std::string filename, int mode) {
+list adf_path_to_entry(SEXP extptr, std::string filename, int mode) {
   
   std::string entry_name = "";
   writable::list result({
@@ -58,8 +58,8 @@ list adf_path_to_entry(SEXP connection, std::string filename, int mode) {
       "name"_nm = writable::strings(r_string(entry_name)),
       "remainder"_nm = writable::strings(r_string(entry_name))});
   
-  AdfDevice * dev = get_adf_dev_internal(connection);
-  int cur_vol     = get_adf_vol_internal(connection);
+  AdfDevice * dev = get_adf_dev(extptr);
+  int cur_vol     = get_adf_vol(extptr);
   check_volume_number(dev, cur_vol);
   int parent      = -1;
   SECTNUM cur_pos = dev->volList[cur_vol]->curDirPtr;
@@ -133,20 +133,22 @@ list adf_path_to_entry(SEXP connection, std::string filename, int mode) {
       entry_sectype != ST_FILE) {
     const char * message = "Path does not point to a file";
     if ((mode & ADF_FI_THROW_ERROR) != 0)
-      Rf_error("%s", message); else Rf_warning("%s", message);
+      Rf_error("%s", message); else if (mode & ADF_FI_WARN)
+        Rf_warning("%s", message);
   }
   if (((mode & ADF_FI_EXPECT_DIR) != 0) &&
       entry_sectype != ST_DIR && entry_sectype != ST_ROOT) {
     const char * message = "Path does not point to a directory";
     if ((mode & ADF_FI_THROW_ERROR) != 0)
-      Rf_error("%s", message); else Rf_warning("%s", message);
+      Rf_error("%s", message); else if (mode & ADF_FI_WARN)
+        Rf_warning("%s", message);
   }
 
   return result;
 }
 
-void adf_change_dir_internal(SEXP connection, SECTNUM sector, int volume) {
-  AdfDevice * dev = get_adf_dev_internal(connection);
+void adf_change_dir_internal(SEXP extptr, SECTNUM sector, int volume) {
+  AdfDevice * dev = get_adf_dev(extptr);
   check_volume_number(dev, volume);
   AdfVolume * vol = dev->volList[volume];
   vol->curDirPtr = sector;
@@ -159,38 +161,36 @@ void check_adf_name(std::string name) {
 }
 
 [[cpp11::register]]
-bool adf_file_exists_(SEXP connection, std::string path) {
-  list entry = adf_path_to_entry(connection, path, 0);
+bool adf_file_exists_(SEXP extptr, std::string path) {
+  list entry = adf_path_to_entry(extptr, path, 0);
   return integers(entry["sector"]).at(0) != -1;
 }
 
 [[cpp11::register]]
-bool adf_dir_exists_(SEXP connection, std::string path) {
-  list entry = adf_path_to_entry(connection, path, 0);
+bool adf_dir_exists_(SEXP extptr, std::string path) {
+  list entry = adf_path_to_entry(extptr, path, 0);
   int sec_type = integers(entry["header_sectype"]).at(0);
   return integers(entry["sector"]).at(0) != -1 &&
     (sec_type == ST_DIR || sec_type == ST_ROOT);
 }
 
 [[cpp11::register]]
-list adf_entry_info_(SEXP connection, std::string path) {
+list adf_entry_info_(SEXP extptr, std::string path) {
   int sector, vol_num, sectype;
   writable::list result;
-  if (Rf_inherits(connection, "adf_device")) {
-    AdfDevice * dev = get_adf_dev_internal(connection);
+  if (Rf_inherits(extptr, "adf_device")) {
+    AdfDevice * dev = get_adf_dev(extptr);
     
-    list entry = adf_path_to_entry(connection, path, 0);
+    list entry = adf_path_to_entry(extptr, path, 0);
     sector  = integers(entry["sector"]).at(0);
     vol_num = integers(entry["volume"]).at(0);
     sectype = integers(entry["header_sectype"]).at(0);
     check_volume_number(dev, vol_num);
-    if (sectype == ST_ROOT) result = interpret_root_header(connection, vol_num);
-    if (sectype == ST_DIR)  result = interpret_dir_header(connection, vol_num, sector);
-    if (sectype == ST_FILE) result = interpret_file_header(connection, vol_num, sector);
-  } else if (Rf_inherits(connection, "adf_file_con")) {
-    Rconnection con = R_GetConnection(connection);
-    if (!con->isopen) Rf_error("Connection is closed");
-    AdfFile *af = (AdfFile *) con->private_ptr;
+    if (sectype == ST_ROOT) result = interpret_root_header(extptr, vol_num);
+    if (sectype == ST_DIR)  result = interpret_dir_header(extptr, vol_num, sector);
+    if (sectype == ST_FILE) result = interpret_file_header(extptr, vol_num, sector);
+  } else if (Rf_inherits(extptr, "adf_file_con")) {
+    AdfFile *af = get_adffile(extptr);
     sector = af->fileHdr->headerKey;
     sectype = af->fileHdr->secType;
     vol_num = get_adf_file_volnum(af);
@@ -199,7 +199,7 @@ list adf_entry_info_(SEXP connection, std::string path) {
     if (sectype == ST_DIR)  result = interpret_dir_header_internal(dev, vol_num, sector);
     if (sectype == ST_FILE) result = interpret_file_header_internal(dev, vol_num, sector);
   } else {
-    Rf_error("`connection` should by of class `adf_device` or `adf_file_con`.");
+    Rf_error("External pointer should by of class `adf_device` or `adf_file_con`.");
   }
   
   return result;
@@ -237,7 +237,25 @@ std::string adf_entry_to_path_internal(AdfDevice * dev, int vol_num, int sectnum
   return result;
 }
 
-std::string adf_entry_to_path(SEXP connection, int vol_num, int sectnum, bool full) {
-  AdfDevice * dev = get_adf_dev_internal(connection);
+std::string adf_entry_to_path(SEXP extptr, int vol_num, int sectnum, bool full) {
+  AdfDevice * dev = get_adf_dev(extptr);
   return adf_entry_to_path_internal(dev, vol_num, sectnum, full);
+}
+
+[[cpp11::register]]
+list adf_con_summary(SEXP extptr) {
+  AdfFile * af = get_adffile(extptr);
+  int nl = af->fileHdr->nameLen;
+  if (nl > MAXNAMELEN) nl = MAXNAMELEN;
+  writable::list result({
+    "description"_nm = (std::string)(std::string(af->fileHdr->fileName).substr(0, nl)),
+    "class"_nm = "adf_file_con",
+    "mode"_nm = af->modeWrite ? "r+b" : "rb",
+    "text"_nm = "binary",
+    "opened"_nm = "opened",
+    "can read"_nm = af->modeRead ? "yes" : "no",
+    "can write"_nm = af->modeWrite ? "yes" : "no"
+  });
+
+  return result;
 }

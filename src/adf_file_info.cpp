@@ -133,13 +133,15 @@ list adf_path_to_entry(SEXP extptr, std::string filename, int mode) {
       entry_sectype != ST_FILE) {
     const char * message = "Path does not point to a file";
     if ((mode & ADF_FI_THROW_ERROR) != 0)
-      Rf_error("%s", message); else Rf_warning("%s", message);
+      Rf_error("%s", message); else if (mode & ADF_FI_WARN)
+        Rf_warning("%s", message);
   }
   if (((mode & ADF_FI_EXPECT_DIR) != 0) &&
       entry_sectype != ST_DIR && entry_sectype != ST_ROOT) {
     const char * message = "Path does not point to a directory";
     if ((mode & ADF_FI_THROW_ERROR) != 0)
-      Rf_error("%s", message); else Rf_warning("%s", message);
+      Rf_error("%s", message); else if (mode & ADF_FI_WARN)
+        Rf_warning("%s", message);
   }
 
   return result;
@@ -238,4 +240,22 @@ std::string adf_entry_to_path_internal(AdfDevice * dev, int vol_num, int sectnum
 std::string adf_entry_to_path(SEXP extptr, int vol_num, int sectnum, bool full) {
   AdfDevice * dev = get_adf_dev(extptr);
   return adf_entry_to_path_internal(dev, vol_num, sectnum, full);
+}
+
+[[cpp11::register]]
+list adf_con_summary(SEXP extptr) {
+  AdfFile * af = get_adffile(extptr);
+  int nl = af->fileHdr->nameLen;
+  if (nl > MAXNAMELEN) nl = MAXNAMELEN;
+  writable::list result({
+    "description"_nm = (std::string)(std::string(af->fileHdr->fileName).substr(0, nl)),
+    "class"_nm = "adf_file_con",
+    "mode"_nm = af->modeWrite ? "r+b" : "rb",
+    "text"_nm = "binary",
+    "opened"_nm = "opened",
+    "can read"_nm = af->modeRead ? "yes" : "no",
+    "can write"_nm = af->modeWrite ? "yes" : "no"
+  });
+
+  return result;
 }

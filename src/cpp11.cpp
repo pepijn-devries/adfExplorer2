@@ -40,6 +40,13 @@ extern "C" SEXP _adfExplorer2_adf_entry_info_(SEXP extptr, SEXP path) {
     return cpp11::as_sexp(adf_entry_info_(cpp11::as_cpp<cpp11::decay_t<SEXP>>(extptr), cpp11::as_cpp<cpp11::decay_t<std::string>>(path)));
   END_CPP11
 }
+// adf_file_info.cpp
+list adf_con_summary(SEXP extptr);
+extern "C" SEXP _adfExplorer2_adf_con_summary(SEXP extptr) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(adf_con_summary(cpp11::as_cpp<cpp11::decay_t<SEXP>>(extptr)));
+  END_CPP11
+}
 // adf_file_operators.cpp
 SEXP adf_change_dir(SEXP extptr, std::string path);
 extern "C" SEXP _adfExplorer2_adf_change_dir(SEXP extptr, SEXP path) {
@@ -101,6 +108,20 @@ SEXP adf_readlines(SEXP extptr, int n_, bool ok, bool warn, std::string encoding
 extern "C" SEXP _adfExplorer2_adf_readlines(SEXP extptr, SEXP n_, SEXP ok, SEXP warn, SEXP encoding, SEXP skipNul) {
   BEGIN_CPP11
     return cpp11::as_sexp(adf_readlines(cpp11::as_cpp<cpp11::decay_t<SEXP>>(extptr), cpp11::as_cpp<cpp11::decay_t<int>>(n_), cpp11::as_cpp<cpp11::decay_t<bool>>(ok), cpp11::as_cpp<cpp11::decay_t<bool>>(warn), cpp11::as_cpp<cpp11::decay_t<std::string>>(encoding), cpp11::as_cpp<cpp11::decay_t<bool>>(skipNul)));
+  END_CPP11
+}
+// adf_file_operators.cpp
+SEXP adf_writebin(SEXP object, SEXP extptr, int size, bool swap, bool useBytes);
+extern "C" SEXP _adfExplorer2_adf_writebin(SEXP object, SEXP extptr, SEXP size, SEXP swap, SEXP useBytes) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(adf_writebin(cpp11::as_cpp<cpp11::decay_t<SEXP>>(object), cpp11::as_cpp<cpp11::decay_t<SEXP>>(extptr), cpp11::as_cpp<cpp11::decay_t<int>>(size), cpp11::as_cpp<cpp11::decay_t<bool>>(swap), cpp11::as_cpp<cpp11::decay_t<bool>>(useBytes)));
+  END_CPP11
+}
+// adf_file_operators.cpp
+SEXP adf_writelines(strings text, SEXP extptr, std::string sep, bool useBytes);
+extern "C" SEXP _adfExplorer2_adf_writelines(SEXP text, SEXP extptr, SEXP sep, SEXP useBytes) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(adf_writelines(cpp11::as_cpp<cpp11::decay_t<strings>>(text), cpp11::as_cpp<cpp11::decay_t<SEXP>>(extptr), cpp11::as_cpp<cpp11::decay_t<std::string>>(sep), cpp11::as_cpp<cpp11::decay_t<bool>>(useBytes)));
   END_CPP11
 }
 // block_adf.cpp
@@ -285,6 +306,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_adfExplorer2_adf_block_size",         (DL_FUNC) &_adfExplorer2_adf_block_size,         2},
     {"_adfExplorer2_adf_change_dir",         (DL_FUNC) &_adfExplorer2_adf_change_dir,         2},
     {"_adfExplorer2_adf_close_file_con",     (DL_FUNC) &_adfExplorer2_adf_close_file_con,     1},
+    {"_adfExplorer2_adf_con_summary",        (DL_FUNC) &_adfExplorer2_adf_con_summary,        1},
     {"_adfExplorer2_adf_dev_format",         (DL_FUNC) &_adfExplorer2_adf_dev_format,         6},
     {"_adfExplorer2_adf_dev_name",           (DL_FUNC) &_adfExplorer2_adf_dev_name,           2},
     {"_adfExplorer2_adf_dev_nvol",           (DL_FUNC) &_adfExplorer2_adf_dev_nvol,           1},
@@ -311,6 +333,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_adfExplorer2_adf_set_entry_name_",    (DL_FUNC) &_adfExplorer2_adf_set_entry_name_,    3},
     {"_adfExplorer2_adf_upper",              (DL_FUNC) &_adfExplorer2_adf_upper,              2},
     {"_adfExplorer2_adf_vol_size",           (DL_FUNC) &_adfExplorer2_adf_vol_size,           2},
+    {"_adfExplorer2_adf_writebin",           (DL_FUNC) &_adfExplorer2_adf_writebin,           5},
+    {"_adfExplorer2_adf_writelines",         (DL_FUNC) &_adfExplorer2_adf_writelines,         4},
     {"_adfExplorer2_close_adf",              (DL_FUNC) &_adfExplorer2_close_adf,              1},
     {"_adfExplorer2_interpret_dir_header",   (DL_FUNC) &_adfExplorer2_interpret_dir_header,   3},
     {"_adfExplorer2_interpret_file_header",  (DL_FUNC) &_adfExplorer2_interpret_file_header,  3},

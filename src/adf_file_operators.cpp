@@ -540,6 +540,7 @@ p = (void *) INTEGER(ans);
   return ans;
 }
 
+
 [[cpp11::register]]
 SEXP adf_readlines(SEXP extptr, int n_, bool ok, bool warn, std::string encoding, bool skipNul) {
   Rboolean utf8locale = (Rboolean)false; // Note that this is an R definition that is not part of its API
@@ -603,4 +604,208 @@ SEXP adf_readlines(SEXP extptr, int n_, bool ok, bool warn, std::string encoding
 
     return result;
     
+}
+
+const char *translateChar0(SEXP x) {
+  if (TYPEOF(x) != CHARSXP)
+    Rf_error("`translateChar0` in `adf_writebin` was not called with CHARSXP as expected");
+  int ct = Rf_getCharCE(x);
+  if (ct == CE_BYTES) return CHAR(x);
+  return Rf_translateChar(x);
+}
+
+[[cpp11::register]]
+SEXP adf_writebin(SEXP object, SEXP extptr, int size, bool swap, bool useBytes) {
+  AdfFile * af = get_adffile(extptr);
+  if (!af->modeWrite)
+    Rf_error("cannot write to this connection");
+  
+  if(swap == NA_LOGICAL) Rf_error("invalid 'swap' argument");
+  if(useBytes == NA_LOGICAL) Rf_error("invalid 'useBytes' argument");
+  R_xlen_t i, len = XLENGTH(object);
+  
+  if (len == 0) return R_NilValue;
+
+#ifndef LONG_VECTOR_SUPPORT
+  /* without long vectors RAW vectors are limited to 2^31 - 1 bytes */
+  if(len * (double)size > INT_MAX) {
+    if(isRaw)
+      Rf_error("only 2^31-1 bytes can be written to a raw vector");
+    else
+      Rf_error("only 2^31-1 bytes can be written in a single writeBin() call");
+  }
+#endif
+  SEXP ans = R_NilValue;
+  if(TYPEOF(object) == STRSXP) {
+    const char *s;
+    /* translateChar0() is the same as CHAR for IS_BYTES strings */
+    for(i = 0; i < len; i++) {
+      if(useBytes)
+        s = CHAR(STRING_ELT(object, i));
+      else
+        s = translateChar0(STRING_ELT(object, i));
+      size_t nwrite = adfFileWrite(af, sizeof(char) * strlen(s) + 1, (uint8_t *)s);
+      if(!nwrite) {
+        Rf_warning("problem writing to connection");
+        break;
+      }
+    }
+  } else {
+    switch(TYPEOF(object)) {
+    case LGLSXP:
+    case INTSXP:
+      CHECK_INT_SIZES(size, sizeof(int));
+      break;
+    case REALSXP:
+      if(size == NA_INTEGER) size = sizeof(double);
+      switch (size) {
+      case sizeof(double):
+      case sizeof(float):
+#if HAVE_LONG_DOUBLE && (SIZEOF_LONG_DOUBLE > SIZEOF_DOUBLE)
+      case sizeof(long double):
+#endif
+        break;
+      default:
+        Rf_error("size %d is unknown on this machine", size);
+      }
+      break;
+    case CPLXSXP:
+      if(size == NA_INTEGER) size = sizeof(Rcomplex);
+      if(size != sizeof(Rcomplex))
+        Rf_error("size changing is not supported for complex vectors");
+      break;
+    case RAWSXP:
+      if(size == NA_INTEGER) size = 1;
+      if(size != 1)
+        Rf_error("size changing is not supported for raw vectors");
+      break;
+    default:
+      Rf_error("writBin is not implemented for the provided object");
+    }
+    char *buf = (char *)malloc(len * size);
+    R_xlen_t j;
+    switch(TYPEOF(object)) {
+    case LGLSXP:
+    case INTSXP:
+      switch (size) {
+      case sizeof(int):
+        memcpy(buf, INTEGER(object), size * len);
+        break;
+#if SIZEOF_LONG == 8
+      case sizeof(long):
+{
+  for (i = 0, j = 0; i < len; i++, j += size) {
+  long l1 = (long) INTEGER(object)[i];
+  memcpy(buf + j, &l1, size);
+}
+  break;
+}
+#elif SIZEOF_LONG_LONG == 8
+      case sizeof(_lli_t):
+{
+  for (i = 0, j = 0; i < len; i++, j += size) {
+  _lli_t ll1 = (_lli_t) INTEGER(object)[i];
+  memcpy(buf + j, &ll1, size);
+}
+  break;
+}
+#endif
+      case 2:
+{
+  for (i = 0, j = 0; i < len; i++, j += size) {
+  short s1 = (short) INTEGER(object)[i];
+  memcpy(buf + j, &s1, size);
+}
+  break;
+}
+      case 1:
+        for (i = 0; i < len; i++)
+          /* compiler-defined conversion behavior */
+          buf[i] = (signed char) INTEGER(object)[i];
+        break;
+      default:
+        Rf_error("size %d is unknown on this machine", size);
+      }
+      break;
+    case REALSXP:
+      switch (size) {
+      case sizeof(double):
+        memcpy(buf, REAL(object), size * len);
+        break;
+      case sizeof(float):
+        {
+          for (i = 0, j = 0; i < len; i++, j += size) {
+          float f1 = (float) REAL(object)[i];
+          memcpy(buf+j, &f1, size);
+        }
+          break;
+        }
+#if HAVE_LONG_DOUBLE && (SIZEOF_LONG_DOUBLE > SIZEOF_DOUBLE)
+      case sizeof(long double):
+{
+  /* some systems have problems with memcpy from
+   the address of an automatic long double,
+   e.g. ix86/x86_64 Linux with gcc4 */
+  static long double ld1;
+  for (i = 0, j = 0; i < len; i++, j += size) {
+    ld1 = (long double) REAL(object)[i];
+    memcpy(buf+j, &ld1, size);
+  }
+  break;
+}
+#endif
+      default:
+        Rf_error("size %d is unknown on this machine", size);
+      }
+      break;
+    case CPLXSXP:
+      memcpy(buf, COMPLEX(object), size * len);
+      break;
+    case RAWSXP:
+      memcpy(buf, RAW(object), len); /* size = 1 */
+  break;
+    }
+    
+    if(swap && size > 1) {
+      if (TYPEOF(object) == CPLXSXP)
+        for(i = 0; i < len; i++) {
+          int sz = size/2;
+          swapb(buf+sz*2*i, sz);
+          swapb(buf+sz*(2*i+1), sz);
+        }
+        else
+          for(i = 0; i < len; i++) swapb(buf+size*i, size);
+    }
+    
+    /* write it now */
+    size_t nwrite = adfFileWrite(af, size*len, (uint8_t *)buf);
+    if (nwrite < (uint32_t)len) Rf_warning("problem writing to connection");
+    free(buf);
+  }
+  return ans;
+}
+
+[[cpp11::register]]
+SEXP adf_writelines(strings text, SEXP extptr, std::string sep, bool useBytes) {
+  AdfFile * af = get_adffile(extptr);
+  const char *ssep;
+  
+  if (!af->modeWrite)
+    Rf_error("cannot write to this connection");
+  if(!Rf_isString(text)) Rf_error("invalid 'text' argument");
+  if(useBytes == NA_LOGICAL)
+    Rf_error("invalid 'useBytes' argument");
+  
+  if(useBytes)
+    ssep = R_CHAR(r_string(sep));
+  else
+    ssep = translateChar0(r_string(sep));
+  
+  for(R_xlen_t i = 0; i < text.size(); i++) {
+    const char * t = useBytes ? R_CHAR(text.at(i)) : translateChar0(text.at(i));
+    adfFileWrite(af, sizeof(char) * strlen(t), (uint8_t *)t);
+    adfFileWrite(af, sizeof(char) * strlen(ssep), (uint8_t *)ssep);
+  }
+
+  return R_NilValue;
 }

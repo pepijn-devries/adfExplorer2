@@ -3,6 +3,7 @@
 <url><loc>https://pepijn-devries.github.io/adfExplorer2/CODE_OF_CONDUCT.html</loc></url>
 <url><loc>https://pepijn-devries.github.io/adfExplorer2/LICENSE.html</loc></url>
 <url><loc>https://pepijn-devries.github.io/adfExplorer2/articles/adfExplorer_vs_adfExplorer2.html</loc></url>
+<url><loc>https://pepijn-devries.github.io/adfExplorer2/articles/adf_objects.html</loc></url>
 <url><loc>https://pepijn-devries.github.io/adfExplorer2/articles/file_system_modes.html</loc></url>
 <url><loc>https://pepijn-devries.github.io/adfExplorer2/articles/index.html</loc></url>
 <url><loc>https://pepijn-devries.github.io/adfExplorer2/articles/virtual_paths.html</loc></url>
@@ -23,6 +24,7 @@
 <url><loc>https://pepijn-devries.github.io/adfExplorer2/reference/list_adf_entries.html</loc></url>
 <url><loc>https://pepijn-devries.github.io/adfExplorer2/reference/move.html</loc></url>
 <url><loc>https://pepijn-devries.github.io/adfExplorer2/reference/name.html</loc></url>
+<url><loc>https://pepijn-devries.github.io/adfExplorer2/reference/read_write.html</loc></url>
 <url><loc>https://pepijn-devries.github.io/adfExplorer2/reference/remove_adf_entry.html</loc></url>
 <url><loc>https://pepijn-devries.github.io/adfExplorer2/reference/s3_methods.html</loc></url>
 <url><loc>https://pepijn-devries.github.io/adfExplorer2/reference/virtual_path.html</loc></url>

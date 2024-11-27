@@ -23,7 +23,7 @@
 
     <a class="navbar-brand me-2" href="index.html">adfExplorer2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.3.0001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,7 +36,8 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="articles/adfExplorer_vs_adfExplorer2.html">adfExplorer vs. adfExplorer2</a></li>
+<li><a class="dropdown-item" href="articles/adf_objects.html">ADF S3 Class Objects</a></li>
+    <li><a class="dropdown-item" href="articles/adfExplorer_vs_adfExplorer2.html">adfExplorer vs. adfExplorer2</a></li>
     <li><a class="dropdown-item" href="articles/file_system_modes.html">ADF File System Modes</a></li>
     <li><a class="dropdown-item" href="articles/virtual_paths.html">Virtual Paths</a></li>
   </ul>
@@ -106,7 +107,7 @@
 <span><span class="va">fcon</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/adf_file_con.html">adf_file_con</a></span><span class="op">(</span><span class="va">my_device</span>, <span class="st">"DF0:s/startup-sequence"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## Read from the file</span></span>
-<span><span class="va">my_startup</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readLines.html" class="external-link">readLines</a></span><span class="op">(</span><span class="va">fcon</span>, warn <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">my_startup</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/read_write.html">readLines</a></span><span class="op">(</span><span class="va">fcon</span>, warn <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## Close the file</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/connections.html" class="external-link">close</a></span><span class="op">(</span><span class="va">fcon</span><span class="op">)</span></span>

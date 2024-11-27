@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">adfExplorer2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.3.0001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,7 +33,8 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/adfExplorer_vs_adfExplorer2.html">adfExplorer vs. adfExplorer2</a></li>
+<li><a class="dropdown-item" href="../articles/adf_objects.html">ADF S3 Class Objects</a></li>
+    <li><a class="dropdown-item" href="../articles/adfExplorer_vs_adfExplorer2.html">adfExplorer vs. adfExplorer2</a></li>
     <li><a class="dropdown-item" href="../articles/file_system_modes.html">ADF File System Modes</a></li>
     <li><a class="dropdown-item" href="../articles/virtual_paths.html">Virtual Paths</a></li>
   </ul>
@@ -122,7 +123,7 @@ you need to format it with a file system. This can be achieved with
 specify which of the modes listed above you want to use for that
 disk:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://pepijn-devries.github.io/adfExplorer2/">adfExplorer2</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://pepijn-devries.github.io/adfExplorer2/">adfExplorer2</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">disk_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".adf"</span><span class="op">)</span></span>
 <span></span>

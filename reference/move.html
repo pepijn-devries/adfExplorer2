@@ -11,7 +11,7 @@ with move_adf_entry() the files are moved (and deleted from its source)."><meta 
 
     <a class="navbar-brand me-2" href="../index.html">adfExplorer2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.3.0001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -22,7 +22,8 @@ with move_adf_entry() the files are moved (and deleted from its source)."><meta 
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/adfExplorer_vs_adfExplorer2.html">adfExplorer vs. adfExplorer2</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/adf_objects.html">ADF S3 Class Objects</a></li>
+    <li><a class="dropdown-item" href="../articles/adfExplorer_vs_adfExplorer2.html">adfExplorer vs. adfExplorer2</a></li>
     <li><a class="dropdown-item" href="../articles/file_system_modes.html">ADF File System Modes</a></li>
     <li><a class="dropdown-item" href="../articles/virtual_paths.html">Virtual Paths</a></li>
   </ul></li>
@@ -133,10 +134,15 @@ files on a physical device you should you <code>base</code> function <code><a hr
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Move the entire virtual device content to</span></span></span>
 <span class="r-in"><span><span class="co">## the tempdir on your physical device</span></span></span>
+<span class="r-in"><span><span class="va">dest</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"DF0"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">dest</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">move_adf_entry</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="virtual_path.html">virtual_path</a></span><span class="op">(</span><span class="va">my_device</span>, <span class="st">"DF0:"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">dest</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## cleanup the temp directory</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="va">dest</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/connections.html" class="external-link">close</a></span><span class="op">(</span><span class="va">my_device</span><span class="op">)</span></span></span>
 </code></pre></div>

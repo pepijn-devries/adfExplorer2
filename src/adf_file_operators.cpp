@@ -628,12 +628,8 @@ SEXP adf_writebin(SEXP object, SEXP extptr, int size, bool swap, bool useBytes) 
 
 #ifndef LONG_VECTOR_SUPPORT
   /* without long vectors RAW vectors are limited to 2^31 - 1 bytes */
-  if(len * (double)size > INT_MAX) {
-    if(isRaw)
-      Rf_error("only 2^31-1 bytes can be written to a raw vector");
-    else
+  if(len * (double)size > INT_MAX)
       Rf_error("only 2^31-1 bytes can be written in a single writeBin() call");
-  }
 #endif
   SEXP ans = R_NilValue;
   if(TYPEOF(object) == STRSXP) {

@@ -73,13 +73,13 @@ Let's start by opening a Amiga Disk File:
 adz_file <- system.file("example.adz", package = "adfExplorer2")
 
 # ---------------- adfExplorer
-library(adfExplorer)
+library(adfExplorer, warn.conflicts = FALSE)
 
 my_disk1 <- read.adz(adz_file)
 
 # ---------------- adfExplorer2
 
-library(adfExplorer2)
+library(adfExplorer2, warn.conflicts = FALSE)
 
 my_disk2 <- connect_adf(adz_file)
 

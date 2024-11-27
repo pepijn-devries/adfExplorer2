@@ -23,7 +23,7 @@ read_adf_block <- function(dev, sector, ...) {
 #' @rdname adf_block
 #' @export
 read_adf_block.adf_device <- function(dev, sector, ...) {
-  read_adf_block_(dev, sector)
+  read_adf_block_(dev, as.integer(sector))
 }
 
 #' @rdname adf_block
@@ -57,7 +57,7 @@ write_adf_block.adf_device.adf_block <- function(dev, sector, data, ...) {
 #' @method write_adf_block.adf_device default
 #' @export
 write_adf_block.adf_device.default <- function(dev, sector, data, ...) {
-  write_adf_block_(dev, sector, data) |> invisible()
+  write_adf_block_(dev, as.integer(sector), data) |> invisible()
 }
 
 #' @rdname adf_block
@@ -72,5 +72,5 @@ as_adf_block <- function(data, ...) {
 #' @rdname adf_block
 #' @export
 new_adf_block <- function() {
-  as_adf_block(raw(512))
+  as_adf_block(raw(512L))
 }

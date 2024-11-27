@@ -84,7 +84,7 @@ readLines <-
 readLines.default <-
   function(con = stdin(), n = -1L, ok = TRUE, warn = TRUE,
            encoding = "unknown", skipNul = FALSE) {
-    base::readBin(con, n, ok, warn, encoding, skipNul)
+    base::readLines(con, n, ok, warn, encoding, skipNul)
   }
 
 #' @rdname read_write

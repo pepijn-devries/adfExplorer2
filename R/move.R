@@ -32,10 +32,15 @@
 #' 
 #' ## Move the entire virtual device content to
 #' ## the tempdir on your physical device
+#' dest <- file.path(tempdir(), "DF0")
+#' dir.create(dest)
 #' move_adf_entry(
 #'   virtual_path(my_device, "DF0:"),
-#'   tempdir()
+#'   dest
 #' )
+#' 
+#' ## cleanup the temp directory
+#' unlink(dest, recursive = TRUE)
 #' 
 #' close(my_device)
 #' @author Pepijn de Vries

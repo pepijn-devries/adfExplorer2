@@ -5,20 +5,10 @@
 #include <vector>
 #include "adflib/adflib.h"
 
-/* R connection definitions: */
-#define class class_name
-#define private private_ptr
-/* the RConnection API is experimental and subject to change */
-#include <R_ext/Connections.h>
-#if ! defined(R_CONNECTIONS_VERSION) || R_CONNECTIONS_VERSION != 1
-#error "Unsupported connections API version"
-#endif
-#undef class
-#undef private
-
 struct AdfContainer {
   AdfDevice * dev;
   int currentVol;
+  bool isopen;
 };
 
 #endif /* __OPEN_ADF__ */

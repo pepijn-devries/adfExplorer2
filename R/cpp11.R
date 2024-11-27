@@ -4,134 +4,166 @@ adf_upper <- function(x, intl) {
   .Call(`_adfExplorer2_adf_upper`, x, intl)
 }
 
-adf_path_to_entry <- function(connection, filename, mode) {
-  .Call(`_adfExplorer2_adf_path_to_entry`, connection, filename, mode)
+adf_path_to_entry <- function(extptr, filename, mode) {
+  .Call(`_adfExplorer2_adf_path_to_entry`, extptr, filename, mode)
 }
 
-adf_file_exists_ <- function(connection, path) {
-  .Call(`_adfExplorer2_adf_file_exists_`, connection, path)
+adf_file_exists_ <- function(extptr, path) {
+  .Call(`_adfExplorer2_adf_file_exists_`, extptr, path)
 }
 
-adf_dir_exists_ <- function(connection, path) {
-  .Call(`_adfExplorer2_adf_dir_exists_`, connection, path)
+adf_dir_exists_ <- function(extptr, path) {
+  .Call(`_adfExplorer2_adf_dir_exists_`, extptr, path)
 }
 
-adf_entry_info_ <- function(connection, path) {
-  .Call(`_adfExplorer2_adf_entry_info_`, connection, path)
+adf_entry_info_ <- function(extptr, path) {
+  .Call(`_adfExplorer2_adf_entry_info_`, extptr, path)
 }
 
-adf_change_dir <- function(connection, path) {
-  .Call(`_adfExplorer2_adf_change_dir`, connection, path)
+adf_con_summary <- function(extptr) {
+  .Call(`_adfExplorer2_adf_con_summary`, extptr)
 }
 
-adf_get_current_dir <- function(connection) {
-  .Call(`_adfExplorer2_adf_get_current_dir`, connection)
+adf_change_dir <- function(extptr, path) {
+  .Call(`_adfExplorer2_adf_change_dir`, extptr, path)
 }
 
-list_adf_entries_ <- function(connection, filename, recursive, nested) {
-  .Call(`_adfExplorer2_list_adf_entries_`, connection, filename, recursive, nested)
+adf_get_current_dir <- function(extptr) {
+  .Call(`_adfExplorer2_adf_get_current_dir`, extptr)
 }
 
-adf_mkdir <- function(connection, path) {
-  .Call(`_adfExplorer2_adf_mkdir`, connection, path)
+list_adf_entries_ <- function(extptr, filename, recursive, nested) {
+  .Call(`_adfExplorer2_list_adf_entries_`, extptr, filename, recursive, nested)
 }
 
-adf_remove_entry <- function(connection, path, flush) {
-  .Call(`_adfExplorer2_adf_remove_entry`, connection, path, flush)
+adf_mkdir <- function(extptr, path) {
+  .Call(`_adfExplorer2_adf_mkdir`, extptr, path)
 }
 
-adf_set_entry_name_ <- function(connection, path, replacement) {
-  .Call(`_adfExplorer2_adf_set_entry_name_`, connection, path, replacement)
+adf_remove_entry <- function(extptr, path, flush) {
+  .Call(`_adfExplorer2_adf_remove_entry`, extptr, path, flush)
 }
 
-move_adf_internal <- function(connection, source, destination) {
-  .Call(`_adfExplorer2_move_adf_internal`, connection, source, destination)
+adf_set_entry_name_ <- function(extptr, path, replacement) {
+  .Call(`_adfExplorer2_adf_set_entry_name_`, extptr, path, replacement)
 }
 
-read_adf_block_ <- function(connection, sector) {
-  .Call(`_adfExplorer2_read_adf_block_`, connection, sector)
+move_adf_internal <- function(extptr, source, destination) {
+  .Call(`_adfExplorer2_move_adf_internal`, extptr, source, destination)
 }
 
-write_adf_block_ <- function(connection, sector, block) {
-  .Call(`_adfExplorer2_write_adf_block_`, connection, sector, block)
+adf_readbin <- function(extptr, what, n, sz, sgn, swap) {
+  .Call(`_adfExplorer2_adf_readbin`, extptr, what, n, sz, sgn, swap)
 }
 
-interpret_file_header <- function(connection, vol_num, sectnum) {
-  .Call(`_adfExplorer2_interpret_file_header`, connection, vol_num, sectnum)
+adf_readlines <- function(extptr, n_, ok, warn, encoding, skipNul) {
+  .Call(`_adfExplorer2_adf_readlines`, extptr, n_, ok, warn, encoding, skipNul)
 }
 
-interpret_dir_header <- function(connection, vol_num, sectnum) {
-  .Call(`_adfExplorer2_interpret_dir_header`, connection, vol_num, sectnum)
+adf_writebin <- function(object, extptr, size, swap, useBytes) {
+  .Call(`_adfExplorer2_adf_writebin`, object, extptr, size, swap, useBytes)
 }
 
-interpret_root_header <- function(connection, vol_num) {
-  .Call(`_adfExplorer2_interpret_root_header`, connection, vol_num)
+adf_writelines <- function(text, extptr, sep, useBytes) {
+  .Call(`_adfExplorer2_adf_writelines`, text, extptr, sep, useBytes)
 }
 
-adf_dev_format <- function(connection, name, ffs, intl, dircache, bootable) {
-  .Call(`_adfExplorer2_adf_dev_format`, connection, name, ffs, intl, dircache, bootable)
+read_adf_block_ <- function(extptr, sector) {
+  .Call(`_adfExplorer2_read_adf_block_`, extptr, sector)
 }
 
-adf_dev_name <- function(connection, vol_num) {
-  .Call(`_adfExplorer2_adf_dev_name`, connection, vol_num)
+write_adf_block_ <- function(extptr, sector, block) {
+  .Call(`_adfExplorer2_write_adf_block_`, extptr, sector, block)
 }
 
-adf_dev_size <- function(connection) {
-  .Call(`_adfExplorer2_adf_dev_size`, connection)
+interpret_file_header <- function(extptr, vol_num, sectnum) {
+  .Call(`_adfExplorer2_interpret_file_header`, extptr, vol_num, sectnum)
 }
 
-adf_dev_nvol <- function(connection) {
-  .Call(`_adfExplorer2_adf_dev_nvol`, connection)
+interpret_dir_header <- function(extptr, vol_num, sectnum) {
+  .Call(`_adfExplorer2_interpret_dir_header`, extptr, vol_num, sectnum)
 }
 
-adf_dev_type <- function(connection) {
-  .Call(`_adfExplorer2_adf_dev_type`, connection)
+interpret_root_header <- function(extptr, vol_num) {
+  .Call(`_adfExplorer2_interpret_root_header`, extptr, vol_num)
 }
 
-adf_free_blocks <- function(connection, vol_num) {
-  .Call(`_adfExplorer2_adf_free_blocks`, connection, vol_num)
+adf_dev_format <- function(extptr, name, ffs, intl, dircache, bootable) {
+  .Call(`_adfExplorer2_adf_dev_format`, extptr, name, ffs, intl, dircache, bootable)
 }
 
-adf_block_size <- function(connection, vol_num) {
-  .Call(`_adfExplorer2_adf_block_size`, connection, vol_num)
+adf_dev_name <- function(extptr, vol_num) {
+  .Call(`_adfExplorer2_adf_dev_name`, extptr, vol_num)
 }
 
-adf_vol_size <- function(connection, vol_num) {
-  .Call(`_adfExplorer2_adf_vol_size`, connection, vol_num)
+adf_dev_size <- function(extptr) {
+  .Call(`_adfExplorer2_adf_dev_size`, extptr)
 }
 
-adf_is_intl <- function(connection, vol_num) {
-  .Call(`_adfExplorer2_adf_is_intl`, connection, vol_num)
+adf_dev_nvol <- function(exptr) {
+  .Call(`_adfExplorer2_adf_dev_nvol`, exptr)
 }
 
-adf_is_dircache <- function(connection, vol_num) {
-  .Call(`_adfExplorer2_adf_is_dircache`, connection, vol_num)
+adf_dev_type <- function(exptr) {
+  .Call(`_adfExplorer2_adf_dev_type`, exptr)
 }
 
-adf_is_ffs <- function(connection, vol_num) {
-  .Call(`_adfExplorer2_adf_is_ffs`, connection, vol_num)
+adf_free_blocks <- function(exptr, vol_num) {
+  .Call(`_adfExplorer2_adf_free_blocks`, exptr, vol_num)
 }
 
-adf_is_write_protected <- function(connection) {
-  .Call(`_adfExplorer2_adf_is_write_protected`, connection)
+adf_block_size <- function(exptr, vol_num) {
+  .Call(`_adfExplorer2_adf_block_size`, exptr, vol_num)
 }
 
-adf_is_bootable <- function(connection, vol_num) {
-  .Call(`_adfExplorer2_adf_is_bootable`, connection, vol_num)
+adf_vol_size <- function(exptr, vol_num) {
+  .Call(`_adfExplorer2_adf_vol_size`, exptr, vol_num)
 }
 
-adf_set_dev_name <- function(connection, vol_num, new_name) {
-  .Call(`_adfExplorer2_adf_set_dev_name`, connection, vol_num, new_name)
+adf_is_intl <- function(exptr, vol_num) {
+  .Call(`_adfExplorer2_adf_is_intl`, exptr, vol_num)
+}
+
+adf_is_dircache <- function(exptr, vol_num) {
+  .Call(`_adfExplorer2_adf_is_dircache`, exptr, vol_num)
+}
+
+adf_is_ffs <- function(exptr, vol_num) {
+  .Call(`_adfExplorer2_adf_is_ffs`, exptr, vol_num)
+}
+
+adf_is_write_protected <- function(exptr) {
+  .Call(`_adfExplorer2_adf_is_write_protected`, exptr)
+}
+
+adf_is_bootable <- function(exptr, vol_num) {
+  .Call(`_adfExplorer2_adf_is_bootable`, exptr, vol_num)
+}
+
+adf_set_dev_name <- function(extptr, vol_num, new_name) {
+  .Call(`_adfExplorer2_adf_set_dev_name`, extptr, vol_num, new_name)
 }
 
 open_adf_ <- function(filename, write_protected) {
   .Call(`_adfExplorer2_open_adf_`, filename, write_protected)
 }
 
-adf_file_con_ <- function(connection, filename, writable) {
-  .Call(`_adfExplorer2_adf_file_con_`, connection, filename, writable)
+seek_adf <- function(extptr, where, origin) {
+  .Call(`_adfExplorer2_seek_adf`, extptr, where, origin)
 }
 
-adf_file_con_info <- function(connection) {
-  .Call(`_adfExplorer2_adf_file_con_info`, connection)
+adf_close_file_con <- function(extptr) {
+  .Call(`_adfExplorer2_adf_close_file_con`, extptr)
+}
+
+adf_file_con_ <- function(extptr, filename, writable) {
+  .Call(`_adfExplorer2_adf_file_con_`, extptr, filename, writable)
+}
+
+adf_file_con_info <- function(extptr) {
+  .Call(`_adfExplorer2_adf_file_con_info`, extptr)
+}
+
+close_adf <- function(extptr) {
+  invisible(.Call(`_adfExplorer2_close_adf`, extptr))
 }

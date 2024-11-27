@@ -23,7 +23,7 @@ we first need a virtual device to work with. The code below show how to set up a
 to the Amiga Disk File provided with this package as an example.
 
 ```{r connect}
-library(adfExplorer2)
+library(adfExplorer2, warn.conflicts = FALSE)
 
 adz_file <- system.file("example.adz", package = "adfExplorer2")
 my_device <- connect_adf(adz_file)

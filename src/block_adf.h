@@ -12,11 +12,11 @@ logicals access_from_int(int access);
 list interpret_root_header_internal(AdfDevice *dev, int vol_num);
 list interpret_file_header_internal(AdfDevice *dev, int vol_num, int sectnum);
 list interpret_dir_header_internal(AdfDevice *dev, int vol_num, int sectnum);
-SEXP read_adf_block_(SEXP connection, int sector);
-SEXP write_adf_block_(SEXP connection, int sector, raws block);
-list interpret_root_header(SEXP connection, int vol_num);
-list interpret_file_header(SEXP connection, int vol_num, int sectnum);
-list interpret_dir_header(SEXP connection, int vol_num, int sectnum);
+SEXP read_adf_block_(SEXP extptr, int sector);
+SEXP write_adf_block_(SEXP extptr, int sector, raws block);
+list interpret_root_header(SEXP extptr, int vol_num);
+list interpret_file_header(SEXP extptr, int vol_num, int sectnum);
+list interpret_dir_header(SEXP extptr, int vol_num, int sectnum);
 raws adf_bootable_code(void);
 RETCODE updateBootSum ( struct AdfVolume * const vol );
 

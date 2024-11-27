@@ -1,6 +1,6 @@
 Package: adfExplorer2
 Title: Access and Manipulate Amiga Disk Files
-Version: 0.0.3.0001
+Version: 0.1.0
 Authors@R:
     c(
     person("Pepijn", "de Vries", role = c("aut", "cre"),
@@ -37,6 +37,7 @@ Collate:
     'directory.R'
     'entry_info.R'
     'remove.R'
+    's3_conn.R'
     's3_methods.R'
     'virtual_path.R'
 Depends:

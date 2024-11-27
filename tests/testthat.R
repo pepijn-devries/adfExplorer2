@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(adfExplorer2)
+library(adfExplorer2) |> suppressMessages()
 
 test_check("adfExplorer2")

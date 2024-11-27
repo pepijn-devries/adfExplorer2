@@ -403,7 +403,7 @@ SEXP adf_readbin(SEXP extptr, int what, int n, int sz, bool sgn, bool swap) {
       CASE_LONG_ETC						                                          \
       break;							                                              \
     default:							                                              \
-      Rf_error("size %d is unknown on this machine", SIZE);	            \
+      Rf_error("size %d is unknown on this machine", (int)SIZE);	      \
     }								                                                    \
 } while(0)
 
@@ -437,7 +437,7 @@ p = (void *) INTEGER(ans);
 #endif
       break;
     default:
-      Rf_error("size %d is unknown on this machine", size);
+      Rf_error("size %d is unknown on this machine", (int)size);
     }
     PROTECT(ans = Rf_allocVector(REALSXP, n));
     p = (void *) REAL(ans);
@@ -479,7 +479,7 @@ p = (void *) INTEGER(ans);
 #endif
     } u;
     if (size > (R_xlen_t)sizeof u)
-      Rf_error("size %d is unknown on this machine", size);
+      Rf_error("size %d is unknown on this machine", (int)size);
     if(mode == 1) { /* integer result */
     for(i = 0, m = 0; i < n; i++) {
       s = (int) adf_file_read(af, size, (uint8_t *)&u);
@@ -509,7 +509,7 @@ p = (void *) INTEGER(ans);
         break;
 #endif
       default:
-        Rf_error("size %d is unknown on this machine", size);
+        Rf_error("size %d is unknown on this machine", (int)size);
       }
     }
     } else if (mode == 2) { /* double result */
@@ -528,7 +528,7 @@ p = (void *) INTEGER(ans);
         break;
 #endif
       default:
-        Rf_error("size %d is unknown on this machine", size);
+        Rf_error("size %d is unknown on this machine", (int)size);
       }
     }
     }

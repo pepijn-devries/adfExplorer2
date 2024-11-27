@@ -1,6 +1,8 @@
-adfExplorer2 v0.0.3.0001
+adfExplorer2 v0.1.0
 -------------
 
+  * Added vignette about ADF S3 class objects
+  * Removed non API entry points to R
   * Added testthat workflow
   * Added test coverage workflow
 

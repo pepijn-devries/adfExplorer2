@@ -65,7 +65,7 @@ system. This can be achieved with `prepare_adf_device()`. With this function
 you can also specify which of the modes listed above you want to use for that disk:
 
 ```{r setup}
-library(adfExplorer2)
+library(adfExplorer2, warn.conflicts = FALSE)
 
 disk_file <- tempfile(fileext = ".adf")
 

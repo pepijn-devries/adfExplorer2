@@ -61,70 +61,7 @@
 <img src="logo.svg" class="logo" alt=""><h1 id="adfexplorer2">adfExplorer2<a class="anchor" aria-label="anchor" href="#adfexplorer2"></a>
 </h1>
 </div>
-<!-- badges: start -->
-
-<p></p>
-<p><code>adfExplorer2</code> is the successor of <a href="https://pepijn-devries.github.io/adfExplorer/" class="external-link"><code>adfExplorer</code></a>. It can be used to read from and write to virtual Amiga Disks, a.k.a Amiga Disk Files (ADF).</p>
-<div class="section level2">
-<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
-</h2>
-<p>You can install the development version of adfExplorer2 from <a href="https://pepijn-devries.r-universe.dev/adfExplorer2" class="external-link">r-universe</a> with:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"adfExplorer2"</span>, repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"https://pepijn-devries.r-universe.dev"</span>, <span class="st">"https://cloud.r-project.org"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="background">Background<a class="anchor" aria-label="anchor" href="#background"></a>
-</h2>
-<div class="section level3">
-<h3 id="amiga-disk-files">Amiga Disk Files<a class="anchor" aria-label="anchor" href="#amiga-disk-files"></a>
-</h3>
-<p>The Commodore Amiga was a home computer that relied heavily on it’s build-in 3.5 inch floppy disk drive in the late eighties and early nineties. The Amiga was a popular system which nowadays can be accurately <a href="https://en.wikipedia.org/wiki/Amiga_emulation" class="external-link">emulated</a> on modern machines. A problem with the emulation of the Amiga is that most modern machines no longer have floppy disk drives. And if they do, they are usually physically not able to read Amiga formatted disks. To overcome this problem, the Amiga Disk File (ADF) was created. Such files are a virtual representation of a floppy disks which can be used in emulation.</p>
-<div class="section level4">
-<h4 id="legal-notes">Legal notes<a class="anchor" aria-label="anchor" href="#legal-notes"></a>
-</h4>
-<p>Emulating the Commodore Amiga hardware is, as far as I can tell, legal. However, the Amiga had its operating system stored on a read only memory chip. Which is commonly referred to as the kickstart. This kickstart software is still protected by copyright law. Licensed copies can be bought legally from <a href="https://www.amigaforever.com" class="external-link">AmigaForever</a>. The same is true for much of the Amiga software, which is still protected by copyright.</p>
-<p>Note that for analysing ADF files with the <code>adfExplorer2</code> package you don’t need the kickstart software. Just make sure the ADF files you use contain data or software for which you own (or don’t need) a licence.</p>
-</div>
-</div>
-<div class="section level3">
-<h3 id="the-adfexplorer2-package">The <code>adfExplorer2</code> package<a class="anchor" aria-label="anchor" href="#the-adfexplorer2-package"></a>
-</h3>
-<p>This package will allow you to analyse Amiga Disk Files (ADF) with the R scripting language. It can also be used to transfer files from and to ADF in batches, e.g. for preparing disks for emulation purposes.</p>
-<p>The focus will be on the older Amiga operating systems (i.e., OS 3.x and less), as I am most familiar with those systems. In newer versions floppy disks became less important anyway. Note that this package cannot read extended ADF files containing information on the disk’s <a href="https://en.wikipedia.org/wiki/Modified_Frequency_Modulation" class="external-link">Modified Frequency Modulation (MFM)</a>. This information is typically only required for copy protected disks and is therefore out of the scope of this package.</p>
-</div>
-</div>
-<div class="section level2">
-<h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
-</h2>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://pepijn-devries.github.io/adfExplorer2/">adfExplorer2</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## First setup a connection to a virtual device</span></span>
-<span><span class="va">adz_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"example.adz"</span>, package <span class="op">=</span> <span class="st">"adfExplorer2"</span><span class="op">)</span></span>
-<span><span class="va">my_device</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/connect_adf.html">connect_adf</a></span><span class="op">(</span><span class="va">adz_file</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## Open a connection to a file on the virtual device</span></span>
-<span><span class="va">fcon</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/adf_file_con.html">adf_file_con</a></span><span class="op">(</span><span class="va">my_device</span>, <span class="st">"DF0:s/startup-sequence"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## Read from the file</span></span>
-<span><span class="va">my_startup</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/read_write.html">readLines</a></span><span class="op">(</span><span class="va">fcon</span>, warn <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## Close the file</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/connections.html" class="external-link">close</a></span><span class="op">(</span><span class="va">fcon</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## Close the virtual device</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/connections.html" class="external-link">close</a></span><span class="op">(</span><span class="va">my_device</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="acknowledgements">Acknowledgements<a class="anchor" aria-label="anchor" href="#acknowledgements"></a>
-</h2>
-<p>The <code>adfExplorer2</code> package is an R interface around the <a href="https://github.com/lclevy/ADFlib" class="external-link"><code>ADFlib</code> library</a>. The package would not have been possible without the work of Laurent Clévy, Tomasz Wolak) and many other <a href="https://github.com/lclevy/ADFlib/blob/master/AUTHORS" class="external-link">contributors</a> of ADFlib.</p>
-</div>
-<div class="section level2">
-<h2 id="code-of-conduct">Code of Conduct<a class="anchor" aria-label="anchor" href="#code-of-conduct"></a>
-</h2>
-<p>Please note that the adfExplorer2 project is released with a <a href="https://contributor-covenant.org/version/2/1/CODE_OF_CONDUCT.html" class="external-link">Contributor Code of Conduct</a>. By contributing to this project, you agree to abide by its terms.</p>
-</div>
+<p>This archived repository is no longer maintained. The <code>adfExplorer2</code> code has been merged with <a href="https://pepijn-devries.github.io/adfExplorer/" class="external-link">adfExplorer</a> and is maintained overthere.</p>
 </div>
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
@@ -165,13 +102,7 @@
 </ul>
 </div>
 
-<div class="dev-status">
-<h2 data-toc-skip>Dev status</h2>
-<ul class="list-unstyled">
-<li><a href="https://github.com/pepijn-devries/adfExplorer2/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/pepijn-devries/adfExplorer2/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
-<li><a href="https://pepijn-devries.r-universe.dev/adfExplorer2" class="external-link"><img src="https://pepijn-devries.r-universe.dev/badges/adfExplorer2" alt="adfExplorer2 status badge"></a></li>
-</ul>
-</div>
+
 
   </aside>
 </div>
